@@ -61,7 +61,7 @@ public abstract class AbstractSettings {
 		
 		parsableProperties = new ParsableProperties();
 		
-		loadFromProperties(properties);
+		loadFromPropertiesWithoutFireEvent(properties);
 
 	}
 	
@@ -70,7 +70,7 @@ public abstract class AbstractSettings {
 	 * 
 	 * @throws IOException
 	 */
-	private void loadFromProperties(Properties properties) throws SettingValidationException {
+	private boolean loadFromPropertiesWithoutFireEvent(Properties properties) throws SettingValidationException {
 
 		Set<String> keys = properties.stringPropertyNames();
 		
@@ -90,12 +90,18 @@ public abstract class AbstractSettings {
 			
 		}
 		
-		if (settingsChanged) {
+		return settingsChanged;
+			
+	}
+	
+	public void loadFromProperties(Properties properties) throws SettingValidationException {
+		
+		if (loadFromPropertiesWithoutFireEvent(properties)) {
 			
 			fireSettingsChanged();
 			
 		}
-
+		
 	}
 
 	/**

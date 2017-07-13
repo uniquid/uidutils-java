@@ -1,5 +1,6 @@
 package com.uniquid.settings;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -19,7 +20,7 @@ public class TestSettings {
 		
 		Assert.assertNotNull(dummy);
 		
-		List<Setting> settings = dummy.getSettings();
+		Collection<Setting> settings = dummy.getSettings();
 		
 		Assert.assertTrue(settings.contains(DummySettings.DUMMY));
 		

@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -25,7 +28,7 @@ public abstract class AbstractSettings {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSettings.class);
 
-	private final List<Setting> settings;
+	private final Map<String, Setting> settings;
 
 	private final List<SettingsListener> settingsListeners;
 	
@@ -118,7 +121,7 @@ public abstract class AbstractSettings {
 		// Create properties
 		Properties properties = new Properties();
 		
-		List<Setting> settings = getSettings();
+		Collection<Setting> settings = getSettings();
 		
 		for (Setting setting : settings) {
 			
@@ -138,17 +141,10 @@ public abstract class AbstractSettings {
 	 * 
 	 * @return list of settings as {@link Setting}
 	 */
-	public List<Setting> getSettings() {
+	public Collection<Setting> getSettings() {
 		
-		List<Setting> newList = new ArrayList<Setting>();
+		return settings.values();
 		
-		for (Setting setting : settings) {
-			
-			newList.add(setting);
-			
-		}
-		
-		return newList;
 	}
 
 	/**
@@ -160,16 +156,8 @@ public abstract class AbstractSettings {
 	 *         given key
 	 */
 	protected Setting getSetting(String key) {
-
-		for (Setting setting : settings) {
-
-			if (setting.getKey().equals(key)) {
-				return setting;
-			}
-
-		}
-
-		return null;
+		
+		return settings.get(key);
 
 	}
 
@@ -392,9 +380,9 @@ public abstract class AbstractSettings {
 	 *            a set of settings that should be excluded as {@link Setting}
 	 * @return a list of setting as {@link Setting}
 	 */
-	private static List<Setting> getSettings(Class<?> targetClass, Set<Setting> excludedSettings) {
+	private static Map<String, Setting> getSettings(Class<?> targetClass, Set<Setting> excludedSettings) {
 
-		List<Setting> settings = new ArrayList<Setting>();
+		Map<String, Setting> settings = new HashMap<String, Setting>();
 
 		// Log
 		LOGGER.info("analyzing class for settings: " + targetClass);
@@ -434,7 +422,7 @@ public abstract class AbstractSettings {
 							LOGGER.info("found setting: " + setting);
 
 							// Add setting
-							settings.add(setting);
+							settings.put(setting.getKey(), setting);
 
 						} else {
 

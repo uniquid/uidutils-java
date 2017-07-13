@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.uniquid.settings.exception.SettingValidationException;
+import com.uniquid.settings.exception.UnknownSettingException;
 import com.uniquid.utils.ParsableProperties;
 
 /**
@@ -35,12 +36,13 @@ public abstract class AbstractSettings {
 	 * 
 	 * @param settingsStore
 	 *            the settings store
+	 * @throws UnknownSettingException 
 	 */
-	public AbstractSettings() throws SettingValidationException {
+	public AbstractSettings() throws SettingValidationException, UnknownSettingException {
 		this(new Properties(), new HashSet<Setting>());
 	}
 	
-	public AbstractSettings(Properties properties) throws SettingValidationException {
+	public AbstractSettings(Properties properties) throws SettingValidationException, UnknownSettingException {
 		this(properties, new HashSet<Setting>());
 	}
 
@@ -51,8 +53,9 @@ public abstract class AbstractSettings {
 	 *            the settings store
 	 * @param excludedSettings
 	 *            a set of settings that should be excluded as {@link Setting}
+	 * @throws UnknownSettingException 
 	 */
-	public AbstractSettings(Properties properties, Set<Setting> excludedSettings) throws SettingValidationException {
+	public AbstractSettings(Properties properties, Set<Setting> excludedSettings) throws SettingValidationException, UnknownSettingException {
 
 		// Get settings
 		settings = getSettings(this.getClass(), excludedSettings);
@@ -67,10 +70,11 @@ public abstract class AbstractSettings {
 	
 	/**
 	 * Load settings from properties
+	 * @throws UnknownSettingException 
 	 * 
 	 * @throws IOException
 	 */
-	private boolean loadFromPropertiesWithoutFireEvent(Properties properties) throws SettingValidationException {
+	private boolean loadFromPropertiesWithoutFireEvent(Properties properties) throws SettingValidationException, UnknownSettingException {
 
 		Set<String> keys = properties.stringPropertyNames();
 		
@@ -94,7 +98,7 @@ public abstract class AbstractSettings {
 			
 	}
 	
-	public void loadFromProperties(Properties properties) throws SettingValidationException {
+	public void loadFromProperties(Properties properties) throws SettingValidationException, UnknownSettingException {
 		
 		if (loadFromPropertiesWithoutFireEvent(properties)) {
 			
@@ -109,10 +113,18 @@ public abstract class AbstractSettings {
 	 * 
 	 * @return properties
 	 */
-	public Properties getProperties() {
+	public Properties getProperties() throws Exception {
 
 		// Create properties
 		Properties properties = new Properties();
+		
+		List<Setting> settings = getSettings();
+		
+		for (Setting setting : settings) {
+			
+			properties.setProperty(setting.getKey(), setting.stringify());
+			
+		}
 
 		// Put all properties from settings
 		properties.putAll(parsableProperties);
@@ -121,18 +133,23 @@ public abstract class AbstractSettings {
 
 	}
 
-//	/**
-//	 * Get list of settings
-//	 * 
-//	 * @return list of settings as {@link Setting}
-//	 */
-//	public List<Setting> getSettings() {
-//		
-//		List<Setting> newList = new ArrayList<Setting>(settings.size());
-//		Collections.copy(newList, settings);
-//		
-//		return newList;
-//	}
+	/**
+	 * Get list of settings
+	 * 
+	 * @return list of settings as {@link Setting}
+	 */
+	public List<Setting> getSettings() {
+		
+		List<Setting> newList = new ArrayList<Setting>();
+		
+		for (Setting setting : settings) {
+			
+			newList.add(setting);
+			
+		}
+		
+		return newList;
+	}
 
 	/**
 	 * Get setting with given key
@@ -308,10 +325,10 @@ public abstract class AbstractSettings {
 	/**
 	 * Save setting
 	 */
-	private boolean setSettingWithoutFiringEvents(Setting setting, String value) throws SettingValidationException {
+	private void setSettingWithoutFiringEvents(String key, String value) throws SettingValidationException, UnknownSettingException {
 
 		// Get setting
-		Setting managedSetting = getSetting(setting.getKey());
+		Setting managedSetting = getSetting(key);
 
 		if (managedSetting != null) {
 		
@@ -319,28 +336,49 @@ public abstract class AbstractSettings {
 			managedSetting.validate(value);
 			
 			// Set property
-			parsableProperties.setProperty(setting.getKey(), value);
+			parsableProperties.setProperty(key, value);
 			
-			return true;
+		} else {
+			
+			throw new UnknownSettingException("Unmanaged setting " + key);
 			
 		}
-		
-		return false;
 		
 	}
 	
 	/**
 	 * Save setting
+	 */
+	private void setSettingWithoutFiringEvents(Setting setting, String value) throws SettingValidationException, UnknownSettingException {
+
+		setSettingWithoutFiringEvents(setting.getKey(), value);
+		
+	}
+	
+	/**
+	 * Save setting
+	 * @throws UnknownSettingException 
 	 * 
 	 */
-	public void setSetting(Setting setting, String value) throws SettingValidationException {
+	public void setSetting(Setting setting, String value) throws SettingValidationException, UnknownSettingException {
 
-		if (setSettingWithoutFiringEvents(setting, value)) {
+		setSettingWithoutFiringEvents(setting, value);
 			
-			fireSettingsChanged();
+		fireSettingsChanged();
 			
-		}
-		
+	}
+	
+	/**
+	 * Save setting
+	 * @throws UnknownSettingException 
+	 * 
+	 */
+	public void setSetting(String setting, String value) throws SettingValidationException, UnknownSettingException {
+
+		setSettingWithoutFiringEvents(setting, value);
+			
+		fireSettingsChanged();
+			
 	}
 
 	/**

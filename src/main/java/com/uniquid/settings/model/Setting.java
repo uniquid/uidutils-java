@@ -3,6 +3,7 @@ package com.uniquid.settings.model;
 import java.io.Serializable;
 
 import com.uniquid.settings.exception.SettingValidationException;
+import com.uniquid.settings.stringifier.DefaultStringifier;
 
 /**
  * Represents an application setting
@@ -18,6 +19,7 @@ public class Setting implements Serializable {
 	private final Object defaultValue;
 	private final SettingType settingType;
 	private final Validator validator;
+	private final Stringifier stringifier;
 
 	/**
 	 * Create new setting. The provided setting value define the type of this
@@ -40,7 +42,8 @@ public class Setting implements Serializable {
 	 * @param validator
 	 *            the setting validator or null if validation is not required
 	 */
-	public Setting(String key, String name, String description, Object defaultValue, Validator validator) {
+	public Setting(String key, String name, String description, Object defaultValue, Validator validator,
+			Stringifier stringifier) {
 
 		this.key = key;
 		this.name = name;
@@ -49,7 +52,12 @@ public class Setting implements Serializable {
 		this.defaultValue = defaultValue;
 		settingType = SettingType.valueClassOf(defaultValue.getClass());
 		this.validator = validator;
+		this.stringifier = stringifier;
 
+	}
+	
+	public Setting(String key, String name, String description, Object defaultValue, Validator validator) {
+		this(key, name, description, defaultValue, null, new DefaultStringifier());
 	}
 
 	/**
@@ -72,7 +80,7 @@ public class Setting implements Serializable {
 	 *            the setting value
 	 */
 	public Setting(String key, String name, String description, Object defaultValue) {
-		this(key, name, description, defaultValue, null);
+		this(key, name, description, defaultValue, null, new DefaultStringifier());
 	}
 
 	/**
@@ -158,6 +166,12 @@ public class Setting implements Serializable {
 
 		}
 
+	}
+	
+	public String stringify() throws Exception {
+		
+		return stringifier.stringify(this);
+			
 	}
 
 	/*

@@ -45,6 +45,11 @@ public class DefaultStringifier implements Stringifier {
 			// Validate as string
 			return (String) setting.getDefaultValue();
 
+		} else if (SettingType.BOOLEAN.equals(settingType)) {
+
+			// Validate as string
+			return String.valueOf(setting.getDefaultValue());
+
 		} else {
 		
 			throw new StringifyException("Unknown type");

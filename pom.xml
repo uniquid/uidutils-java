@@ -10,6 +10,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>1.7.22</slf4j-version>
+    <bitcoinj-version>0.14.4</bitcoinj-version>
   </properties>
  
   <name>Uniquid utils</name>
@@ -29,6 +30,20 @@
       <version>4.8.2</version>
       <scope>test</scope>
     </dependency>
+    
+     <dependency>
+      <groupId>org.bitcoinj</groupId>
+      <artifactId>bitcoinj-core</artifactId>
+      <version>${bitcoinj-version}</version>
+    </dependency>
+
+<!-- https://mvnrepository.com/artifact/org.json/json -->
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20170516</version>
+</dependency>
+
 
   </dependencies>
 </project>

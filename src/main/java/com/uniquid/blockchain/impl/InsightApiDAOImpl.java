@@ -1,4 +1,4 @@
-package com.uniquid.blockchain;
+package com.uniquid.blockchain.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,11 +15,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.uniquid.blockchain.AddressInfo;
+import com.uniquid.blockchain.BlockChainDAO;
+import com.uniquid.blockchain.Utxo;
 import com.uniquid.blockchain.exception.BlockChainException;
 
-public class InsightApiBlockChainDAOImpl implements BlockChainDAO {
+public class InsightApiDAOImpl implements BlockChainDAO {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(InsightApiBlockChainDAOImpl.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(InsightApiDAOImpl.class);
 
 	private static final String ADDR_URL = "http://%1&s/insight-api/addr/%2&s";
 	private static final String UTXOS_URL = "http://%1&s/insight-api/addr/%2&s/utxo";
@@ -27,7 +30,7 @@ public class InsightApiBlockChainDAOImpl implements BlockChainDAO {
 
 	private String insightApiHost;
 
-	public InsightApiBlockChainDAOImpl(String insightApiHost) {
+	public InsightApiDAOImpl(String insightApiHost) {
 		this.insightApiHost = insightApiHost;
 	}
 

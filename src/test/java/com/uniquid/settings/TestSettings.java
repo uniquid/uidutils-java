@@ -1,7 +1,6 @@
 package com.uniquid.settings;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 
 import org.junit.Test;

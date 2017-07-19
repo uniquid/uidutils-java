@@ -1,8 +1,10 @@
 package com.uniquid.blockchain;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,56 +15,68 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.uniquid.blockchain.exception.BlockChainException;
+
 public class InsightApiBlockChainDAOImpl implements BlockChainDAO {
-	
+
 	private static Logger LOGGER = LoggerFactory.getLogger(InsightApiBlockChainDAOImpl.class);
-	
+
 	private static final String ADDR_URL = "http://%1&s/insight-api/addr/%2&s";
 	private static final String UTXOS_URL = "http://%1&s/insight-api/addr/%2&s/utxo";
 	private static final String RAWTX_URL = "http://%1&s/insight-api/rawtx/%2&s";
 
 	private String insightApiHost;
-	
+
 	public InsightApiBlockChainDAOImpl(String insightApiHost) {
 		this.insightApiHost = insightApiHost;
 	}
-	
+
 	@Override
-	public AddressInfo retrieveAddressInfo(String address) throws Exception {
-		
-		URL url = new URL(ADDR_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
-		
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		
-		// optional default is GET
-		connection.setRequestMethod("GET");
+	public AddressInfo retrieveAddressInfo(String address) throws BlockChainException {
 
-		//add request header
-		connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+		try {
+			URL url = new URL(ADDR_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
 
-		if (200 == connection.getResponseCode()) {
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String inputLine;
-			StringBuilder response = new StringBuilder();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
+			// optional default is GET
+			connection.setRequestMethod("GET");
+
+			// add request header
+			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+
+			if (200 == connection.getResponseCode()) {
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuilder response = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+
+				in.close();
+
+				return addressFromJsonString(response.toString());
+
+			} else {
+
+				return null;
+
 			}
-			
-			in.close();
-			
-			
-			return addressFromJsonString(response.toString());
-			
-		} else {
-		
-			return null;
-		
+
+		} catch (MalformedURLException ex) {
+
+			throw new BlockChainException("Exception", ex);
+
+		} catch (IOException ex) {
+
+			throw new BlockChainException("Exception", ex);
+
 		}
-		
+
 	}
-	
+
 	private static AddressInfo addressFromJsonString(String string) throws JSONException {
 
 		AddressInfo addressInfo = new AddressInfo();
@@ -73,33 +87,23 @@ public class InsightApiBlockChainDAOImpl implements BlockChainDAO {
 		addressInfo.setTotalReceived(jsonMessage.getLong("totalReceivedSat"));
 		addressInfo.setTotalSent(jsonMessage.getLong("totalSentSat"));
 		addressInfo.setUnconfirmedBalance(jsonMessage.getLong("unconfirmedBalanceSat"));
-		
+
 		return addressInfo;
 
 	}
-	
-	public static void main(String[] args) throws Exception {
-		
-		InsightApiBlockChainDAOImpl blockChainDAOImpl = new InsightApiBlockChainDAOImpl("explorer.uniquid.co:3001");
-		
-		Collection<Utxo> utxo = blockChainDAOImpl.retrieveUtxo("moJ6LK1BZTvLPhA1XFefMmKCH3YGrdSegm");
-		
-		System.out.println();
-		
-	}
-	
+
 	private static Collection<Utxo> utxosFromJsonString(String string) throws JSONException {
 
 		Collection<Utxo> collection = new ArrayList<Utxo>();
-		
+
 		JSONArray jsonMessage = new JSONArray(string);
-		
+
 		int elements = jsonMessage.length();
-		
+
 		for (int i = 0; i < elements; i++) {
-			
+
 			Utxo utxo = new Utxo();
-			
+
 			JSONObject object = jsonMessage.getJSONObject(i);
 
 			utxo.setAddress(object.getString("address"));
@@ -117,81 +121,104 @@ public class InsightApiBlockChainDAOImpl implements BlockChainDAO {
 	}
 
 	@Override
-	public Collection<Utxo> retrieveUtxo(String address) throws Exception {
-		
-		URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
-		
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		
-		// optional default is GET
-		connection.setRequestMethod("GET");
+	public Collection<Utxo> retrieveUtxo(String address) throws BlockChainException {
 
-		//add request header
-		connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+		try {
 
-		if (200 == connection.getResponseCode()) {
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String inputLine;
-			StringBuilder response = new StringBuilder();
+			URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
 
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			// optional default is GET
+			connection.setRequestMethod("GET");
+
+			// add request header
+			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+
+			if (200 == connection.getResponseCode()) {
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuilder response = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+
+				in.close();
+
+				return utxosFromJsonString(response.toString());
+
+			} else {
+
+				return null;
+
 			}
-			
-			in.close();
-			
-			return utxosFromJsonString(response.toString());
-			
-		} else {
-		
-			return null;
-		
+
+		} catch (MalformedURLException ex) {
+
+			throw new BlockChainException("Exception", ex);
+
+		} catch (IOException ex) {
+
+			throw new BlockChainException("Exception", ex);
+
 		}
 	}
-	
+
 	private static String rawtxFromJsonString(String string) throws JSONException {
 
 		JSONObject jsonMessage = new JSONObject(string);
-		
+
 		String rawtx = jsonMessage.getString("rawtx");
-		
+
 		return rawtx;
 
 	}
 
 	@Override
-	public String retrieveRawTx(String txid) throws Exception {
-		
-		URL url = new URL(RAWTX_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
-		
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		
-		// optional default is GET
-		connection.setRequestMethod("GET");
+	public String retrieveRawTx(String txid) throws BlockChainException {
 
-		//add request header
-		connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+		try {
+			URL url = new URL(RAWTX_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
 
-		if (200 == connection.getResponseCode()) {
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String inputLine;
-			StringBuilder response = new StringBuilder();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
+			// optional default is GET
+			connection.setRequestMethod("GET");
+
+			// add request header
+			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+
+			if (200 == connection.getResponseCode()) {
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuilder response = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+
+				in.close();
+
+				return rawtxFromJsonString(response.toString());
+
+			} else {
+
+				return null;
+
 			}
-			
-			in.close();
-			
-			return rawtxFromJsonString(response.toString());
-			
-		} else {
-		
-			return null;
-		
+
+		} catch (MalformedURLException ex) {
+
+			throw new BlockChainException("Exception", ex);
+
+		} catch (IOException ex) {
+
+			throw new BlockChainException("Exception", ex);
+
 		}
 	}
-	
+
 }

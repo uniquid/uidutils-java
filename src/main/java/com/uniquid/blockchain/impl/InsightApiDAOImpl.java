@@ -70,12 +70,16 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 		} catch (MalformedURLException ex) {
 
-			throw new BlockChainException("Exception", ex);
+			throw new BlockChainException("Exception Accessing URL", ex);
 
 		} catch (IOException ex) {
 
-			throw new BlockChainException("Exception", ex);
+			throw new BlockChainException("Exception while I/O", ex);
 
+		} catch (Throwable t) {
+			
+			throw new BlockChainException("Unexpected Exception", t);
+			
 		}
 
 	}
@@ -149,7 +153,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 				}
 
 				in.close();
-
+				
 				return utxosFromJsonString(response.toString());
 
 			} else {
@@ -160,12 +164,16 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 		} catch (MalformedURLException ex) {
 
-			throw new BlockChainException("Exception", ex);
+			throw new BlockChainException("Exception Accessing URL", ex);
 
 		} catch (IOException ex) {
 
-			throw new BlockChainException("Exception", ex);
+			throw new BlockChainException("Exception while I/O", ex);
 
+		} catch (Throwable t) {
+			
+			throw new BlockChainException("Unexpected Exception", t);
+			
 		}
 	}
 
@@ -215,12 +223,16 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 		} catch (MalformedURLException ex) {
 
-			throw new BlockChainException("Exception", ex);
+			throw new BlockChainException("Exception Accessing URL", ex);
 
 		} catch (IOException ex) {
 
-			throw new BlockChainException("Exception", ex);
+			throw new BlockChainException("Exception while I/O", ex);
 
+		} catch (Throwable t) {
+			
+			throw new BlockChainException("Unexpected Exception", t);
+			
 		}
 	}
 

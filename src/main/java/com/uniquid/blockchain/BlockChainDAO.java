@@ -20,10 +20,7 @@ public interface BlockChainDAO {
 	public Collection<Utxo> retrieveUtxo(String address) throws BlockChainException;
 	
 	/**
-	 * 
-	 * @param txid
-	 * @return
-	 * @throws Exception
+	 * Retrieve the raw transaction from a transaction id
 	 */
 	public String retrieveRawTx(String txid) throws BlockChainException;
 

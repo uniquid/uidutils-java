@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 
 public class AddressUtils {
 	
-	public static Address getNextUserAddress(final String pubKey, final NetworkParameters networkParameters,
+	public static Address getNextUserExternalAddress(final String pubKey, final NetworkParameters networkParameters,
 			final int userIndex) {
 		
 		DeterministicKey deterministicKey = DeterministicKey.deserializeB58(pubKey, networkParameters);
@@ -62,7 +62,7 @@ public class AddressUtils {
 		
 	}
 	
-	public static Address getNextProviderAddress(final String pubKey, final NetworkParameters networkParameters,
+	public static Address getNextProviderExternalAddress(final String pubKey, final NetworkParameters networkParameters,
 			final int providerIndex) {
 		
 		DeterministicKey deterministicKey = DeterministicKey.deserializeB58(pubKey, networkParameters);

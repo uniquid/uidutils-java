@@ -23,5 +23,10 @@ public interface BlockChainDAO {
 	 * Retrieve the raw transaction from a transaction id
 	 */
 	public String retrieveRawTx(String txid) throws BlockChainException;
+	
+	/**
+	 * Send a raw tx to the network
+	 */
+	public String sendTx(String rawtx) throws BlockChainException;
 
 }

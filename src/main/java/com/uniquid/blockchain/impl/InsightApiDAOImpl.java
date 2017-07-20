@@ -27,6 +27,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 	private static final String ADDR_URL = "http://%1&s/insight-api/addr/%2&s";
 	private static final String UTXOS_URL = "http://%1&s/insight-api/addr/%2&s/utxo";
 	private static final String RAWTX_URL = "http://%1&s/insight-api/rawtx/%2&s";
+	private static final String SENDTX_URL = "http://%1&s/insight-api/tx/send";
 
 	private String insightApiHost;
 
@@ -218,6 +219,83 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 			} else {
 
 				return null;
+
+			}
+
+		} catch (MalformedURLException ex) {
+
+			throw new BlockChainException("Exception Accessing URL", ex);
+
+		} catch (IOException ex) {
+
+			throw new BlockChainException("Exception while I/O", ex);
+
+		} catch (Throwable t) {
+			
+			throw new BlockChainException("Unexpected Exception", t);
+			
+		}
+	}
+	
+	private static String txidFromJsonString(String string) throws JSONException {
+
+		JSONObject jsonMessage = new JSONObject(string);
+
+		String txid = jsonMessage.getString("txid");
+
+		return txid;
+
+	}
+
+	@Override
+	public String sendTx(String rawtx) throws BlockChainException {
+		
+		try {
+			
+			JSONObject jsonMessage = new JSONObject();
+
+			jsonMessage.put("rawtx", rawtx);
+			
+			byte[] postDataBytes = jsonMessage.toString().getBytes("UTF-8");
+
+			URL url = new URL(SENDTX_URL.replace("%1&s", insightApiHost));
+
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			// optional default is GET
+			connection.setRequestMethod("POST");
+
+			// add request header
+			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+			
+			connection.setRequestProperty("Content-Type", "application/json");
+			
+			connection.setRequestProperty("Charset", "utf-8");
+			
+			connection.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+			
+			connection.setDoOutput(true);
+			
+			connection.getOutputStream().write(postDataBytes);
+
+			if (200 == connection.getResponseCode()) {
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuilder response = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+
+				in.close();
+
+				return txidFromJsonString(response.toString());
+
+			} else {
+				
+				throw new BlockChainException("Error while submitting tx: " + connection.getResponseCode() + " " +
+						connection.getResponseMessage());
 
 			}
 

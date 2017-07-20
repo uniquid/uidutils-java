@@ -159,7 +159,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 			} else {
 
-				return null;
+				return new ArrayList<Utxo>();
 
 			}
 

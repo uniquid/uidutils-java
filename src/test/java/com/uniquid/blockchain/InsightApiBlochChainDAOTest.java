@@ -1,4 +1,4 @@
-package com.uniquid.settings;
+package com.uniquid.blockchain;
 
 import java.util.Collection;
 

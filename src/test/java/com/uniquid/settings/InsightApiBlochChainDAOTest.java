@@ -14,7 +14,7 @@ public class InsightApiBlochChainDAOTest {
 	@Test
 	public void test() throws Exception {
 
-		InsightApiDAOImpl blockChainDAOImpl = new InsightApiDAOImpl("explorer.uniquid.co:3001");
+		InsightApiDAOImpl blockChainDAOImpl = new InsightApiDAOImpl("http://explorer.uniquid.co:3001");
 
 		Collection<Utxo> utxo = blockChainDAOImpl.retrieveUtxo("moJ6LK1BZTvLPhA1XFefMmKCH3YGrdSegm");
 

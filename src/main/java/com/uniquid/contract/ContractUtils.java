@@ -10,8 +10,6 @@ import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.crypto.TransactionSignature;
 import org.bitcoinj.script.ScriptBuilder;
 
-import com.uniquid.params.UniquidRegTest;
-
 public class ContractUtils {
 	
 	public static final Coin FEE = Coin.COIN.divide(10000); /* 0,0001 */
@@ -27,7 +25,7 @@ public class ContractUtils {
 	 *  call this with the transactionoutput
 	 * 
 	 */
-	public static Transaction buildAccessContract(final String userAddress, final String revokeAddress, final String changeAddress, final TransactionOutput prevOut, BitSet bitSet) throws Exception {
+	public static Transaction buildAccessContract(final String userAddress, final String revokeAddress, final String changeAddress, final TransactionOutput prevOut, BitSet bitSet, NetworkParameters networkParameters) throws Exception {
 		
 		Coin coinValue = Coin.COIN.divide(100000).multiply(95); /* 0,00095 */
 		
@@ -35,8 +33,6 @@ public class ContractUtils {
 		
 		final Coin FEE = Coin.COIN.divide(100000).multiply(5); /* 0,00005 */
 		
-		final NetworkParameters networkParameters = UniquidRegTest.get();
-
         final Transaction transaction = new Transaction(networkParameters);
         
         if (userAddress != null) {
@@ -106,7 +102,7 @@ public class ContractUtils {
 	/*
 	 * Revoke a contract sending back to provider the coin
 	 */
-	public static Transaction buildRevokeContract(final String providerAddress, final TransactionOutput prevOut) throws Exception {
+	public static Transaction buildRevokeContract(final String providerAddress, final TransactionOutput prevOut, NetworkParameters networkParameters) throws Exception {
 		
 		
 		final Coin FEE = Coin.COIN.divide(100000).multiply(5); /* 0,00005 */
@@ -115,8 +111,6 @@ public class ContractUtils {
 		
 		Coin totalCoinOut = Coin.ZERO;
 		
-		final NetworkParameters networkParameters = UniquidRegTest.get();
-
         final Transaction transaction = new Transaction(networkParameters);
         
         if (providerAddress == null) {

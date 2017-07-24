@@ -20,6 +20,11 @@ public interface BlockChainDAO {
 	public Collection<Utxo> retrieveUtxo(String address) throws BlockChainException;
 	
 	/**
+	 * Retrieve a collection of utxo from an address
+	 */
+	public Collection<Utxo> retrieveUtxo(String address, int maxUtxo) throws BlockChainException;
+	
+	/**
 	 * Retrieve the raw transaction from a transaction id
 	 */
 	public String retrieveRawTx(String txid) throws BlockChainException;

@@ -5,64 +5,64 @@ package com.uniquid.blockchain;
  */
 public class AddressInfo {
 	
-	private long balance;
-	private long totalReceived;
-	private long totalSent;
-	private long unconfirmedBalance;
+	private double balance;
+	private double totalReceived;
+	private double totalSent;
+	private double unconfirmedBalance;
 	
 	/**
 	 * Returns the balance of the address
 	 */
-	public long getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 	
 	/**
 	 * Set the balance of the address
 	 */
-	public void setBalance(long balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 	
 	/**
 	 * Return the total received satoshi
 	 */
-	public long getTotalReceived() {
+	public double getTotalReceived() {
 		return totalReceived;
 	}
 	
 	/**
 	 * Set the total received satoshi
 	 */
-	public void setTotalReceived(long totalReceived) {
+	public void setTotalReceived(double totalReceived) {
 		this.totalReceived = totalReceived;
 	}
 	
 	/**
 	 * Return the total sent satoshi
 	 */
-	public long getTotalSent() {
+	public double getTotalSent() {
 		return totalSent;
 	}
 	
 	/**
 	 * Set the total sent satoshi
 	 */
-	public void setTotalSent(long totalSent) {
+	public void setTotalSent(double totalSent) {
 		this.totalSent = totalSent;
 	}
 	
 	/**
 	 * Return the unconfirmed
 	 */
-	public long getUnconfirmedBalance() {
+	public double getUnconfirmedBalance() {
 		return unconfirmedBalance;
 	}
 	
 	/**
 	 * Set the unconfirmed
 	 */
-	public void setUnconfirmedBalance(long unconfirmedBalance) {
+	public void setUnconfirmedBalance(double unconfirmedBalance) {
 		this.unconfirmedBalance = unconfirmedBalance;
 	}
 

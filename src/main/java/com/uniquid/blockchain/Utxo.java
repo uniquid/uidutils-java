@@ -9,7 +9,7 @@ public class Utxo {
 	private String txid;
 	private long vout;
 	private String scriptPubKey;
-	private long amount;
+	private double amount;
 	private long confirmation;
 	
 	/**
@@ -71,14 +71,14 @@ public class Utxo {
 	/**
 	 * Returns the amount of this utxo in satoshi
 	 */
-	public long getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
 	/**
 	 * Set the amount of this utxo in satoshi
 	 */
-	public void setAmount(long amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

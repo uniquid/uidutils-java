@@ -91,22 +91,24 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 		JSONObject jsonMessage = new JSONObject(string);
 
-		addressInfo.setBalance(jsonMessage.getLong("balanceSat"));
-		addressInfo.setTotalReceived(jsonMessage.getLong("totalReceivedSat"));
-		addressInfo.setTotalSent(jsonMessage.getLong("totalSentSat"));
-		addressInfo.setUnconfirmedBalance(jsonMessage.getLong("unconfirmedBalanceSat"));
+		addressInfo.setBalance(jsonMessage.getDouble("balance"));
+		addressInfo.setTotalReceived(jsonMessage.getDouble("totalReceived"));
+		addressInfo.setTotalSent(jsonMessage.getDouble("totalSent"));
+		addressInfo.setUnconfirmedBalance(jsonMessage.getDouble("unconfirmedBalance"));
 
 		return addressInfo;
 
 	}
 
-	private static Collection<Utxo> utxosFromJsonString(String string) throws JSONException {
+	private static Collection<Utxo> utxosFromJsonString(String string, int maxUtxos) throws JSONException {
 
 		Collection<Utxo> collection = new ArrayList<Utxo>();
 
 		JSONArray jsonMessage = new JSONArray(string);
 
 		int elements = jsonMessage.length();
+		
+		elements = (elements <= maxUtxos) ? elements : maxUtxos;
 
 		for (int i = 0; i < elements; i++) {
 
@@ -118,7 +120,35 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 			utxo.setTxid(object.getString("txid"));
 			utxo.setVout(object.getLong("vout"));
 			utxo.setScriptPubKey(object.getString("scriptPubKey"));
-			utxo.setAmount(object.getLong("satoshis"));
+			utxo.setAmount(object.getDouble("amount"));
+			utxo.setConfirmation(object.getLong("confirmations"));
+
+			collection.add(utxo);
+		}
+
+		return collection;
+
+	}
+	
+	private static Collection<Utxo> utxosFromJsonString(String string) throws JSONException {
+
+		Collection<Utxo> collection = new ArrayList<Utxo>();
+
+		JSONArray jsonMessage = new JSONArray(string);
+
+		int elements = jsonMessage.length();
+		
+		for (int i = 0; i < elements; i++) {
+
+			Utxo utxo = new Utxo();
+
+			JSONObject object = jsonMessage.getJSONObject(i);
+
+			utxo.setAddress(object.getString("address"));
+			utxo.setTxid(object.getString("txid"));
+			utxo.setVout(object.getLong("vout"));
+			utxo.setScriptPubKey(object.getString("scriptPubKey"));
+			utxo.setAmount(object.getDouble("amount"));
 			utxo.setConfirmation(object.getLong("confirmations"));
 
 			collection.add(utxo);
@@ -156,6 +186,56 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 				in.close();
 				
 				return utxosFromJsonString(response.toString());
+
+			} else {
+
+				return new ArrayList<Utxo>();
+
+			}
+
+		} catch (MalformedURLException ex) {
+
+			throw new BlockChainException("Exception Accessing URL", ex);
+
+		} catch (IOException ex) {
+
+			throw new BlockChainException("Exception while I/O", ex);
+
+		} catch (Throwable t) {
+			
+			throw new BlockChainException("Unexpected Exception", t);
+			
+		}
+	}
+	
+	@Override
+	public Collection<Utxo> retrieveUtxo(String address, int maxUtxo) throws BlockChainException {
+		
+		try {
+
+			URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
+
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			// optional default is GET
+			connection.setRequestMethod("GET");
+
+			// add request header
+			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+
+			if (200 == connection.getResponseCode()) {
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuilder response = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+
+				in.close();
+				
+				return utxosFromJsonString(response.toString(), maxUtxo);
 
 			} else {
 

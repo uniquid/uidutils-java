@@ -21,7 +21,7 @@ public class InsightApiBlochChainDAOTest {
 		AddressInfo addressInfo = blockChainDAOImpl.retrieveAddressInfo("moJ6LK1BZTvLPhA1XFefMmKCH3YGrdSegm");
 		
 		Assert.assertNotNull(addressInfo);
-		Assert.assertEquals(addressInfo.getBalance(), 805000);
+		Assert.assertEquals(addressInfo.getBalance(), 0.00805);
 		
 		AddressInfo addressInfo2 = blockChainDAOImpl.retrieveAddressInfo("1Nro9WkpaKm9axmcfPVp79dAJU1Gx7VmMZ");
 		
@@ -36,6 +36,16 @@ public class InsightApiBlochChainDAOTest {
 		
 		Assert.assertNotNull(utxo2);
 		Assert.assertEquals(0, utxo2.size());
+		
+		Collection<Utxo> utxo3 = blockChainDAOImpl.retrieveUtxo("mzRR13McMm1Eh3LbrwaXgWLVRsCsMTVfUa");
+		
+		Assert.assertNotNull(utxo3);
+		Assert.assertEquals(4, utxo3.size());
+		
+		utxo3 = blockChainDAOImpl.retrieveUtxo("mzRR13McMm1Eh3LbrwaXgWLVRsCsMTVfUa", 1);
+		
+		Assert.assertNotNull(utxo3);
+		Assert.assertEquals(1, utxo3.size());
 		
 		String rawTx = blockChainDAOImpl.retrieveRawTx(utxo.iterator().next().getTxid());
 		

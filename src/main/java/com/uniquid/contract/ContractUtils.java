@@ -1,6 +1,8 @@
 package com.uniquid.contract;
 
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
@@ -13,7 +15,8 @@ import org.bitcoinj.script.ScriptBuilder;
 public class ContractUtils {
 	
 	public static final Coin FEE = Coin.COIN.divide(10000); /* 0,0001 */
-	public static final Coin IMPRINT_COIN_VALUE = Coin.CENT;
+	public static final Coin IMPRINT_COIN_VALUE = Coin.CENT; /*0,01 */
+	public static final Coin COIN_OUTPUT = Coin.COIN.divide(10000); /* 0,0001 */
 	
 	/*
 	 * 1 - call http://explorer.uniquid.co:3001/insight-api/addr/moJ6LK1BZTvLPhA1XFefMmKCH3YGrdSegm/utxo
@@ -27,11 +30,19 @@ public class ContractUtils {
 	 */
 	public static Transaction buildAccessContract(final String userAddress, final String revokeAddress, final String changeAddress, final TransactionOutput prevOut, BitSet bitSet, NetworkParameters networkParameters) throws Exception {
 		
-		Coin coinValue = Coin.COIN.divide(100000).multiply(95); /* 0,00095 */
+		ArrayList<TransactionOutput> inputs = new ArrayList<TransactionOutput>();
+		
+		inputs.add(prevOut);
+		
+		return buildAccessContract(userAddress, revokeAddress, changeAddress, inputs, bitSet, networkParameters);
+
+	}
+	
+	public static Transaction buildAccessContract(final String userAddress, final String revokeAddress, final String changeAddress, final List<TransactionOutput> inputs, BitSet bitSet, NetworkParameters networkParameters) throws Exception {
+		
+		Coin coinValue = COIN_OUTPUT;
 		
 		Coin totalCoinOut = Coin.ZERO;
-		
-		final Coin FEE = Coin.COIN.divide(100000).multiply(5); /* 0,00005 */
 		
         final Transaction transaction = new Transaction(networkParameters);
         
@@ -80,14 +91,18 @@ public class ContractUtils {
         
         TransactionOutput outputChange = null;
         try {
-
-            final Coin change = IMPRINT_COIN_VALUE.subtract(totalCoinOut);
+        	
+    		final Coin change = sum(inputs).subtract(totalCoinOut);
             
 			outputChange = new TransactionOutput(networkParameters, transaction, change, Address.fromBase58(networkParameters, changeAddress));
             transaction.addOutput(outputChange);
 			
 			// Connect all input
-        	transaction.addInput(prevOut).setScriptSig(ScriptBuilder.createInputScript(TransactionSignature.dummy()));
+            for (TransactionOutput input : inputs) {
+            	
+            	transaction.addInput(input).setScriptSig(ScriptBuilder.createInputScript(TransactionSignature.dummy()));
+            	
+            }
             	
         	return transaction;
 
@@ -99,14 +114,25 @@ public class ContractUtils {
 
 	}
 	
+	private static Coin sum(List<TransactionOutput> outputs) {
+		
+		Coin sum = Coin.ZERO;
+		
+		for (TransactionOutput out : outputs) {
+			
+			sum = sum.add(out.getValue());
+			
+		}
+		
+		return sum;
+		
+	}
+	
 	/*
 	 * Revoke a contract sending back to provider the coin
 	 */
 	public static Transaction buildRevokeContract(final String providerAddress, final TransactionOutput prevOut, NetworkParameters networkParameters) throws Exception {
 		
-		
-		final Coin FEE = Coin.COIN.divide(100000).multiply(5); /* 0,00005 */
-
 		Coin coinValue = prevOut.getValue().subtract(FEE);
 		
 		Coin totalCoinOut = Coin.ZERO;

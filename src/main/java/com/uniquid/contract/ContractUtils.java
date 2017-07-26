@@ -131,7 +131,19 @@ public class ContractUtils {
 	/*
 	 * Revoke a contract sending back to provider the coin
 	 */
-	public static Transaction buildRevokeContract(final String providerAddress, final TransactionOutput prevOut, NetworkParameters networkParameters) throws Exception {
+	public static Transaction buildRevokeContract(final String providerAddress, final String userAddress, final TransactionOutput prevOut, NetworkParameters networkParameters) throws Exception {
+		
+		if (providerAddress == null) {
+			
+			throw new Exception("Provider address is null");
+			
+		}
+		
+		if (userAddress == null) {
+			
+			throw new Exception("User address is null");
+			
+		}
 		
 		Coin coinValue = prevOut.getValue().subtract(FEE);
 		
@@ -139,15 +151,13 @@ public class ContractUtils {
 		
         final Transaction transaction = new Transaction(networkParameters);
         
-        if (providerAddress == null) {
-        	
-        	 throw new Exception("Provider address is null");
-        	
-        }
-        
         // provider output
-        TransactionOutput outputToProvider = new TransactionOutput(networkParameters, transaction, coinValue, Address.fromBase58(networkParameters, providerAddress));
+        TransactionOutput outputToProvider = new TransactionOutput(networkParameters, transaction, coinValue.divide(2), Address.fromBase58(networkParameters, providerAddress));
         transaction.addOutput(outputToProvider);
+        
+        // user output
+        TransactionOutput outputToUser = new TransactionOutput(networkParameters, transaction, coinValue.divide(2), Address.fromBase58(networkParameters, userAddress));
+        transaction.addOutput(outputToUser);
         
         // add value
         totalCoinOut = totalCoinOut.add(coinValue);

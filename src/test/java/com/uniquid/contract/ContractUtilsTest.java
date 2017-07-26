@@ -34,12 +34,13 @@ public class ContractUtilsTest {
 
 		Transaction revoke = ContractUtils.buildRevokeContract(
 				"mggtDLwsHpWPB1Y7tKh9G665jJgLUbGiQQ",
+				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
 				originalTransaction.getOutput(2), TestNet3Params.get());
 
 		String revokeTx = new String(Hex.encode(revoke.bitcoinSerialize()));
 
 		Assert.assertEquals(
-				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7020000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff01084c0100000000001976a9140cd8e0eb6259627c4cdae4b03166bc4e9041947688ac00000000",
+				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7020000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff0204a60000000000001976a9140cd8e0eb6259627c4cdae4b03166bc4e9041947688ac04a60000000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
 				revokeTx);
 
 	}

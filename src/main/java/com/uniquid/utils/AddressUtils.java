@@ -12,8 +12,8 @@ import com.google.common.collect.ImmutableList;
 
 public class AddressUtils {
 	
-	public static Address getNextUserExternalAddress(final String pubKey, final NetworkParameters networkParameters,
-			final int userIndex) {
+	public static Address getUserExternalAddress(final String pubKey, final NetworkParameters networkParameters,
+			final long userIndex) {
 		
 		DeterministicKey deterministicKey = DeterministicKey.deserializeB58(pubKey, networkParameters);
 		DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(deterministicKey);
@@ -23,13 +23,13 @@ public class AddressUtils {
 			
 			/* M/44'/0' node tpub */
 			child = ImmutableList.of(new ChildNumber(0, false), new ChildNumber(1/*user*/, false),
-					new ChildNumber(0/*external*/, false), new ChildNumber(userIndex, false));
+					new ChildNumber(0/*external*/, false), new ChildNumber((int)userIndex, false));
 		
 		} else if (deterministicKey.getDepth() == 3) {
 			
 			/* M/44'/0'/X context tpub */
 			child = ImmutableList.of(new ChildNumber(1/*user*/, false),
-					new ChildNumber(0/*external*/, false), new ChildNumber(userIndex, false));
+					new ChildNumber(0/*external*/, false), new ChildNumber((int)userIndex, false));
 		}
 
 		DeterministicKey imprintingKey = deterministicHierarchy.get(child, true, true);
@@ -37,8 +37,8 @@ public class AddressUtils {
 		
 	}
 	
-	public static Address getNextUserInternalAddress(final String pubKey, final NetworkParameters networkParameters,
-			final int userIndex) {
+	public static Address getUserInternalAddress(final String pubKey, final NetworkParameters networkParameters,
+			final long userIndex) {
 		
 		DeterministicKey deterministicKey = DeterministicKey.deserializeB58(pubKey, networkParameters);
 		DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(deterministicKey);
@@ -48,13 +48,13 @@ public class AddressUtils {
 			
 			/* M/44'/0' node tpub */
 			child = ImmutableList.of(new ChildNumber(0, false), new ChildNumber(1/*user*/, false),
-					new ChildNumber(1/*internal*/, false), new ChildNumber(userIndex, false));
+					new ChildNumber(1/*internal*/, false), new ChildNumber((int)userIndex, false));
 		
 		} else if (deterministicKey.getDepth() == 3) {
 			
 			/* M/44'/0'/X context tpub */
 			child = ImmutableList.of(new ChildNumber(1/*user*/, false),
-					new ChildNumber(1/*internal*/, false), new ChildNumber(userIndex, false));
+					new ChildNumber(1/*internal*/, false), new ChildNumber((int)userIndex, false));
 		}
 
 		DeterministicKey imprintingKey = deterministicHierarchy.get(child, true, true);
@@ -62,8 +62,8 @@ public class AddressUtils {
 		
 	}
 	
-	public static Address getNextProviderExternalAddress(final String pubKey, final NetworkParameters networkParameters,
-			final int providerIndex) {
+	public static Address getProviderExternalAddress(final String pubKey, final NetworkParameters networkParameters,
+			final long providerIndex) {
 		
 		DeterministicKey deterministicKey = DeterministicKey.deserializeB58(pubKey, networkParameters);
 		DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(deterministicKey);
@@ -73,13 +73,13 @@ public class AddressUtils {
 			
 			/* M/44'/0' node tpub */
 			child = ImmutableList.of(new ChildNumber(0, false), new ChildNumber(0/*provider*/, false),
-					new ChildNumber(/*external*/0, false), new ChildNumber(providerIndex, false));
+					new ChildNumber(/*external*/0, false), new ChildNumber((int)providerIndex, false));
 		
 		} else if (deterministicKey.getDepth() == 3) {
 			
 			/* M/44'/0'/X context tpub */
 			child = ImmutableList.of(new ChildNumber(0/*provider*/, false),
-					new ChildNumber(/*external*/0, false), new ChildNumber(providerIndex, false));
+					new ChildNumber(/*external*/0, false), new ChildNumber((int)providerIndex, false));
 		}
 
 		DeterministicKey imprintingKey = deterministicHierarchy.get(child, true, true);
@@ -87,8 +87,8 @@ public class AddressUtils {
 		
 	}
 	
-	public static Address getNextProviderInternalAddress(final String pubKey, final NetworkParameters networkParameters,
-			final int providerIndex) {
+	public static Address getProviderInternalAddress(final String pubKey, final NetworkParameters networkParameters,
+			final long providerIndex) {
 		
 		DeterministicKey deterministicKey = DeterministicKey.deserializeB58(pubKey, networkParameters);
 		DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(deterministicKey);
@@ -98,13 +98,13 @@ public class AddressUtils {
 			
 			/* M/44'/0' node tpub */
 			child = ImmutableList.of(new ChildNumber(0, false), new ChildNumber(0/*provider*/, false),
-					new ChildNumber(1/*internal*/, false), new ChildNumber(providerIndex, false));
+					new ChildNumber(1/*internal*/, false), new ChildNumber((int)providerIndex, false));
 		
 		} else if (deterministicKey.getDepth() == 3) {
 			
 			/* M/44'/0'/X context tpub */
 			child = ImmutableList.of(new ChildNumber(0/*provider*/, false),
-					new ChildNumber(1/*internal*/, false), new ChildNumber(providerIndex, false));
+					new ChildNumber(1/*internal*/, false), new ChildNumber((int)providerIndex, false));
 		}
 
 		DeterministicKey imprintingKey = deterministicHierarchy.get(child, true, true);

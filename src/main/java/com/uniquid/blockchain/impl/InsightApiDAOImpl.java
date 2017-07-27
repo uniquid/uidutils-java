@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.uniquid.blockchain.AddressInfo;
 import com.uniquid.blockchain.BlockChainDAO;
+import com.uniquid.blockchain.Transaction;
 import com.uniquid.blockchain.Utxo;
 import com.uniquid.blockchain.exception.BlockChainException;
 
@@ -27,6 +29,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 	private static final String ADDR_URL = "%1&s/insight-api/addr/%2&s";
 	private static final String UTXOS_URL = "%1&s/insight-api/addr/%2&s/utxo";
 	private static final String RAWTX_URL = "%1&s/insight-api/rawtx/%2&s";
+	private static final String TRANSACTION_URL = "%1&s/insight-api/tx/%2&s";
 	private static final String SENDTX_URL = "%1&s/insight-api/tx/send";
 
 	private String insightApiHost;
@@ -295,6 +298,101 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 				in.close();
 
 				return rawtxFromJsonString(response.toString());
+
+			} else {
+
+				return null;
+
+			}
+
+		} catch (MalformedURLException ex) {
+
+			throw new BlockChainException("Exception Accessing URL", ex);
+
+		} catch (IOException ex) {
+
+			throw new BlockChainException("Exception while I/O", ex);
+
+		} catch (Throwable t) {
+			
+			throw new BlockChainException("Unexpected Exception", t);
+			
+		}
+	}
+	
+	private static Transaction transactionFromJsonString(String string) throws JSONException {
+
+		JSONObject jsonMessage = new JSONObject(string);
+
+		String txid = jsonMessage.getString("txid");
+		
+		long version = jsonMessage.getLong("version");
+		
+		long confirmations = jsonMessage.getLong("confirmations");
+		
+		long time = jsonMessage.getLong("time");
+		
+		String spentTxId = null;
+		
+		JSONArray vouts = jsonMessage.getJSONArray("vout");
+		
+		Iterator<Object> iterator = vouts.iterator();
+		
+		while (iterator.hasNext()) {
+			
+			JSONObject vout = (JSONObject) iterator.next();
+			
+			if (vout.getLong("n") == 2) {
+				
+				if (!vout.isNull("spentTxId")) {
+					
+					spentTxId = vout.getString("spentTxId");
+
+				}
+				
+			}
+			
+		}
+
+		Transaction transaction = new Transaction();
+		
+		transaction.setTxid(txid);
+		transaction.setVersion(version);
+		transaction.setConfirmations(confirmations);
+		transaction.setTime(time);
+		transaction.setSpentTxId(spentTxId);
+		
+		return transaction;
+
+	}
+	
+	@Override
+	public Transaction retrieveTransaction(String txid) throws BlockChainException {
+		
+		try {
+			URL url = new URL(TRANSACTION_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
+
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			// optional default is GET
+			connection.setRequestMethod("GET");
+
+			// add request header
+			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
+
+			if (200 == connection.getResponseCode()) {
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuilder response = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+
+				in.close();
+
+				return transactionFromJsonString(response.toString());
 
 			} else {
 

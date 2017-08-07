@@ -60,7 +60,7 @@ public class RegistryDAOImpl implements RegistryDAO {
 
 			connection.getOutputStream().write(postDataBytes);
 
-			if (200 == connection.getResponseCode()) {
+			if (201 == connection.getResponseCode()) {
 
 				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String inputLine;

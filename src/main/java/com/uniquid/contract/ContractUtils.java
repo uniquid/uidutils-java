@@ -149,14 +149,16 @@ public class ContractUtils {
 		
 		Coin totalCoinOut = Coin.ZERO;
 		
+		Coin coinDivided = Coin.valueOf(coinValue.getValue() / 2);
+		
         final Transaction transaction = new Transaction(networkParameters);
         
         // provider output
-        TransactionOutput outputToProvider = new TransactionOutput(networkParameters, transaction, coinValue.divide(2), Address.fromBase58(networkParameters, providerAddress));
+        TransactionOutput outputToProvider = new TransactionOutput(networkParameters, transaction, coinDivided, Address.fromBase58(networkParameters, providerAddress));
         transaction.addOutput(outputToProvider);
         
         // user output
-        TransactionOutput outputToUser = new TransactionOutput(networkParameters, transaction, coinValue.divide(2), Address.fromBase58(networkParameters, userAddress));
+        TransactionOutput outputToUser = new TransactionOutput(networkParameters, transaction, coinDivided, Address.fromBase58(networkParameters, userAddress));
         transaction.addOutput(outputToUser);
         
         // add value

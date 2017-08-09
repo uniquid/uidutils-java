@@ -336,11 +336,10 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 		
 		JSONArray vouts = jsonMessage.getJSONArray("vout");
 		
-		Iterator<Object> iterator = vouts.iterator();
-		
-		while (iterator.hasNext()) {
+		// avoid use of iterator because on Android we don't have this method!
+		for (int i = 0; i < vouts.length(); i++) {
 			
-			JSONObject vout = (JSONObject) iterator.next();
+			JSONObject vout = (JSONObject) vouts.get(i);
 			
 			if (vout.getLong("n") == 2) {
 				
@@ -353,7 +352,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 			}
 			
 		}
-
+		
 		Transaction transaction = new Transaction();
 		
 		transaction.setTxid(txid);

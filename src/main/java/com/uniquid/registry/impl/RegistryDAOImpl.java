@@ -12,8 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.uniquid.blockchain.AddressInfo;
-import com.uniquid.blockchain.exception.BlockChainException;
 import com.uniquid.registry.RegistryDAO;
 import com.uniquid.registry.exception.RegistryException;
 
@@ -172,14 +170,4 @@ public class RegistryDAOImpl implements RegistryDAO {
 		
 	}
 	
-	public static void main(String[] args) throws Exception {
-		
-		RegistryDAOImpl i = new RegistryDAOImpl("http://appliance4.uniquid.co:8080");
-		
-		String a = i.retrieveProviderName("n2PFqZKd3XfbgKQwkV5jJ1Je1pj114U4LJ");
-		
-		System.out.println(a);
-		
-	}
-
 }

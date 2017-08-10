@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import com.uniquid.registry.exception.RegistryException;
 import com.uniquid.registry.impl.RegistryDAOImpl;
 
 import junit.framework.Assert;
@@ -30,6 +31,13 @@ public class RegistryDAOImplTest {
 		provider = registryDao.retrieveProviderName(String.valueOf(randomLong));
 		
 		Assert.assertEquals("Provider_" + randomLong, provider);
+		
+		try {
+			registryDao.insertMapping("Provider_" + randomLong, String.valueOf(randomLong));
+			Assert.fail();
+		} catch (RegistryException ex) {
+			// expected
+		}
 		
 	}
 

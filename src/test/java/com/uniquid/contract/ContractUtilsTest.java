@@ -22,17 +22,74 @@ public class ContractUtilsTest {
 		bitSet.set(30);
 		bitSet.set(33);
 
-		Transaction contract = ContractUtils.buildAccessContract("mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt", "mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
+		Transaction contract = null;
+		
+		contract = ContractUtils.buildAccessContract(
+				null,
+				"mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
+				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
+				originalTransaction.getOutput(3), bitSet, TestNet3Params.get());
+		
+		String contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
+		
+		Assert.assertEquals(
+				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff030000000000000000536a4c50000000004002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac68fa0b00000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
+				contractTx);
+		
+		contract = ContractUtils.buildAccessContract(
+				"mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
+				"mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
+				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
+				originalTransaction.getOutput(3), null, TestNet3Params.get());
+		
+		contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
+		
+		Assert.assertEquals(
+				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff0310270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac10270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac58d30b00000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
+				contractTx);
+		
+		contract = ContractUtils.buildAccessContract("mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt", null,
 				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
 				originalTransaction.getOutput(3), bitSet, TestNet3Params.get());
 
-		String contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
+		contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
+
+		Assert.assertEquals(
+				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff0310270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac0000000000000000536a4c50000000004002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000068fa0b00000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
+				contractTx);
+		
+		contract = ContractUtils.buildAccessContract("mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt", "mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
+				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
+				originalTransaction.getOutput(3), bitSet, TestNet3Params.get());
+
+		contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
 
 		Assert.assertEquals(
 				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff0410270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac0000000000000000536a4c50000000004002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac58d30b00000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
 				contractTx);
 
-		Transaction revoke = ContractUtils.buildRevokeContract(
+		Transaction revoke = null;
+		try {
+			revoke = ContractUtils.buildRevokeContract(
+					null,
+					"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
+					originalTransaction.getOutput(2), TestNet3Params.get());
+			Assert.fail();
+		} catch (Exception e) {
+			//
+		}
+		
+		try {
+			revoke = ContractUtils.buildRevokeContract(
+					"mggtDLwsHpWPB1Y7tKh9G665jJgLUbGiQQ",
+					null,
+					originalTransaction.getOutput(2), TestNet3Params.get());
+			Assert.fail();
+		} catch (Exception e) {
+			//
+		}
+		
+		revoke = ContractUtils.buildRevokeContract(
 				"mggtDLwsHpWPB1Y7tKh9G665jJgLUbGiQQ",
 				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
 				originalTransaction.getOutput(2), TestNet3Params.get());

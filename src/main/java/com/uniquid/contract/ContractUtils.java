@@ -173,7 +173,7 @@ public class ContractUtils {
 
         } catch (Exception ex) {
 
-           throw new Exception("Exception while creating an imprinting contract", ex);
+           throw new Exception("Exception while building revoke contract", ex);
 
         }
 

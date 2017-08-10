@@ -32,6 +32,10 @@ public class InsightApiBlochChainDAOTest {
 		Assert.assertNotNull(utxo);
 		Assert.assertEquals(1, utxo.size());
 		
+		Transaction tx = blockChainDAOImpl.retrieveTransaction(utxo.iterator().next().getTxid());
+		
+		Assert.assertNotNull(tx);
+		
 		Collection<Utxo> utxo2 = blockChainDAOImpl.retrieveUtxo("1Nro9WkpaKm9axmcfPVp79dAJU1Gx7VmMZ");
 		
 		Assert.assertNotNull(utxo2);

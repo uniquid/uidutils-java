@@ -83,6 +83,7 @@ public class SeedUtils {
 		
 		System.out.println("Mnemonics: " + readData[0]);
 		System.out.println("Creation time: " + readData[1]);
+		System.out.println("Node name: " + readData[2]);
 	}
 
 }

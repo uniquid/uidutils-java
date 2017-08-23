@@ -1,17 +1,16 @@
 package com.uniquid.encryption;
 
+import java.nio.charset.Charset;
 import java.security.AlgorithmParameters;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.spongycastle.util.encoders.Base64;
 
 public class AESUtils {
 
@@ -50,8 +49,8 @@ public class AESUtils {
 
 		byte[] encVal = cipher.doFinal(data.getBytes());
 
-		result[0] = Base64.getEncoder().encodeToString(iv);
-		result[1] = Base64.getEncoder().encodeToString(encVal);
+		result[0] = new String(Base64.encode(iv), Charset.forName("UTF-8"));
+        result[1] = new String(Base64.encode(encVal), Charset.forName("UTF-8"));
 
 		return result;
 	}
@@ -69,10 +68,10 @@ public class AESUtils {
 
 		Cipher cipher = Cipher.getInstance(ENC_ALGO);
 
-		byte[] iv = Base64.getDecoder().decode(initialVector);
+		byte[] iv = Base64.decode(initialVector);
 
 		cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-		byte[] decordedValue = Base64.getDecoder().decode(encryptedData);
+		byte[] decordedValue = Base64.decode(encryptedData);
 		byte[] decValue = cipher.doFinal(decordedValue);
 		return new String(decValue);
 

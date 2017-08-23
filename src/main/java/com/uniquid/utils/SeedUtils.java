@@ -42,10 +42,12 @@ public class SeedUtils {
 
 		final String mnemonic = secureData.getString("mnemonic");
 		final int creationTime = secureData.getInt("creationTime");
+		final String name = secureData.getString("name");
 		
-		Object[] readData = new Object[2];
+		Object[] readData = new Object[3];
 		readData[0] = mnemonic;
 		readData[1] = creationTime;
+		readData[2] = name;
 		
 		return readData;
 		
@@ -56,6 +58,7 @@ public class SeedUtils {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("mnemonic", sensitiveData[0]);
 		jsonObject.put("creationTime", sensitiveData[1]);
+		jsonObject.put("name", sensitiveData[2]);
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(seedFile));
 		

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.uniquid.encryption.AESUtils;
@@ -18,7 +19,7 @@ public class SeedUtils {
 	}
 	
 	
-	public Object[] readData(String password) throws Exception {
+	public BackupData readData(String password) throws Exception {
 		
 		FileInputStream fis = new FileInputStream(seedFile);
 		
@@ -39,28 +40,33 @@ public class SeedUtils {
 		String decrypted = AESUtils.decrypt(encoded, iv, password);
 		
 		final JSONObject secureData = new JSONObject(decrypted);
-
-		final String mnemonic = secureData.getString("mnemonic");
-		final int creationTime = secureData.getInt("creationTime");
-		final String name = secureData.getString("name");
 		
-		Object[] readData = new Object[3];
-		readData[0] = mnemonic;
-		readData[1] = creationTime;
-		readData[2] = name;
-		
-		return readData;
+		return backupDataFromJSON(secureData);
 		
 	}
 	
-	public void saveData(Object[] sensitiveData, String password) throws Exception {
+	protected BackupData backupDataFromJSON(JSONObject secureData) throws JSONException {
+		final String mnemonic = secureData.getString("mnemonic");
+		final long creationTime = secureData.getLong("creationTime");
+		final String name = secureData.getString("name");
 		
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("mnemonic", sensitiveData[0]);
-		jsonObject.put("creationTime", sensitiveData[1]);
-		jsonObject.put("name", sensitiveData[2]);
+		BackupData backupData = createInstance();
+		backupData.setMnemonic(mnemonic);
+		backupData.setCreationTime(creationTime);
+		backupData.setName(name);
+		
+		return backupData;
+	}
+	
+	protected BackupData createInstance() {
+		return new BackupData();
+	}
+	
+	public void saveData(BackupData backupData, String password) throws Exception {		
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(seedFile));
+		
+		JSONObject jsonObject = backupDataToJSON(backupData);
 		
 		String[] encryptionResult = AESUtils.encrypt(jsonObject.toString(), password);
 		
@@ -76,14 +82,24 @@ public class SeedUtils {
 		
 	}
 	
+	protected JSONObject backupDataToJSON(BackupData backupData) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("mnemonic", backupData.getMnemonic());
+		jsonObject.put("creationTime", backupData.getCreationTime());
+		jsonObject.put("name", backupData.getName());
+		
+		return jsonObject;
+			
+	}
+	
 	public static void main(String[] args) throws Exception {
 		SeedUtils seedUtils = new SeedUtils(new File(args[0]));
 		
-		Object[] readData = seedUtils.readData(args[1]);
+		BackupData backupData = seedUtils.readData(args[1]);
 		
-		System.out.println("Mnemonics: " + readData[0]);
-		System.out.println("Creation time: " + readData[1]);
-		System.out.println("Node name: " + readData[2]);
+		System.out.println("Mnemonics: " + backupData.getMnemonic());
+		System.out.println("Creation time: " + backupData.getCreationTime());
+		System.out.println("Node name: " + backupData.getName());
 	}
 
 }

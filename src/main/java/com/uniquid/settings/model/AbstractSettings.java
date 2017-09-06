@@ -419,7 +419,7 @@ public abstract class AbstractSettings {
 						if (!excluded) {
 
 							// Log
-							LOGGER.info("found setting: " + setting);
+							LOGGER.debug("found setting: " + setting);
 
 							// Add setting
 							settings.put(setting.getKey(), setting);
@@ -427,7 +427,7 @@ public abstract class AbstractSettings {
 						} else {
 
 							// Log
-							LOGGER.info("ignore found setting since it is on excluded set: "
+							LOGGER.debug("ignore found setting since it is on excluded set: "
 									+ setting);
 
 						}

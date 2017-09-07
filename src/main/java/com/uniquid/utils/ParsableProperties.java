@@ -6,14 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Extension of Properties class that allows to perform a get and transform automatically the value to a primitive type 
+ * Extension of Properties class that allows to perform a get and transform
+ * automatically the value to a primitive type
  */
 public class ParsableProperties extends Properties {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ParsableProperties.class);
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Get value as boolean
 	 * 
@@ -39,7 +40,7 @@ public class ParsableProperties extends Properties {
 		return value;
 
 	}
-	
+
 	/**
 	 * Get value as boolean
 	 * 
@@ -88,7 +89,7 @@ public class ParsableProperties extends Properties {
 		return value;
 
 	}
-	
+
 	/**
 	 * Get as double
 	 * 
@@ -148,7 +149,7 @@ public class ParsableProperties extends Properties {
 		return value;
 
 	}
-	
+
 	/**
 	 * Get value as integer
 	 * 
@@ -204,7 +205,7 @@ public class ParsableProperties extends Properties {
 		return value;
 
 	}
-	
+
 	/**
 	 * Get a value as long
 	 * 
@@ -235,7 +236,7 @@ public class ParsableProperties extends Properties {
 		}
 
 	}
-	
+
 	/**
 	 * Get a value as string
 	 * 
@@ -257,7 +258,7 @@ public class ParsableProperties extends Properties {
 		return value;
 
 	}
-	
+
 	/**
 	 * Get a value as string
 	 * 
@@ -276,6 +277,70 @@ public class ParsableProperties extends Properties {
 
 			// Log
 			LOGGER.warn("unable to get value for key: " + key);
+
+			return null;
+
+		}
+
+	}
+
+	/**
+	 * Get value as enum
+	 * 
+	 * @param enumType
+	 * @param key
+	 * @return
+	 */
+	public Enum<?> getAsEnum(Class enumType, String key, Enum defaultValue) {
+
+		// Get value
+		String value = getProperty(key);
+
+		if (value == null) {
+			return defaultValue;
+		}
+
+		try {
+
+			// Parse to Enum
+			Enum enumValue = Enum.valueOf(enumType, value);
+
+			return enumValue;
+
+		} catch (Exception ex) {
+
+			// Log
+			LOGGER.warn("unable to get value for key: " + key + ": ", ex);
+
+			return null;
+
+		}
+
+	}
+
+	/**
+	 * Get value as enum
+	 * 
+	 * @param enumType
+	 * @param key
+	 * @return
+	 */
+	public Enum<?> getAsEnum(Class enumType, String key) {
+
+		// Get value
+		String value = getProperty(key);
+
+		try {
+
+			// Parse to Enum
+			Enum enumValue = Enum.valueOf(enumType, value);
+
+			return enumValue;
+
+		} catch (Exception ex) {
+
+			// Log
+			LOGGER.warn("unable to get value for key: " + key + ": ", ex);
 
 			return null;
 

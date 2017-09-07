@@ -9,7 +9,8 @@ public enum SettingType {
 	DOUBLE("DOUBLE", Double.class),
 	INTEGER("INTEGER", Integer.class),
 	LONG("LONG", Long.class),
-	STRING("STRING", String.class);
+	STRING("STRING", String.class),
+	ENUM("ENUM", Enum.class);
 	
 	private String id;
 	private Class<?> valueClass;

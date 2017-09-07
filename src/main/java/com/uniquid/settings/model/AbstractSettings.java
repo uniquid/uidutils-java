@@ -23,7 +23,7 @@ import com.uniquid.utils.ParsableProperties;
  * Abstract class for application settings.
  */
 public abstract class AbstractSettings {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSettings.class);
@@ -31,20 +31,20 @@ public abstract class AbstractSettings {
 	private final Map<String, Setting> settings;
 
 	private final List<SettingsListener> settingsListeners;
-	
+
 	private final ParsableProperties parsableProperties;
-	
+
 	/**
 	 * Create new settings using given settings store
 	 * 
 	 * @param settingsStore
 	 *            the settings store
-	 * @throws UnknownSettingException 
+	 * @throws UnknownSettingException
 	 */
 	public AbstractSettings() throws SettingValidationException, UnknownSettingException {
 		this(new Properties(), new HashSet<Setting>());
 	}
-	
+
 	public AbstractSettings(Properties properties) throws SettingValidationException, UnknownSettingException {
 		this(properties, new HashSet<Setting>());
 	}
@@ -56,59 +56,62 @@ public abstract class AbstractSettings {
 	 *            the settings store
 	 * @param excludedSettings
 	 *            a set of settings that should be excluded as {@link Setting}
-	 * @throws UnknownSettingException 
+	 * @throws UnknownSettingException
 	 */
-	public AbstractSettings(Properties properties, Set<Setting> excludedSettings) throws SettingValidationException, UnknownSettingException {
+	public AbstractSettings(Properties properties, Set<Setting> excludedSettings)
+			throws SettingValidationException, UnknownSettingException {
 
 		// Get settings
 		settings = getSettings(this.getClass(), excludedSettings);
 
 		settingsListeners = new ArrayList<SettingsListener>();
-		
+
 		parsableProperties = new ParsableProperties();
-		
+
 		loadFromPropertiesWithoutFireEvent(properties);
 
 	}
-	
+
 	/**
 	 * Load settings from properties
-	 * @throws UnknownSettingException 
+	 * 
+	 * @throws UnknownSettingException
 	 * 
 	 * @throws IOException
 	 */
-	private boolean loadFromPropertiesWithoutFireEvent(Properties properties) throws SettingValidationException, UnknownSettingException {
+	private boolean loadFromPropertiesWithoutFireEvent(Properties properties)
+			throws SettingValidationException, UnknownSettingException {
 
 		Set<String> keys = properties.stringPropertyNames();
-		
+
 		boolean settingsChanged = false;
-		
+
 		for (String key : keys) {
-			
+
 			Setting setting = getSetting(key);
-			
+
 			if (setting != null) {
-				
+
 				setSettingWithoutFiringEvents(setting, properties.getProperty(key));
-				
+
 				settingsChanged = true;
-				
+
 			}
-			
+
 		}
-		
+
 		return settingsChanged;
-			
+
 	}
-	
+
 	public void loadFromProperties(Properties properties) throws SettingValidationException, UnknownSettingException {
-		
+
 		if (loadFromPropertiesWithoutFireEvent(properties)) {
-			
+
 			fireSettingsChanged();
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -120,13 +123,13 @@ public abstract class AbstractSettings {
 
 		// Create properties
 		Properties properties = new Properties();
-		
+
 		Collection<Setting> settings = getSettings();
-		
+
 		for (Setting setting : settings) {
-			
+
 			properties.setProperty(setting.getKey(), setting.stringify());
-			
+
 		}
 
 		// Put all properties from settings
@@ -142,9 +145,9 @@ public abstract class AbstractSettings {
 	 * @return list of settings as {@link Setting}
 	 */
 	public Collection<Setting> getSettings() {
-		
+
 		return settings.values();
-		
+
 	}
 
 	/**
@@ -156,7 +159,7 @@ public abstract class AbstractSettings {
 	 *         given key
 	 */
 	protected Setting getSetting(String key) {
-		
+
 		return settings.get(key);
 
 	}
@@ -311,62 +314,84 @@ public abstract class AbstractSettings {
 	}
 
 	/**
+	 * Get setting value as Enum
+	 * 
+	 * @param setting
+	 * @return
+	 */
+	protected Enum getAsEnum(Setting setting) {
+
+		Enum value = parsableProperties.getAsEnum(setting.getDefaultValue().getClass(), setting.getKey());
+
+		if (value == null) {
+			value = (Enum) setting.getDefaultValue();
+		}
+
+		return value;
+
+	}
+
+	/**
 	 * Save setting
 	 */
-	private void setSettingWithoutFiringEvents(String key, String value) throws SettingValidationException, UnknownSettingException {
+	private void setSettingWithoutFiringEvents(String key, String value)
+			throws SettingValidationException, UnknownSettingException {
 
 		// Get setting
 		Setting managedSetting = getSetting(key);
 
 		if (managedSetting != null) {
-		
+
 			// validate
 			managedSetting.validate(value);
-			
+
 			// Set property
 			parsableProperties.setProperty(key, value);
-			
+
 		} else {
-			
+
 			throw new UnknownSettingException("Unmanaged setting " + key);
-			
+
 		}
-		
+
 	}
-	
+
 	/**
 	 * Save setting
 	 */
-	private void setSettingWithoutFiringEvents(Setting setting, String value) throws SettingValidationException, UnknownSettingException {
+	private void setSettingWithoutFiringEvents(Setting setting, String value)
+			throws SettingValidationException, UnknownSettingException {
 
 		setSettingWithoutFiringEvents(setting.getKey(), value);
-		
+
 	}
-	
+
 	/**
 	 * Save setting
-	 * @throws UnknownSettingException 
+	 * 
+	 * @throws UnknownSettingException
 	 * 
 	 */
 	public void setSetting(Setting setting, String value) throws SettingValidationException, UnknownSettingException {
 
 		setSettingWithoutFiringEvents(setting, value);
-			
+
 		fireSettingsChanged();
-			
+
 	}
-	
+
 	/**
 	 * Save setting
-	 * @throws UnknownSettingException 
+	 * 
+	 * @throws UnknownSettingException
 	 * 
 	 */
 	public void setSetting(String setting, String value) throws SettingValidationException, UnknownSettingException {
 
 		setSettingWithoutFiringEvents(setting, value);
-			
+
 		fireSettingsChanged();
-			
+
 	}
 
 	/**
@@ -403,8 +428,7 @@ public abstract class AbstractSettings {
 				int modifiers = field.getModifiers();
 
 				// Get is static and final
-				boolean isStaticAndFinal = Modifier.isStatic(modifiers)
-						&& Modifier.isFinal(modifiers);
+				boolean isStaticAndFinal = Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers);
 
 				if (isStaticAndFinal) {
 
@@ -427,24 +451,22 @@ public abstract class AbstractSettings {
 						} else {
 
 							// Log
-							LOGGER.debug("ignore found setting since it is on excluded set: "
-									+ setting);
+							LOGGER.debug("ignore found setting since it is on excluded set: " + setting);
 
 						}
 
 					} catch (IllegalAccessException ex) {
 
 						// Log
-						LOGGER.error("an error occurs retrieving settings: "
-								+ fieldName, ex);
+						LOGGER.error("an error occurs retrieving settings: " + fieldName, ex);
 
 					}
 
 				} else {
 
 					// Log
-					LOGGER.warn("an error occurs retrieving setting: "
-							+ fieldName + ", must be declared as static final");
+					LOGGER.warn(
+							"an error occurs retrieving setting: " + fieldName + ", must be declared as static final");
 
 				}
 
@@ -457,8 +479,8 @@ public abstract class AbstractSettings {
 	}
 
 	/**
-	 * Invoke {@link SettingsListener#settingChanged(AbstractSettings)} for every
-	 * setting listener added to this class
+	 * Invoke {@link SettingsListener#settingChanged(AbstractSettings)} for
+	 * every setting listener added to this class
 	 */
 	private void fireSettingsChanged() {
 
@@ -476,5 +498,5 @@ public abstract class AbstractSettings {
 		}
 
 	}
-	
+
 }

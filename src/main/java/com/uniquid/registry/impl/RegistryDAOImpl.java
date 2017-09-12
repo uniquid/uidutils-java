@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,11 +98,12 @@ public class RegistryDAOImpl implements RegistryDAO {
 
 		JSONArray jsonArray = new JSONArray(string);
 		
-		Iterator i = jsonArray.iterator();
+		// AVOID ITERATOR! WORKAROUND FOR ANDROID!
+		int elements = jsonArray.length();
 		
-		while (i.hasNext()) {
+		for (int i = 0; i < elements; i++) {
 			
-			JSONObject jsonMessage = (JSONObject) i.next();
+			JSONObject jsonMessage = jsonArray.getJSONObject(i);
 
 			String a = jsonMessage.getString("provider_address");
 			String n = jsonMessage.getString("provider_name");

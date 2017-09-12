@@ -393,10 +393,16 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 				return transactionFromJsonString(response.toString());
 
-			} else {
+			} else if (404 == connection.getResponseCode()) {
 
 				return null;
 
+			} else {
+				
+				LOGGER.warn("Returned response code {}", connection.getResponseCode());
+				
+				throw new BlockChainException("Problem while accessing transaction");
+				
 			}
 
 		} catch (MalformedURLException ex) {

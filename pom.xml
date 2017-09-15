@@ -10,7 +10,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>1.7.22</slf4j-version>
-    <bitcoinj-version>0.14.4</bitcoinj-version>
+    <bitcoinj-version>0.14.5</bitcoinj-version>
   </properties>
  
   <name>Uniquid utils</name>
@@ -33,7 +33,7 @@
     
      <dependency>
       <groupId>org.bitcoinj</groupId>
-      <artifactId>bitcoinj-core</artifactId>
+      <artifactId>bitcoinj-core-uniquid</artifactId>
       <version>${bitcoinj-version}</version>
     </dependency>
 

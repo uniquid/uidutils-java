@@ -1,10 +1,6 @@
 package com.uniquid.registry.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.json.JSONArray;
@@ -13,6 +9,9 @@ import org.json.JSONObject;
 
 import com.uniquid.registry.RegistryDAO;
 import com.uniquid.registry.exception.RegistryException;
+import com.uniquid.utils.DataProvider;
+import com.uniquid.utils.HttpUtils;
+import com.uniquid.utils.ResponseDecoder;
 
 public class RegistryDAOImpl implements RegistryDAO {
 	
@@ -35,57 +34,44 @@ public class RegistryDAOImpl implements RegistryDAO {
 			jsonMessage.put("provider_name", providerName);
 			jsonMessage.put("provider_address", providerAddress);
 
-			byte[] postDataBytes = jsonMessage.toString().getBytes("UTF-8");
+			final byte[] postDataBytes = jsonMessage.toString().getBytes("UTF-8");
 
 			URL url = new URL(PUT_URL.replace("%1&s", registryAddress));
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			HttpUtils.sendDataWithPost(url, new DataProvider<Void>() {
 
-			// optional default is GET
-			connection.setRequestMethod("POST");
-
-			// add request header
-			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
-
-			connection.setRequestProperty("Content-Type", "application/json");
-
-			connection.setRequestProperty("Charset", "utf-8");
-
-			connection.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-
-			connection.setDoOutput(true);
-
-			connection.getOutputStream().write(postDataBytes);
-
-			if (201 == connection.getResponseCode()) {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
-
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
+				@Override
+				public int getExpectedResponseCode() {
+					return HttpURLConnection.HTTP_CREATED;
 				}
 
-				in.close();
+				@Override
+				public Void manageResponse(String serverResponse) throws Exception {
+					return null;
+				}
 
-				return; /*(response.toString());*/
+				@Override
+				public Void manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+					throw new RegistryException("Error while submitting post: " + responseCode + " " + responseMessage);
+				}
 
-			} else {
+				@Override
+				public String getContentType() {
+					return "application/json";
+				}
 
-				throw new RegistryException("Error while submitting post: " + connection.getResponseCode() + " "
-						+ connection.getResponseMessage());
+				@Override
+				public String getCharset() {
+					return "utf-8";
+				}
 
-			}
-
-		} catch (MalformedURLException ex) {
-
-			throw new RegistryException("Exception Accessing URL", ex);
-
-		} catch (IOException ex) {
-
-			throw new RegistryException("Exception while I/O", ex);
-
+				@Override
+				public byte[] getPayload() {
+					return postDataBytes;
+				}
+			
+			});
+			
 		} catch (Throwable t) {
 
 			throw new RegistryException("Unexpected Exception", t);
@@ -121,47 +107,33 @@ public class RegistryDAOImpl implements RegistryDAO {
 	}
 
 	@Override
-	public String retrieveProviderName(String providerAddress) throws RegistryException {
+	public String retrieveProviderName(final String providerAddress) throws RegistryException {
 		
 		try {
 			URL url = new URL(GET_URL.replace("%1&s", registryAddress));
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<String>() {
 
-			// optional default is GET
-			connection.setRequestMethod("GET");
-
-			// add request header
-			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
-
-			if (200 == connection.getResponseCode()) {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
-
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
+				@Override
+				public int getExpectedResponseCode() {
+					return HttpURLConnection.HTTP_OK;
 				}
 
-				in.close();
+				@Override
+				public String manageResponse(String serverResponse) throws Exception {
+					return addressFromJsonString(serverResponse, providerAddress);
+				}
 
-				return addressFromJsonString(response.toString(), providerAddress);
-
-			} else {
-
-				return null;
-
-			}
-
-		} catch (MalformedURLException ex) {
-
-			throw new RegistryException("Exception Accessing URL", ex);
-
-		} catch (IOException ex) {
-
-			throw new RegistryException("Exception while I/O", ex);
-
+				@Override
+				public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+						return null;
+					
+					throw new RegistryException("Server returned " + responseCode + " " + responseMessage);
+				}
+			
+			});
+			
 		} catch (Throwable t) {
 			
 			throw new RegistryException("Unexpected Exception", t);

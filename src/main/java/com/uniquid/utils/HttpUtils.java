@@ -1,34 +1,91 @@
 package com.uniquid.utils;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpUtils {
 	
-	static String postRequest(String server, String contentType, String payload, int expectedResponseCode)
-			throws MalformedURLException, IOException {
+	private static Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
+	
+	private static final String USER_AGENT = "UNIQUID-UTILS-0.1";
+	
+	public static <T> T sendDataWithPost(URL url, DataProvider<T> dataProvider) throws Exception {
 
-		URL url = new URL(server);
-		HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-		httpURLConnection.setDoOutput(true);
-		httpURLConnection.setRequestMethod("POST");
-		httpURLConnection.setRequestProperty("Content-Type", contentType);
-		httpURLConnection.connect();
-		DataOutputStream dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream());
-		dataOutputStream.writeBytes(payload);
-		dataOutputStream.flush();
-		dataOutputStream.close();
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("User-Agent", USER_AGENT);
+		connection.setRequestProperty("Content-Type", dataProvider.getContentType());
+		connection.setRequestProperty("Charset", dataProvider.getCharset());
+		connection.setRequestProperty("Content-Length", String.valueOf(dataProvider.getPayload().length));
+		connection.setDoOutput(true);
 
-		if (httpURLConnection.getResponseCode() == expectedResponseCode) {
+		connection.getOutputStream().write(dataProvider.getPayload());
 
-			return httpURLConnection.getResponseMessage();
+		if (connection.getResponseCode() == dataProvider.getExpectedResponseCode()) {
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+			StringBuilder response = new StringBuilder();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+
+			in.close();
+
+			return dataProvider.manageResponse(response.toString());
 
 		} else {
+			
+			return dataProvider.manageUnexpectedResponseCode(connection.getResponseCode(), connection.getResponseMessage());
 
-			return "responseCode: " + httpURLConnection.getResponseCode();
+		}
+
+	}
+	
+	public static <T> T retrieveDataViaHttpGet(URL url, ResponseDecoder<T> responseDecoder) throws Exception {
+
+		try {
+
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			// optional default is GET
+			connection.setRequestMethod("GET");
+
+			// add request header
+			connection.setRequestProperty("User-Agent", USER_AGENT);
+
+			if (connection.getResponseCode() == responseDecoder.getExpectedResponseCode()) {
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuilder response = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+
+				in.close();
+
+				return responseDecoder.manageResponse(response.toString());
+
+			} else {
+				
+				return responseDecoder.manageUnexpectedResponseCode(connection.getResponseCode(), connection.getResponseMessage());
+
+			}
+
+		} catch (Throwable t) {
+
+			LOGGER.error("Unexpected Exception", t);
+
+			throw new Exception("Unexpected Exception", t);
 
 		}
 

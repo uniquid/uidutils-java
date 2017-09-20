@@ -1,14 +1,9 @@
 package com.uniquid.blockchain.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +16,9 @@ import com.uniquid.blockchain.BlockChainDAO;
 import com.uniquid.blockchain.Transaction;
 import com.uniquid.blockchain.Utxo;
 import com.uniquid.blockchain.exception.BlockChainException;
+import com.uniquid.utils.DataProvider;
+import com.uniquid.utils.HttpUtils;
+import com.uniquid.utils.ResponseDecoder;
 
 public class InsightApiDAOImpl implements BlockChainDAO {
 
@@ -31,7 +29,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 	private static final String RAWTX_URL = "%1&s/insight-api/rawtx/%2&s";
 	private static final String TRANSACTION_URL = "%1&s/insight-api/tx/%2&s";
 	private static final String SENDTX_URL = "%1&s/insight-api/tx/send";
-
+	
 	private String insightApiHost;
 
 	public InsightApiDAOImpl(String insightApiHost) {
@@ -44,41 +42,32 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 		try {
 			URL url = new URL(ADDR_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<AddressInfo>() {
 
-			// optional default is GET
-			connection.setRequestMethod("GET");
-
-			// add request header
-			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
-
-			if (200 == connection.getResponseCode()) {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
-
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
+				@Override
+				public AddressInfo manageResponse(String serverResponse) {
+					
+					return addressFromJsonString(serverResponse);
+					
 				}
 
-				in.close();
+				@Override
+				public int getExpectedResponseCode() {
+					return HttpURLConnection.HTTP_OK;
+				}
 
-				return addressFromJsonString(response.toString());
-
-			} else {
-
-				return null;
-
-			}
-
-		} catch (MalformedURLException ex) {
-
-			throw new BlockChainException("Exception Accessing URL", ex);
-
-		} catch (IOException ex) {
-
-			throw new BlockChainException("Exception while I/O", ex);
+				@Override
+				public AddressInfo manageUnexpectedResponseCode(int responseCode, String responseMessage)
+						throws Exception {
+					
+					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+						
+						return null;
+					
+					throw new Exception("Received " + responseCode + responseMessage);
+				}
+				
+			});
 
 		} catch (Throwable t) {
 			
@@ -168,41 +157,31 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 			URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Collection<Utxo>>() {
 
-			// optional default is GET
-			connection.setRequestMethod("GET");
-
-			// add request header
-			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
-
-			if (200 == connection.getResponseCode()) {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
-
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
+				@Override
+				public Collection<Utxo> manageResponse(String serverResponse) {
+					
+					return utxosFromJsonString(serverResponse);
+					
 				}
 
-				in.close();
+				@Override
+				public int getExpectedResponseCode() {
+					return HttpURLConnection.HTTP_OK;
+				}
+
+				@Override
+				public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage)
+						throws Exception {
+					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+						
+						return new ArrayList<Utxo>();
+					
+					throw new Exception("Received " + responseCode + responseMessage);
+				}
 				
-				return utxosFromJsonString(response.toString());
-
-			} else {
-
-				return new ArrayList<Utxo>();
-
-			}
-
-		} catch (MalformedURLException ex) {
-
-			throw new BlockChainException("Exception Accessing URL", ex);
-
-		} catch (IOException ex) {
-
-			throw new BlockChainException("Exception while I/O", ex);
+			});
 
 		} catch (Throwable t) {
 			
@@ -212,47 +191,35 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 	}
 	
 	@Override
-	public Collection<Utxo> retrieveUtxo(String address, int maxUtxo) throws BlockChainException {
+	public Collection<Utxo> retrieveUtxo(String address, final int maxUtxo) throws BlockChainException {
 		
 		try {
 
 			URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Collection<Utxo>>() {
 
-			// optional default is GET
-			connection.setRequestMethod("GET");
-
-			// add request header
-			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
-
-			if (200 == connection.getResponseCode()) {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
-
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
+				@Override
+				public Collection<Utxo> manageResponse(String serverResponse) {
+					return utxosFromJsonString(serverResponse, maxUtxo);
+				}
+				
+				@Override
+				public int getExpectedResponseCode() {
+					return HttpURLConnection.HTTP_OK;
 				}
 
-				in.close();
-				
-				return utxosFromJsonString(response.toString(), maxUtxo);
+				@Override
+				public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage)
+						throws Exception {
+					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+						
+						return new ArrayList<Utxo>();
+					
+					throw new Exception("Received " + responseCode + responseMessage);
+				}
 
-			} else {
-
-				return new ArrayList<Utxo>();
-
-			}
-
-		} catch (MalformedURLException ex) {
-
-			throw new BlockChainException("Exception Accessing URL", ex);
-
-		} catch (IOException ex) {
-
-			throw new BlockChainException("Exception while I/O", ex);
+			});
 
 		} catch (Throwable t) {
 			
@@ -277,42 +244,29 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 		try {
 			URL url = new URL(RAWTX_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<String>() {
 
-			// optional default is GET
-			connection.setRequestMethod("GET");
-
-			// add request header
-			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
-
-			if (200 == connection.getResponseCode()) {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
-
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
+				@Override
+				public String manageResponse(String serverResponse) {
+					return rawtxFromJsonString(serverResponse);
+				}
+				
+				@Override
+				public int getExpectedResponseCode() {
+					return HttpURLConnection.HTTP_OK;
 				}
 
-				in.close();
+				@Override
+				public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+						
+						return null;
+					
+					throw new Exception("Received " + responseCode + responseMessage);
+				}
 
-				return rawtxFromJsonString(response.toString());
-
-			} else {
-
-				return null;
-
-			}
-
-		} catch (MalformedURLException ex) {
-
-			throw new BlockChainException("Exception Accessing URL", ex);
-
-		} catch (IOException ex) {
-
-			throw new BlockChainException("Exception while I/O", ex);
-
+			});
+			
 		} catch (Throwable t) {
 			
 			throw new BlockChainException("Unexpected Exception", t);
@@ -370,48 +324,32 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 		
 		try {
 			URL url = new URL(TRANSACTION_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
+			
+			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Transaction>() {
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-			// optional default is GET
-			connection.setRequestMethod("GET");
-
-			// add request header
-			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
-
-			if (200 == connection.getResponseCode()) {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
-
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
+				@Override
+				public Transaction manageResponse(String serverResponse) {
+					return transactionFromJsonString(serverResponse);
+				}
+				
+				@Override
+				public int getExpectedResponseCode() {
+					return HttpURLConnection.HTTP_OK;
 				}
 
-				in.close();
+				@Override
+				public Transaction manageUnexpectedResponseCode(int responseCode, String responseMessage)
+						throws Exception {
+					
+					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+						
+						return null;
+					
+					throw new Exception("Received " + responseCode + responseMessage);
+					
+				}
 
-				return transactionFromJsonString(response.toString());
-
-			} else if (404 == connection.getResponseCode()) {
-
-				return null;
-
-			} else {
-				
-				LOGGER.warn("Returned response code {}", connection.getResponseCode());
-				
-				throw new BlockChainException("Problem while accessing transaction");
-				
-			}
-
-		} catch (MalformedURLException ex) {
-
-			throw new BlockChainException("Exception Accessing URL", ex);
-
-		} catch (IOException ex) {
-
-			throw new BlockChainException("Exception while I/O", ex);
+			});
 
 		} catch (Throwable t) {
 			
@@ -439,56 +377,50 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 			jsonMessage.put("rawtx", rawtx);
 			
-			byte[] postDataBytes = jsonMessage.toString().getBytes("UTF-8");
+			final byte[] postDataBytes = jsonMessage.toString().getBytes("UTF-8");
 
 			URL url = new URL(SENDTX_URL.replace("%1&s", insightApiHost));
-
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-			// optional default is GET
-			connection.setRequestMethod("POST");
-
-			// add request header
-			connection.setRequestProperty("User-Agent", "UNIQUID-UTILS-0.1");
 			
-			connection.setRequestProperty("Content-Type", "application/json");
-			
-			connection.setRequestProperty("Charset", "utf-8");
-			
-			connection.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-			
-			connection.setDoOutput(true);
-			
-			connection.getOutputStream().write(postDataBytes);
+			return HttpUtils.sendDataWithPost(url, new DataProvider<String>() {
 
-			if (200 == connection.getResponseCode()) {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
-
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
+				@Override
+				public String manageResponse(String serverResponse) {
+					return txidFromJsonString(serverResponse);
+				}
+				
+				@Override
+				public String getContentType() {
+					return "application/json";
 				}
 
-				in.close();
+				@Override
+				public String getCharset() {
+					return "utf-8";
+				}
 
-				return txidFromJsonString(response.toString());
+				@Override
+				public byte[] getPayload() {
+					return postDataBytes;
+				}
 
-			} else {
+				@Override
+				public int getExpectedResponseCode() {
+					return HttpURLConnection.HTTP_OK;
+				}
+
+				@Override
+				public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+					
+					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+						
+						return null;
+					
+					throw new Exception("Received " + responseCode + responseMessage);
+					
+				}
 				
-				throw new BlockChainException("Error while submitting tx: " + connection.getResponseCode() + " " +
-						connection.getResponseMessage());
-
-			}
-
-		} catch (MalformedURLException ex) {
-
-			throw new BlockChainException("Exception Accessing URL", ex);
-
-		} catch (IOException ex) {
-
-			throw new BlockChainException("Exception while I/O", ex);
+			});
+			
 
 		} catch (Throwable t) {
 			

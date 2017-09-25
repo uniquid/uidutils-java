@@ -6,7 +6,7 @@ public class FunctionRequestMessage implements UniquidMessage {
 
 	private long id;
 
-	private String user, parameters;
+	private String user = "", parameters = "";
 
 	private int function;
 

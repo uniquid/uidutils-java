@@ -7,13 +7,14 @@ import org.json.JSONObject;
 import com.uniquid.messages.FunctionRequestMessage;
 import com.uniquid.messages.FunctionResponseMessage;
 import com.uniquid.messages.MessageSerializer;
+import com.uniquid.messages.MessageSerializerException;
 import com.uniquid.messages.MessageType;
 import com.uniquid.messages.UniquidMessage;
 
 public class JSONMessageSerializer implements MessageSerializer {
 	
 	@Override
-	public byte[] serialize(UniquidMessage uniquidMessage) throws Exception {
+	public byte[] serialize(UniquidMessage uniquidMessage) throws MessageSerializerException {
 		
 		if (MessageType.FUNCTION_REQUEST.equals(uniquidMessage.getMessageType())) {
 			
@@ -60,12 +61,12 @@ public class JSONMessageSerializer implements MessageSerializer {
 			
 		}
 		
-		throw new Exception("Unknown message type " + uniquidMessage.getMessageType());
+		throw new MessageSerializerException("Unknown message type " + uniquidMessage.getMessageType());
 		
 	}
 
 	@Override
-	public UniquidMessage deserialize(byte[] payload) throws Exception {
+	public UniquidMessage deserialize(byte[] payload) throws MessageSerializerException {
 		
 		String jsonString = new String(payload, StandardCharsets.UTF_8);
 		
@@ -116,7 +117,7 @@ public class JSONMessageSerializer implements MessageSerializer {
 		
 		}
 		
-		throw new Exception("Invalid message to deserialize!");
+		throw new MessageSerializerException("Invalid message to deserialize!");
 	}
 	
 }

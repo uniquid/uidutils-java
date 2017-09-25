@@ -2,7 +2,6 @@ package com.uniquid.messages;
 
 /**
  * Available Uniquid Messages
- *
  */
 public enum MessageType {
 	

@@ -7,17 +7,17 @@ public interface MessageSerializer {
 	 * 
 	 * @param uniquidMessage
 	 * @return
-	 * @throws Exception 
+	 * @throws MessageSerializerException 
 	 */
-	public byte[] serialize(UniquidMessage uniquidMessage) throws Exception;
+	public byte[] serialize(UniquidMessage uniquidMessage) throws MessageSerializerException;
 	
 	/**
 	 * Deserialize ad Uniquid Message
 	 * 
 	 * @param payload
 	 * @return
-	 * @throws Exception 
+	 * @throws MessageSerializerException 
 	 */
-	public UniquidMessage deserialize(byte[] payload) throws Exception;
+	public UniquidMessage deserialize(byte[] payload) throws MessageSerializerException;
 	
 }

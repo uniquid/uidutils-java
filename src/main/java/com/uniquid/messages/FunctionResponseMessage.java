@@ -27,7 +27,7 @@ public class FunctionResponseMessage implements UniquidMessage {
 
 	private long id;
 	
-	private String provider, result;
+	private String provider = "", result = "";
 	
 	private int error;
 	

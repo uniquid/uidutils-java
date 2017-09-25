@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.uniquid.messages.FunctionRequestMessage;
 import com.uniquid.messages.FunctionResponseMessage;
+import com.uniquid.messages.MessageSerializerException;
 import com.uniquid.messages.UniquidMessage;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
 
@@ -12,14 +13,14 @@ import junit.framework.Assert;
 public class JSONMessageSerializerTest {
 
 	@Test
-	public void testSerialization() throws Exception {
+	public void testSerialization() throws MessageSerializerException {
 
-		String request = "{\"sender\":\"ciccio\", \"body\": { \"method\":33, \"params\": \"{456}\", \"id\":123467 } }";
+		String request = "{\"sender\":\"ciccio\", \"body\": { \"method\":33, \"params\": \"456\", \"id\":123467 } }";
 		
 		FunctionRequestMessage functionRequestMessage = new FunctionRequestMessage();
 		functionRequestMessage.setUser("ciccio");
 		functionRequestMessage.setFunction(33);
-		functionRequestMessage.setParameters("{456}");
+		functionRequestMessage.setParameters("456");
 		functionRequestMessage.setId(123467);
 
 		String response = "{\"sender\":\"ciccio\", \"body\": { \"result\":\"43f\", \"error\": 0, \"id\":123456 } }";

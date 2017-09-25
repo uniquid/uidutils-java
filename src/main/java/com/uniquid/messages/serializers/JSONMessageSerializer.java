@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.json.JSONObject;
 
+import com.uniquid.messages.AnnounceMessage;
 import com.uniquid.messages.FunctionRequestMessage;
 import com.uniquid.messages.FunctionResponseMessage;
 import com.uniquid.messages.MessageSerializer;
@@ -57,6 +58,17 @@ public class JSONMessageSerializer implements MessageSerializer {
 			
 			jsonResponse.put("body", jsonBody);
 			
+			return jsonResponse.toString().getBytes();
+			
+		} else if (MessageType.ANNOUNCE.equals(uniquidMessage.getMessageType())) {
+			
+			AnnounceMessage announceMessage = (AnnounceMessage) uniquidMessage;
+			
+			final JSONObject jsonResponse = new JSONObject();
+			
+			jsonResponse.put("name", announceMessage.getName());
+			jsonResponse.put("xpub", announceMessage.getPubKey());
+
 			return jsonResponse.toString().getBytes();
 			
 		}
@@ -115,6 +127,19 @@ public class JSONMessageSerializer implements MessageSerializer {
 				
 			}
 		
+		} else if (jsonMessage.has("xpub")) {
+			
+			final String name = jsonMessage.getString("name");
+			
+			final String pubKey = jsonMessage.getString("xpub");
+			
+			AnnounceMessage announceMessage = new AnnounceMessage();
+			
+			announceMessage.setName(name);
+			announceMessage.setPubKey(pubKey);
+			
+			return announceMessage;
+			
 		}
 		
 		throw new MessageSerializerException("Invalid message to deserialize!");

@@ -2,6 +2,7 @@ package com.uniquid.message;
 
 import org.junit.Test;
 
+import com.uniquid.messages.AnnounceMessage;
 import com.uniquid.messages.FunctionRequestMessage;
 import com.uniquid.messages.FunctionResponseMessage;
 import com.uniquid.messages.MessageSerializerException;
@@ -15,6 +16,12 @@ public class JSONMessageSerializerTest {
 	@Test
 	public void testSerialization() throws MessageSerializerException {
 
+		String announce = "{ \"name\":\"ciccio\", \"xpub\":\"1234567\" }";
+		
+		AnnounceMessage announceMessage = new AnnounceMessage();
+		announceMessage.setName("ciccio");
+		announceMessage.setPubKey("1234567");
+		
 		String request = "{\"sender\":\"ciccio\", \"body\": { \"method\":33, \"params\": \"456\", \"id\":123467 } }";
 		
 		FunctionRequestMessage functionRequestMessage = new FunctionRequestMessage();
@@ -31,12 +38,18 @@ public class JSONMessageSerializerTest {
 		functionResponseMessage.setError(0);
 		functionResponseMessage.setId(123456);
 
+		UniquidMessage announceMessage2 = new JSONMessageSerializer().deserialize(announce.getBytes());
+		
 		UniquidMessage requestMessage = new JSONMessageSerializer().deserialize(request.getBytes());
 
 		UniquidMessage responseMessage = new JSONMessageSerializer().deserialize(response.getBytes());
 
 		String request1 = new String(new JSONMessageSerializer().serialize(requestMessage));
 		String response1 = new String(new JSONMessageSerializer().serialize(responseMessage));
+		String ann = new String(new JSONMessageSerializer().serialize(announceMessage2));
+		
+		
+		Assert.assertEquals(announceMessage2, announceMessage);
 		
 		Assert.assertEquals(requestMessage, functionRequestMessage);
 		

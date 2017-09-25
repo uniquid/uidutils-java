@@ -5,6 +5,8 @@ package com.uniquid.messages;
  */
 public enum MessageType {
 	
+	ANNOUNCE,
+	
 	FUNCTION_REQUEST,
 	
 	FUNCTION_RESPONSE

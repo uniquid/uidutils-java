@@ -1,9 +1,8 @@
-package com.uniquid.userclient.impl.factory;
+package com.uniquid.userclient.impl;
 
 import com.uniquid.register.user.UserChannel;
 import com.uniquid.userclient.UserClient;
 import com.uniquid.userclient.UserClientFactory;
-import com.uniquid.userclient.impl.mqtt.MQTTUserClient;
 
 public class DefaultUserClientFactory implements UserClientFactory {
 	

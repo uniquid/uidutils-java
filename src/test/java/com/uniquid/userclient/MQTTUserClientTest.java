@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import com.uniquid.messages.FunctionRequestMessage;
 import com.uniquid.messages.FunctionResponseMessage;
-import com.uniquid.userclient.impl.mqtt.MQTTMessageSerializer;
-import com.uniquid.userclient.impl.mqtt.MQTTUserClient;
+import com.uniquid.messages.serializers.JSONMessageSerializer;
+import com.uniquid.userclient.impl.MQTTUserClient;
 
 public class MQTTUserClientTest {
 
@@ -33,7 +33,7 @@ public class MQTTUserClientTest {
 		
 		FunctionRequestMessage providerRequest = new FunctionRequestMessage();
 		providerRequest.setUser(sender);
-		providerRequest.setMethod(method);
+		providerRequest.setFunction(method);
 		providerRequest.setParameters(params);
 		
 		String broker = "tcp://appliance4.uniquid.co:1883"; 
@@ -84,7 +84,7 @@ public class MQTTUserClientTest {
 			
 			Assert.assertNotNull(message);
 
-			FunctionRequestMessage rpcProviderRequest = (FunctionRequestMessage) new MQTTMessageSerializer().deserialize(payload);
+			FunctionRequestMessage rpcProviderRequest = (FunctionRequestMessage) new JSONMessageSerializer().deserialize(payload);
 			Assert.assertNotNull(rpcProviderRequest);
 			
 			FunctionResponseMessage rpcProviderResponse = new FunctionResponseMessage();
@@ -93,7 +93,7 @@ public class MQTTUserClientTest {
 			rpcProviderResponse.setResult("result");
 			rpcProviderResponse.setId(rpcProviderRequest.getId());
 			
-			connection.publish(rpcProviderRequest.getUser(), new MQTTMessageSerializer().serialize(rpcProviderResponse), QoS.AT_LEAST_ONCE, false);
+			connection.publish(rpcProviderRequest.getUser(), new JSONMessageSerializer().serialize(rpcProviderResponse), QoS.AT_LEAST_ONCE, false);
 			
 			connection.disconnect();			
 			
@@ -110,7 +110,7 @@ public class MQTTUserClientTest {
 		
 		FunctionRequestMessage providerRequest = new FunctionRequestMessage();
 		providerRequest.setUser(sender);
-		providerRequest.setMethod(method);
+		providerRequest.setFunction(method);
 		providerRequest.setParameters(params);
 		providerRequest.setId(1234);
 		
@@ -158,7 +158,7 @@ private void startMqttServerMockException() {
 			
 			Assert.assertNotNull(message);
 						
-			FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) new MQTTMessageSerializer().deserialize(payload);
+			FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) new JSONMessageSerializer().deserialize(payload);
 			Assert.assertNotNull(functionRequestMessage);
 
 			FunctionResponseMessage functionResponseMessage = new FunctionResponseMessage();

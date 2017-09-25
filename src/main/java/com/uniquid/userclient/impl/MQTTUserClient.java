@@ -1,4 +1,4 @@
-package com.uniquid.userclient.impl.mqtt;
+package com.uniquid.userclient.impl;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.uniquid.messages.UniquidMessage;
+import com.uniquid.messages.serializers.JSONMessageSerializer;
 import com.uniquid.userclient.UserClient;
 import com.uniquid.userclient.UserClientException;
 
@@ -27,7 +28,7 @@ public class MQTTUserClient implements UserClient {
 	private int timeoutInSeconds;
 	private String destination;
 	private String senderTopic;
-	private MQTTMessageSerializer messageSerializer;
+	private JSONMessageSerializer messageSerializer;
 	
 	/**
 	 * Creates an instance from broker, destination topic and timeout
@@ -41,7 +42,7 @@ public class MQTTUserClient implements UserClient {
 		this.destination = destinationTopic;
 		this.timeoutInSeconds = timeoutInSeconds;
 		this.senderTopic = senderTopic;
-		this.messageSerializer = new MQTTMessageSerializer();
+		this.messageSerializer = new JSONMessageSerializer();
 		
 	}
 

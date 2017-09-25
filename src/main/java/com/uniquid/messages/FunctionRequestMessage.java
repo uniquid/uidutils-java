@@ -1,13 +1,15 @@
 package com.uniquid.messages;
 
+import java.util.Objects;
+
 public class FunctionRequestMessage implements UniquidMessage {
 
 	private long id;
-	
+
 	private String user, parameters;
-	
-	private int method;
-	
+
+	private int function;
+
 	public long getId() {
 		return id;
 	}
@@ -32,12 +34,12 @@ public class FunctionRequestMessage implements UniquidMessage {
 		this.parameters = parameters;
 	}
 
-	public int getMethod() {
-		return method;
+	public int getFunction() {
+		return function;
 	}
 
-	public void setMethod(int method) {
-		this.method = method;
+	public void setFunction(int method) {
+		this.function = method;
 	}
 
 	@Override
@@ -46,5 +48,28 @@ public class FunctionRequestMessage implements UniquidMessage {
 		return MessageType.FUNCTION_REQUEST;
 
 	}
-	
+
+	@Override
+	public boolean equals(Object object) {
+
+		if (!(object instanceof FunctionRequestMessage))
+			return false;
+
+		if (this == object)
+			return true;
+
+		FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) object;
+
+		return Objects.equals(id, functionRequestMessage.id) && Objects.equals(user, functionRequestMessage.user)
+				&& Objects.equals(parameters, functionRequestMessage.parameters)
+				&& Objects.equals(function, functionRequestMessage.function);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(id, user, parameters, function);
+
+	}
+
 }

@@ -12,6 +12,9 @@ import com.uniquid.messages.MessageSerializerException;
 import com.uniquid.messages.MessageType;
 import com.uniquid.messages.UniquidMessage;
 
+/**
+ * Implementation of Uniquid Messages with JSON format
+ */
 public class JSONMessageSerializer implements MessageSerializer {
 	
 	@Override
@@ -71,9 +74,11 @@ public class JSONMessageSerializer implements MessageSerializer {
 
 			return jsonResponse.toString().getBytes();
 			
-		}
+		} else {
 		
-		throw new MessageSerializerException("Unknown message type " + uniquidMessage.getMessageType());
+			throw new MessageSerializerException("Unknown message type " + uniquidMessage.getMessageType());
+			
+		}
 		
 	}
 
@@ -125,6 +130,10 @@ public class JSONMessageSerializer implements MessageSerializer {
 				
 				return responseMessage;
 				
+			} else {
+				
+				throw new MessageSerializerException("Invalid message to deserialize!");
+				
 			}
 		
 		} else if (jsonMessage.has("xpub")) {
@@ -140,9 +149,11 @@ public class JSONMessageSerializer implements MessageSerializer {
 			
 			return announceMessage;
 			
-		}
+		} else {
 		
-		throw new MessageSerializerException("Invalid message to deserialize!");
+			throw new MessageSerializerException("Invalid message to deserialize!");
+			
+		}
 	}
 	
 }

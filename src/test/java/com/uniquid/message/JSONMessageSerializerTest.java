@@ -37,17 +37,34 @@ public class JSONMessageSerializerTest {
 		functionResponseMessage.setResult("43f");
 		functionResponseMessage.setError(0);
 		functionResponseMessage.setId(123456);
+		
+		String invalid1 = "{\"sender\":\"ciccio\", \"body\": { \"invalid\":\"invalid\" } }";
+		
+		String invalid2 = "{\"invalid\":\"message\" }";
 
 		UniquidMessage announceMessage2 = new JSONMessageSerializer().deserialize(announce.getBytes());
 		
 		UniquidMessage requestMessage = new JSONMessageSerializer().deserialize(request.getBytes());
 
 		UniquidMessage responseMessage = new JSONMessageSerializer().deserialize(response.getBytes());
+		
+		try {
+			new JSONMessageSerializer().deserialize(invalid1.getBytes());
+			Assert.fail();
+		} catch (MessageSerializerException ex) {
+			// Expected
+		}
+		
+		try {
+			new JSONMessageSerializer().deserialize(invalid2.getBytes());
+			Assert.fail();
+		} catch (MessageSerializerException ex) {
+			// Expected
+		}
 
 		String request1 = new String(new JSONMessageSerializer().serialize(requestMessage));
 		String response1 = new String(new JSONMessageSerializer().serialize(responseMessage));
 		String ann = new String(new JSONMessageSerializer().serialize(announceMessage2));
-		
 		
 		Assert.assertEquals(announceMessage2, announceMessage);
 		

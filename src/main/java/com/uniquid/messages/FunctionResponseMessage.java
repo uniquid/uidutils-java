@@ -2,6 +2,9 @@ package com.uniquid.messages;
 
 import java.util.Objects;
 
+/**
+ * Represents a Function Response message: a response from a Provider to an User request's.
+ */
 public class FunctionResponseMessage implements UniquidMessage {
 	
 	/**

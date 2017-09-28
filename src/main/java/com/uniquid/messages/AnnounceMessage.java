@@ -2,6 +2,9 @@ package com.uniquid.messages;
 
 import java.util.Objects;
 
+/**
+ * Represents an Announce Message: a message sent by a Node when it appear the first time.
+ */
 public class AnnounceMessage implements UniquidMessage {
 	
 	private String name = "", pubKey = "";

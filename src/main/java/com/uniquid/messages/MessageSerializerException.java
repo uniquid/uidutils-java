@@ -1,5 +1,8 @@
 package com.uniquid.messages;
 
+/**
+ * Thrown when a problem during message serialization/deserialization occurs
+ */
 public class MessageSerializerException extends Exception {
 	
 private static final long serialVersionUID = 1L;

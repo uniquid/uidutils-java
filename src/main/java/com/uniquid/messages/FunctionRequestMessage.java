@@ -2,6 +2,9 @@ package com.uniquid.messages;
 
 import java.util.Objects;
 
+/**
+ * Represent a Function Request message: the User asks the provider to perform the specified function.
+ */
 public class FunctionRequestMessage implements UniquidMessage {
 
 	private long id;

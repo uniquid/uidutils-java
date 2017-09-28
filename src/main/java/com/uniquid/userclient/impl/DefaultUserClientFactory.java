@@ -1,6 +1,5 @@
 package com.uniquid.userclient.impl;
 
-import com.uniquid.register.user.UserChannel;
 import com.uniquid.userclient.UserClient;
 import com.uniquid.userclient.UserClientFactory;
 
@@ -18,9 +17,9 @@ public class DefaultUserClientFactory implements UserClientFactory {
 	}
 
 	@Override
-	public UserClient getUserClient(UserChannel userChannel) {
+	public UserClient getUserClient(UserClientFactoryConfiguration configuration) {
 		
-		return new MQTTUserClient(mqttBroker, userChannel.getProviderName(), timeout, userChannel.getUserAddress());
+		return new MQTTUserClient(mqttBroker, configuration.getProviderName(), timeout, configuration.getUserAddress());
 		
 	}
 	

@@ -88,7 +88,7 @@ public class MQTTUserClientTest {
 			Assert.assertNotNull(rpcProviderRequest);
 			
 			FunctionResponseMessage rpcProviderResponse = new FunctionResponseMessage();
-			rpcProviderResponse.setProvider("sender");
+			rpcProviderResponse.setProvider("test");
 			rpcProviderResponse.setError(0);
 			rpcProviderResponse.setResult("result");
 			rpcProviderResponse.setId(rpcProviderRequest.getId());

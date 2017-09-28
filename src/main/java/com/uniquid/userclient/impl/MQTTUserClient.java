@@ -26,8 +26,8 @@ public class MQTTUserClient implements UserClient {
 	
 	private String broker;
 	private int timeoutInSeconds;
-	private String destination;
-	private String senderTopic;
+	private String destinationTopic;
+	private String senderAddress;
 	private JSONMessageSerializer messageSerializer;
 	
 	/**
@@ -37,11 +37,11 @@ public class MQTTUserClient implements UserClient {
 	 * @param timeoutInSeconds the timeout in seconds to wait for a response
 	 */
 	public MQTTUserClient(final String broker, final String destinationTopic, final int timeoutInSeconds,
-			String senderTopic) {
+			String senderAddress) {
 		this.broker = broker;
-		this.destination = destinationTopic;
+		this.destinationTopic = destinationTopic;
 		this.timeoutInSeconds = timeoutInSeconds;
-		this.senderTopic = senderTopic;
+		this.senderAddress = senderAddress;
 		this.messageSerializer = new JSONMessageSerializer();
 		
 	}
@@ -49,7 +49,7 @@ public class MQTTUserClient implements UserClient {
 	@Override
 	public UniquidMessage execute(final UniquidMessage userRequest) throws UserClientException {
 		
-		LOGGER.info("Sending output message to {}", destination);
+		LOGGER.info("Sending output message to {}", destinationTopic);
 		
 		BlockingConnection connection = null;
 		
@@ -61,10 +61,8 @@ public class MQTTUserClient implements UserClient {
 			connection = mqtt.blockingConnection();
 			connection.connect();
 			
-			final String destinationTopic = destination;
-			
 			// to subscribe
-			final Topic[] topics = { new Topic(senderTopic, QoS.AT_LEAST_ONCE) };
+			final Topic[] topics = { new Topic(senderAddress, QoS.AT_LEAST_ONCE) };
 			/*byte[] qoses = */connection.subscribe(topics);
 
 			byte[] payload = messageSerializer.serialize(userRequest);

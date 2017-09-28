@@ -8,18 +8,16 @@ public class DefaultUserClientFactory implements UserClientFactory {
 	
 	private String mqttBroker;
 	private int timeout;
-	private String senderTopic;
 	
-	public DefaultUserClientFactory(String mqttBroker, int timeout, String senderTopic) {
+	public DefaultUserClientFactory(String mqttBroker, int timeout) {
 		this.mqttBroker = mqttBroker;
 		this.timeout = timeout;
-		this.senderTopic = senderTopic;
 	}
 
 	@Override
 	public UserClient getUserClient(UserChannel userChannel) {
 		
-		return new MQTTUserClient(mqttBroker, userChannel.getProviderName(), timeout, senderTopic);
+		return new MQTTUserClient(mqttBroker, userChannel.getProviderName(), timeout, userChannel.getUserAddress());
 		
 	}
 	

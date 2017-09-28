@@ -4,6 +4,9 @@ import com.uniquid.register.user.UserChannel;
 import com.uniquid.userclient.UserClient;
 import com.uniquid.userclient.UserClientFactory;
 
+/**
+ * Default User Client Factory that returns currently only MQTTUserClient
+ */
 public class DefaultUserClientFactory implements UserClientFactory {
 	
 	private String mqttBroker;

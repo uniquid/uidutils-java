@@ -48,6 +48,12 @@ public class MQTTUserClient implements UserClient {
 
 	@Override
 	public UniquidMessage execute(final UniquidMessage userRequest) throws UserClientException {
+	
+		return sendRecv(userRequest);
+		
+	}
+	
+	public UniquidMessage sendRecv(final UniquidMessage userRequest) throws UserClientException {
 		
 		LOGGER.info("Sending output message to {}", destinationTopic);
 		
@@ -84,6 +90,54 @@ public class MQTTUserClient implements UserClient {
 
 			// Create a JSON Message
 			return messageSerializer.deserialize(payload);
+			
+		} catch (Throwable t) {
+			
+			LOGGER.error("Exception", t);
+			
+			throw new UserClientException("Exception", t);
+			
+		} finally {
+			
+			// disconnect
+			try {
+
+				if (connection != null) {
+				
+					LOGGER.info("Disconnecting");
+					
+					connection.disconnect();
+					
+				}
+
+			} catch (Exception ex) {
+
+				LOGGER.error("Catched Exception", ex);
+
+			}
+
+		} 
+	
+	}
+	
+	public void send(final UniquidMessage userRequest) throws UserClientException {
+		
+		LOGGER.info("Sending output message to {}", destinationTopic);
+		
+		BlockingConnection connection = null;
+		
+		try {
+			final MQTT mqtt = new MQTT();
+			
+			mqtt.setHost(broker);
+			
+			connection = mqtt.blockingConnection();
+			connection.connect();
+			
+			byte[] payload = messageSerializer.serialize(userRequest);
+
+			// consume
+			connection.publish(destinationTopic, payload, QoS.AT_LEAST_ONCE, false);
 			
 		} catch (Throwable t) {
 			

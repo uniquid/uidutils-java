@@ -1,17 +1,29 @@
 package com.uniquid.messages;
 
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * Represent a Function Request message: the User asks the provider to perform the specified function.
  */
 public class FunctionRequestMessage implements UniquidMessage {
 
+	private Random random = new Random();
+	
 	private long id;
 
 	private String user = "", parameters = "";
 
 	private int function;
+	
+	public FunctionRequestMessage() {
+		
+		// This will set a random id!
+		do {
+			id = random.nextInt(Integer.MAX_VALUE);
+		} while (id == 0);
+		
+	}
 
 	public long getId() {
 		return id;

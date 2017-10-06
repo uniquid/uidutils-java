@@ -77,12 +77,14 @@ public class ContractUtils {
         
         if (revokeAddress != null) {
 
+            Coin revokeCoinOutput = coinValue.multiply(3);
+
         		// revoke addr output
-	        TransactionOutput outputToRevoke = new TransactionOutput(networkParameters, transaction, coinValue, Address.fromBase58(networkParameters, revokeAddress));
+	        TransactionOutput outputToRevoke = new TransactionOutput(networkParameters, transaction, revokeCoinOutput, Address.fromBase58(networkParameters, revokeAddress));
 	        transaction.addOutput(outputToRevoke);
 	        
 	        // add value
-	        totalCoinOut = totalCoinOut.add(coinValue);
+	        totalCoinOut = totalCoinOut.add(revokeCoinOutput);
 	        
         }
         

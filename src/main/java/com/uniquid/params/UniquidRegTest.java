@@ -52,16 +52,16 @@ public class UniquidRegTest extends RegTestParams {
 	/**
 	 * Allow to override default peers used to access to blockchain
 	 * 
-	 * @param seeds a String representing peers separated by semicolon
+	 * @param peers a String representing peers separated by semicolon
 	 * @throws Exception in case a problem during parsing occurs
 	 */
-	public void overrideSeeds(String seeds) throws Exception {
+	public void overridePeers(String peers) throws Exception {
 		List<Integer> list = new ArrayList<Integer>();
 
-		if (seeds == null || seeds.isEmpty())
+		if (peers == null || peers.isEmpty())
 			throw new Exception("Invalid seeds");
 		
-		StringTokenizer stringTokenizer = new StringTokenizer(seeds, ";");
+		StringTokenizer stringTokenizer = new StringTokenizer(peers, ";");
 		
 		if (!(stringTokenizer.countTokens() > 0)) {
 			throw new Exception("Invalid seeds count");

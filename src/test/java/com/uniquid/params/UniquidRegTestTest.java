@@ -16,7 +16,7 @@ public class UniquidRegTestTest {
 		
 		Assert.assertArrayEquals(expected, seeds);
 		
-		UniquidRegTest.get().overrideSeeds("192.168.1.2");
+		UniquidRegTest.get().overridePeers("192.168.1.2");
 		
 		int[] newSeeds = UniquidRegTest.get().getAddrSeeds();
 		

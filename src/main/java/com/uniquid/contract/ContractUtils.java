@@ -38,6 +38,18 @@ public class ContractUtils {
 
 	}
 	
+	/**
+	 * Builds an access contract
+	 * 
+	 * @param userAddress
+	 * @param revokeAddress
+	 * @param changeAddress
+	 * @param inputs
+	 * @param bitSet
+	 * @param networkParameters
+	 * @return
+	 * @throws Exception
+	 */
 	public static Transaction buildAccessContract(final String userAddress, final String revokeAddress, final String changeAddress, final List<TransactionOutput> inputs, BitSet bitSet, NetworkParameters networkParameters) throws Exception {
 		
 		Coin coinValue = COIN_OUTPUT;
@@ -130,7 +142,7 @@ public class ContractUtils {
 		
 	}
 	
-	/*
+	/**
 	 * Revoke a contract sending back to provider the coin
 	 */
 	public static Transaction buildRevokeContract(final String providerAddress, final String userAddress, final TransactionOutput prevOut, NetworkParameters networkParameters) throws Exception {

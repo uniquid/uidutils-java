@@ -1,5 +1,8 @@
 package com.uniquid.blockchain;
 
+/**
+ * Represents a blockchain transaction
+ */
 public class Transaction {
 	
 	private String txid;

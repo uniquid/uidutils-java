@@ -12,6 +12,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.spongycastle.util.encoders.Base64;
 
+/**
+ * Class to manage AES encryption
+ */
 public class AESUtils {
 
 	private static final String KEY_ALGO = "AES";

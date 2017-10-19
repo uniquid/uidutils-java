@@ -14,7 +14,7 @@ import com.uniquid.utils.IpUtils;
  */
 public class UniquidRegTest extends RegTestParams {
 	
-	// By default use test peers
+	// By default use test peers: /52.225.217.168, /52.167.211.151, /52.225.218.133
 	private static int[] SEEDS = new int[] {(int) 2832851252L, (int) 2547230516L, (int) 2245714228L};
 	
 	public static final String ID_UNIQUIDREGTEST = "com.uniquid.regtest";

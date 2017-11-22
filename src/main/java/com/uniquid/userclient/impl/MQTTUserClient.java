@@ -91,11 +91,17 @@ public class MQTTUserClient implements UserClient {
 			// Create a JSON Message
 			return messageSerializer.deserialize(payload);
 			
+		} catch (TimeoutException ex) {
+			
+			LOGGER.error("Timeout while waiting response!", ex);
+			
+			throw new UserClientException("Timeout while waiting response!", ex);
+			
 		} catch (Throwable t) {
 			
-			LOGGER.error("Exception", t);
+			LOGGER.error("Catched Exception: " + t.getMessage(), t);
 			
-			throw new UserClientException("Exception", t);
+			throw new UserClientException("Catched Exception: " + t.getMessage(), t);
 			
 		} finally {
 			
@@ -112,7 +118,7 @@ public class MQTTUserClient implements UserClient {
 
 			} catch (Exception ex) {
 
-				LOGGER.error("Catched Exception", ex);
+				LOGGER.error("Catched Exception: " + ex.getMessage(), ex);
 
 			}
 
@@ -139,11 +145,17 @@ public class MQTTUserClient implements UserClient {
 			// consume
 			connection.publish(destinationTopic, payload, QoS.AT_LEAST_ONCE, false);
 			
+		} catch (TimeoutException ex) {
+			
+			LOGGER.error("Timeout while waiting response!", ex);
+			
+			throw new UserClientException("Timeout while waiting response!", ex);
+			
 		} catch (Throwable t) {
 			
-			LOGGER.error("Exception", t);
+			LOGGER.error("Catched Exception: " + t.getMessage(), t);
 			
-			throw new UserClientException("Exception", t);
+			throw new UserClientException("Catched Exception: " + t.getMessage(), t);
 			
 		} finally {
 			
@@ -160,7 +172,7 @@ public class MQTTUserClient implements UserClient {
 
 			} catch (Exception ex) {
 
-				LOGGER.error("Catched Exception", ex);
+				LOGGER.error("Catched Exception: " + ex.getMessage(), ex);
 
 			}
 

@@ -72,8 +72,7 @@ public class TCPUserClient implements UserClient {
 			byte[] message = msgfinal.getBytes();
 
 			int messageSize = message.length;
-			// LOGGER.debug("size of message {} is {}", new String(message),
-			// messageSize);
+
 			byte[] prefix = ByteBuffer.allocate(5).order(ByteOrder.BIG_ENDIAN).putInt(messageSize).array();
 			byte[] request = Arrays.concatenate(prefix, message);
 			dataOutputStream.write(request);

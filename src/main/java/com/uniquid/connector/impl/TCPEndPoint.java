@@ -22,7 +22,7 @@ import com.uniquid.messages.UniquidMessage;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
 
 /**
- * Implementation of a {@link EndPoint} used by {@link MQTTConnector}
+ * Implementation of a {@link EndPoint} used by {@link TCPConnector}
  */
 public class TCPEndPoint implements EndPoint {
 	
@@ -52,6 +52,8 @@ public class TCPEndPoint implements EndPoint {
 			byte[] length = new byte[5];
 			int size = inputStream.read(length, 0, 5);
 
+			// TODO WE SHOULD PUT AN UPPER LIMIT HERE TO AVOID LEAKS/MALICIOUS REQUESTS...
+			
 			ByteBuffer buffer = ByteBuffer.wrap(length);
 			int num = buffer.getInt();
 

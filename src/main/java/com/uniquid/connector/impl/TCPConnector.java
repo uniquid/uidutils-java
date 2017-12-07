@@ -1,5 +1,6 @@
 package com.uniquid.connector.impl;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -15,7 +16,7 @@ import com.uniquid.connector.ConnectorException;
 import com.uniquid.connector.EndPoint;
 
 /**
- * Implementation of a {@link Connector} that uses the MQTT protocol.
+ * Implementation of a {@link Connector} that uses the TCP plain protocol.
  */
 public class TCPConnector implements Connector {
 
@@ -116,9 +117,11 @@ public class TCPConnector implements Connector {
 			@Override
 			public void run() {
 				
+				ServerSocket serverSocket = null;
+				
 				try {
 				
-					ServerSocket serverSocket = new ServerSocket(port);
+					serverSocket = new ServerSocket(port);
 					
 					while (!Thread.currentThread().isInterrupted()) {
 						
@@ -145,6 +148,22 @@ public class TCPConnector implements Connector {
 				} catch (Exception ex) {
 					
 					LOGGER.error("Catched Exception", ex);
+					
+				} finally {
+					
+					if (serverSocket != null && !serverSocket.isClosed()) {
+						
+						try {
+							
+							serverSocket.close();
+							
+						} catch (IOException e) {
+							
+							// DO NOTHING HERE
+							
+						}
+						
+					}
 					
 				}
 

@@ -26,6 +26,8 @@ import com.uniquid.userclient.UserClientException;
 public class TCPUserClient implements UserClient {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(TCPUserClient.class);
+
+	private static final int PREFIX_LEN = 4;
 	
 	private String host;
 	private int port;
@@ -73,14 +75,14 @@ public class TCPUserClient implements UserClient {
 
 			int messageSize = message.length;
 
-			byte[] prefix = ByteBuffer.allocate(5).order(ByteOrder.BIG_ENDIAN).putInt(messageSize).array();
+			byte[] prefix = ByteBuffer.allocate(PREFIX_LEN).order(ByteOrder.BIG_ENDIAN).putInt(messageSize).array();
 			byte[] request = Arrays.concatenate(prefix, message);
 			dataOutputStream.write(request);
 			dataOutputStream.flush();
 			
 			DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-			byte[] length = new byte[5];
-			dataInputStream.read(length, 0, 5);
+			byte[] length = new byte[PREFIX_LEN];
+			dataInputStream.read(length, 0, PREFIX_LEN);
 			ByteBuffer byteBuffer = ByteBuffer.wrap(length);
 			int resultLen = byteBuffer.getInt();
 			byte[] received = new byte[resultLen];
@@ -143,7 +145,7 @@ public class TCPUserClient implements UserClient {
 			byte[] message = msgfinal.getBytes();
 
 			int messageSize = message.length;
-			byte[] prefix = ByteBuffer.allocate(5).order(ByteOrder.BIG_ENDIAN).putInt(messageSize).array();
+			byte[] prefix = ByteBuffer.allocate(PREFIX_LEN).order(ByteOrder.BIG_ENDIAN).putInt(messageSize).array();
 			byte[] request = Arrays.concatenate(prefix, message);
 			dataOutputStream.write(request);
 			dataOutputStream.flush();

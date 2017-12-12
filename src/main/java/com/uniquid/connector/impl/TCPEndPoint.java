@@ -27,6 +27,7 @@ import com.uniquid.messages.serializers.JSONMessageSerializer;
 public class TCPEndPoint implements EndPoint {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(TCPEndPoint.class);
+	private static final int PREFIX_LEN = 4;
 	
 	private Socket socket;
 	
@@ -49,8 +50,8 @@ public class TCPEndPoint implements EndPoint {
 			
 			DataInputStream inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 
-			byte[] length = new byte[5];
-			int size = inputStream.read(length, 0, 5);
+			byte[] length = new byte[PREFIX_LEN];
+			int size = inputStream.read(length, 0, PREFIX_LEN);
 
 			// TODO WE SHOULD PUT AN UPPER LIMIT HERE TO AVOID LEAKS/MALICIOUS REQUESTS...
 			
@@ -105,7 +106,7 @@ public class TCPEndPoint implements EndPoint {
 			DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 			int messageSize = payload.length;
 	
-			byte[] prefix = ByteBuffer.allocate(5).order(ByteOrder.BIG_ENDIAN).putInt(messageSize).array();
+			byte[] prefix = ByteBuffer.allocate(PREFIX_LEN).order(ByteOrder.BIG_ENDIAN).putInt(messageSize).array();
 			byte[] result = Arrays.concatenate(prefix, payload);
 	
 			dataOutputStream.write(result);

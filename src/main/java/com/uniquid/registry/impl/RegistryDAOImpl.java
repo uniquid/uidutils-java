@@ -16,7 +16,7 @@ import com.uniquid.utils.ResponseDecoder;
 public class RegistryDAOImpl implements RegistryDAO {
 	
 	private static final String PUT_URL = "%1&s/registry";
-	private static final String GET_URL = "%1&s/registry";
+	private static final String GET_URL = "%1&s/registry?providerAddress=%2&s";
 	
 	private String registryAddress;
 	
@@ -110,7 +110,7 @@ public class RegistryDAOImpl implements RegistryDAO {
 	public String retrieveProviderName(final String providerAddress) throws RegistryException {
 		
 		try {
-			URL url = new URL(GET_URL.replace("%1&s", registryAddress));
+			URL url = new URL(GET_URL.replace("%1&s", registryAddress).replace("%2&s", providerAddress));
 
 			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<String>() {
 

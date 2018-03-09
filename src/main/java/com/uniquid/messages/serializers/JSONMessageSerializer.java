@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import org.json.JSONObject;
 
 import com.uniquid.messages.AnnounceMessage;
+import com.uniquid.messages.CapabilityMessage;
 import com.uniquid.messages.FunctionRequestMessage;
 import com.uniquid.messages.FunctionResponseMessage;
 import com.uniquid.messages.MessageSerializer;
@@ -72,6 +73,22 @@ public class JSONMessageSerializer implements MessageSerializer {
 			jsonResponse.put("name", announceMessage.getName());
 			jsonResponse.put("xpub", announceMessage.getPubKey());
 
+			return jsonResponse.toString().getBytes();
+			
+		} else if (MessageType.UNIQUID_CAPABILITY.equals(uniquidMessage.getMessageType())) {
+			
+			CapabilityMessage capabilityMessage = (CapabilityMessage) uniquidMessage;
+			
+			final JSONObject jsonResponse = new JSONObject();
+			
+			jsonResponse.put("assigner", capabilityMessage.getAssigner());
+			jsonResponse.put("resourceID", capabilityMessage.getResourceID());
+			jsonResponse.put("assignee", capabilityMessage.getAssignee());
+			jsonResponse.put("rights", capabilityMessage.getRights());
+			jsonResponse.put("since", capabilityMessage.getSince());
+			jsonResponse.put("until", capabilityMessage.getUntil());
+			jsonResponse.put("assignerSignature", capabilityMessage.getAssignerSignature());
+			
 			return jsonResponse.toString().getBytes();
 			
 		} else {
@@ -148,6 +165,29 @@ public class JSONMessageSerializer implements MessageSerializer {
 			announceMessage.setPubKey(pubKey);
 			
 			return announceMessage;
+			
+		} else if (jsonMessage.has("assignerSignature")) {
+			
+			String assigner = jsonMessage.getString("assigner");
+
+			String resourceID = jsonMessage.getString("resourceID");
+			String assignee = jsonMessage.getString("assignee");
+			String rights = jsonMessage.getString("rights");
+			long since = jsonMessage.getLong("since");
+			long until = jsonMessage.getLong("until");
+			
+			String assignerSignature = jsonMessage.getString("assignerSignature");
+			
+			CapabilityMessage capabilityMessage = new CapabilityMessage();
+			capabilityMessage.setAssigner(assigner);
+			capabilityMessage.setResourceID(resourceID);
+			capabilityMessage.setAssignee(assignee);
+			capabilityMessage.setRights(rights);
+			capabilityMessage.setSince(since);
+			capabilityMessage.setUntil(until);
+			capabilityMessage.setAssignerSignature(assignerSignature);
+			
+			return capabilityMessage;
 			
 		} else {
 		

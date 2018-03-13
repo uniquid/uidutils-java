@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.uniquid.connector.ConnectorException;
 import com.uniquid.connector.EndPoint;
+import com.uniquid.messages.CapabilityMessage;
 import com.uniquid.messages.FunctionRequestMessage;
 import com.uniquid.messages.FunctionResponseMessage;
 import com.uniquid.messages.MessageSerializer;
@@ -24,7 +25,7 @@ public class MQTTEndPoint implements EndPoint {
 	
 	private String broker;
 	
-	private final FunctionRequestMessage providerRequest;
+	private final UniquidMessage receivedMessage;
 	private final FunctionResponseMessage providerResponse;
 	
 	private MessageSerializer messageSerializer = new JSONMessageSerializer();
@@ -46,10 +47,16 @@ public class MQTTEndPoint implements EndPoint {
 			if (MessageType.FUNCTION_REQUEST.equals(messageReceived.getMessageType())) {
 				
 				// Retrieve message
-				providerRequest = (FunctionRequestMessage) messageReceived;
+				receivedMessage = (FunctionRequestMessage) messageReceived;
 						
 				providerResponse = new FunctionResponseMessage();
-				providerResponse.setId(providerRequest.getId());
+				providerResponse.setId(((FunctionRequestMessage) messageReceived).getId());
+				
+			} else if (MessageType.UNIQUID_CAPABILITY.equals(messageReceived.getMessageType())) {
+				
+				receivedMessage = (CapabilityMessage) messageReceived;
+				providerResponse = new FunctionResponseMessage();
+				providerResponse.setId(0);
 				
 			} else {
 			
@@ -65,28 +72,34 @@ public class MQTTEndPoint implements EndPoint {
 	}
 
 	@Override
-	public FunctionRequestMessage getInputMessage() {
-		return providerRequest;
+	public UniquidMessage getInputMessage() {
+		return receivedMessage;
 	}
 
 	@Override
-	public FunctionResponseMessage getOutputMessage() {
+	public UniquidMessage getOutputMessage() {
 		return providerResponse;
 	}
 
 	@Override
 	public void flush() throws ConnectorException {
 		
-		MQTTUserClient mqttUserClient = new MQTTUserClient(broker, providerRequest.getUser(), DEFAULT_TIMEOUT, providerResponse.getProvider());
+		if (receivedMessage instanceof FunctionRequestMessage) {
+			
+			FunctionRequestMessage message = (FunctionRequestMessage) receivedMessage;
 		
-		try {
+			MQTTUserClient mqttUserClient = new MQTTUserClient(broker, message.getUser(), DEFAULT_TIMEOUT, providerResponse.getProvider());
 			
-			mqttUserClient.send(providerResponse);
-			
-		} catch (UserClientException e) {
-			
-			throw new ConnectorException("Exception", e);
-			
+			try {
+				
+				mqttUserClient.send(providerResponse);
+				
+			} catch (UserClientException e) {
+				
+				throw new ConnectorException("Exception", e);
+				
+			}
+		
 		}
 
 	}

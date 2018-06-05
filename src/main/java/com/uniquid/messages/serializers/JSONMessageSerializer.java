@@ -2,6 +2,7 @@ package com.uniquid.messages.serializers;
 
 import java.nio.charset.StandardCharsets;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.uniquid.messages.AnnounceMessage;
@@ -100,7 +101,7 @@ public class JSONMessageSerializer implements MessageSerializer {
 	}
 
 	@Override
-	public UniquidMessage deserialize(byte[] payload) throws MessageSerializerException {
+	public UniquidMessage deserialize(byte[] payload) throws MessageSerializerException, JSONException {
 		
 		String jsonString = new String(payload, StandardCharsets.UTF_8);
 		

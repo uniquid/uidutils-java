@@ -24,11 +24,11 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(InsightApiDAOImpl.class);
 
-	private static final String ADDR_URL = "%1&s/insight-api/addr/%2&s";
-	private static final String UTXOS_URL = "%1&s/insight-api/addr/%2&s/utxo";
-	private static final String RAWTX_URL = "%1&s/insight-api/rawtx/%2&s";
-	private static final String TRANSACTION_URL = "%1&s/insight-api/tx/%2&s";
-	private static final String SENDTX_URL = "%1&s/insight-api/tx/send";
+	private static final String ADDR_URL = "%1&s/addr/%2&s";
+	private static final String UTXOS_URL = "%1&s/addr/%2&s/utxo";
+	private static final String RAWTX_URL = "%1&s/rawtx/%2&s";
+	private static final String TRANSACTION_URL = "%1&s/tx/%2&s";
+	private static final String SENDTX_URL = "%1&s/tx/send";
 	
 	private String insightApiHost;
 

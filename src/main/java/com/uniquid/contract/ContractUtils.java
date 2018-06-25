@@ -14,7 +14,8 @@ import org.bitcoinj.script.ScriptBuilder;
 
 public class ContractUtils {
 	
-	public static final Coin FEE = Coin.COIN.divide(10000); /* 0,0001 */
+//	public static final Coin FEE = Coin.COIN.divide(10000); /* 0,0001 */
+	public static final Coin FEE = Coin.COIN.divide(1000); /* 0,001 */
 	public static final Coin IMPRINT_COIN_VALUE = Coin.CENT; /*0,01 */
 	public static final Coin COIN_OUTPUT = Coin.COIN.divide(10000); /* 0,0001 */
 	

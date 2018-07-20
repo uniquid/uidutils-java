@@ -1,22 +1,24 @@
 package com.uniquid.params;
 
-import java.math.BigInteger;
-
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestLitecoinNetParams;
 import org.bitcoinj.params.TestNet2Params;
 
 public class UniquidLitecoinTest extends TestLitecoinNetParams {
-	
-//	private static final BigInteger MAX_TARGET = new BigInteger("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16);
-	
-	public static final String ID_UNIQUIDLITEREGTEST = "com.uniquid.litecointest";
-	public static final String PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST = "uniquidlitecointest";
+		
+	public static final String ID_UNIQUIDLITETEST = "com.uniquid.litecointest";
+	public static final String PAYMENT_PROTOCOL_ID_UNIQUIDLITETEST = "uniquidlitecointest";
 	
 	private UniquidLitecoinTest() {
 		super();
 		
-        id = ID_UNIQUIDLITEREGTEST;
+        id = ID_UNIQUIDLITETEST;
+        
+        dnsSeeds = new String[] {
+                "testnet-seed.litecointools.com",
+                "seed-b.litecoin.loshan.co.uk",
+                "dnsseed-testnet.thrasher.io"
+        };
 
         majorityEnforceBlockUpgrade = TestNet2Params.TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = TestNet2Params.TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED;
@@ -31,8 +33,8 @@ public class UniquidLitecoinTest extends TestLitecoinNetParams {
 		
 			instance = new UniquidLitecoinTest();
 
-			NetworkParameters.addCustomNetworkParameter(ID_UNIQUIDLITEREGTEST, instance);
-			NetworkParameters.addCustomPaymentProtocol(ID_UNIQUIDLITEREGTEST, instance);
+			NetworkParameters.addCustomNetworkParameter(ID_UNIQUIDLITETEST, instance);
+			NetworkParameters.addCustomPaymentProtocol(PAYMENT_PROTOCOL_ID_UNIQUIDLITETEST, instance);
 		}
 		
 		return instance;
@@ -40,7 +42,7 @@ public class UniquidLitecoinTest extends TestLitecoinNetParams {
 
 	@Override
 	public String getPaymentProtocolId() {
-		return PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST;
+		return PAYMENT_PROTOCOL_ID_UNIQUIDLITETEST;
 	}
 
 }

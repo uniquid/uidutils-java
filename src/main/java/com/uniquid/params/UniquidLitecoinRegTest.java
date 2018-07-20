@@ -5,48 +5,47 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.RegTestParams;
+import org.bitcoinj.params.RegTestLitecoinNetParams;
+import org.bitcoinj.params.TestLitecoinNetParams;
 
 import com.uniquid.utils.IpUtils;
 
-/**
- * Network parameters for Uniquid Internal RegTestNet
- */
-public class UniquidRegTest extends RegTestParams {
+public class UniquidLitecoinRegTest extends RegTestLitecoinNetParams {
 	
-	// By default use test peers: /52.225.217.168, /52.167.211.151, /52.225.218.133
-	private static int[] SEEDS = new int[] {(int) 2832851252L, (int) 2547230516L, (int) 2245714228L};
+	public static final String ID_UNIQUIDLITEREGTEST = "com.uniquid.litecoinregtest";
+	public static final String PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST = "uniquidlitecoinregtest";
 	
-	public static final String ID_UNIQUIDREGTEST = "com.uniquid.regtest";
-	public static final String PAYMENT_PROTOCOL_ID_UNIQUIDREGTEST = "uniquidregtest";
-
-	private UniquidRegTest() {
-
-		port = 19000;
-		id = ID_UNIQUIDREGTEST;
-
-		addrSeeds = SEEDS;
+	// By default use test peers: /40.115.10.153, /40.115.103.9, /40.115.9.216
+	private static int[] SEEDS = new int[] {(int) 2567598888L, (int) 157774632L, (int) 3624497960L};
+	
+	private UniquidLitecoinRegTest() {
+		super();
 		
+		port = 19000;
+        id = ID_UNIQUIDLITEREGTEST;
+        
+        addrSeeds = SEEDS;
+        
 	}
 	
-	private static UniquidRegTest instance;
+	private static UniquidLitecoinRegTest instance;
 	
-	public static synchronized UniquidRegTest get() {
+	public static synchronized UniquidLitecoinRegTest get() {
 		
 		if (instance == null) {
 		
-			instance = new UniquidRegTest();
+			instance = new UniquidLitecoinRegTest();
 
-			NetworkParameters.addCustomNetworkParameter(ID_UNIQUIDREGTEST, instance);
-			NetworkParameters.addCustomPaymentProtocol(PAYMENT_PROTOCOL_ID_UNIQUIDREGTEST, instance);
+			NetworkParameters.addCustomNetworkParameter(ID_UNIQUIDLITEREGTEST, instance);
+			NetworkParameters.addCustomPaymentProtocol(PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST, instance);
 		}
 		
 		return instance;
 	}
-	
+
 	@Override
 	public String getPaymentProtocolId() {
-		return PAYMENT_PROTOCOL_ID_UNIQUIDREGTEST;
+		return PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST;
 	}
 	
 	/**

@@ -1,17 +1,16 @@
 package com.uniquid.registry.impl;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.uniquid.registry.RegistryDAO;
 import com.uniquid.registry.exception.RegistryException;
 import com.uniquid.utils.DataProvider;
 import com.uniquid.utils.HttpUtils;
 import com.uniquid.utils.ResponseDecoder;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class RegistryDAOImpl implements RegistryDAO {
 	

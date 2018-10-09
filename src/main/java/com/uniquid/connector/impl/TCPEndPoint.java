@@ -1,5 +1,13 @@
 package com.uniquid.connector.impl;
 
+import com.uniquid.connector.ConnectorException;
+import com.uniquid.connector.EndPoint;
+import com.uniquid.messages.*;
+import com.uniquid.messages.serializers.JSONMessageSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spongycastle.util.Arrays;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,19 +15,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spongycastle.util.Arrays;
-
-import com.uniquid.connector.ConnectorException;
-import com.uniquid.connector.EndPoint;
-import com.uniquid.messages.FunctionRequestMessage;
-import com.uniquid.messages.FunctionResponseMessage;
-import com.uniquid.messages.MessageSerializer;
-import com.uniquid.messages.MessageType;
-import com.uniquid.messages.UniquidMessage;
-import com.uniquid.messages.serializers.JSONMessageSerializer;
 
 /**
  * Implementation of a {@link EndPoint} used by {@link TCPConnector}
@@ -38,8 +33,7 @@ public class TCPEndPoint implements EndPoint {
 	
 	/**
 	 * Creates a new instance from the byte array message and broker
-	 * @param mqttMessageRequest the message received
-	 * @param broker the broker to use
+	 * @param socket the socket to use
 	 * @throws ConnectorException in case a problem occurs.
 	 */
 	TCPEndPoint(Socket socket) throws ConnectorException {

@@ -2,27 +2,27 @@ package com.uniquid.params;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestLitecoinNetParams;
-import org.bitcoinj.params.TestNet2Params;
+import org.bitcoinj.params.TestNet3Params;
 
 public class UniquidLitecoinTest extends TestLitecoinNetParams {
 		
 	public static final String ID_UNIQUIDLITETEST = "com.uniquid.litecointest";
 	public static final String PAYMENT_PROTOCOL_ID_UNIQUIDLITETEST = "uniquidlitecointest";
+
+	// 95.216.36.231 - 78.47.24.45 - 142.93.73.233
+	private static int[] SEEDS = new int[] {(int) 3877951583L, (int) 756559694L, (int) 3913899406L};
 	
 	private UniquidLitecoinTest() {
 		super();
 		
         id = ID_UNIQUIDLITETEST;
-        
-        dnsSeeds = new String[] {
-                "testnet-seed.litecointools.com",
-                "seed-b.litecoin.loshan.co.uk",
-                "dnsseed-testnet.thrasher.io"
-        };
 
-        majorityEnforceBlockUpgrade = TestNet2Params.TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
-        majorityRejectBlockOutdated = TestNet2Params.TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED;
-        majorityWindow = TestNet2Params.TESTNET_MAJORITY_WINDOW;
+		dnsSeeds = null;
+		addrSeeds = SEEDS;
+
+        majorityEnforceBlockUpgrade = TestNet3Params.TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
+        majorityRejectBlockOutdated = TestNet3Params.TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED;
+        majorityWindow = TestNet3Params.TESTNET_MAJORITY_WINDOW;
 	}
 	
 	private static UniquidLitecoinTest instance;

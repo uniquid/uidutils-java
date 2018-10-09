@@ -1,9 +1,9 @@
 package com.uniquid.utils;
 
-import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
 
 /**
  * Extension of Properties class that allows to perform a get and transform

@@ -1,14 +1,12 @@
 package com.uniquid.params;
 
+import com.uniquid.utils.IpUtils;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.params.RegTestLitecoinNetParams;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.RegTestLitecoinNetParams;
-import org.bitcoinj.params.TestLitecoinNetParams;
-
-import com.uniquid.utils.IpUtils;
 
 public class UniquidLitecoinRegTest extends RegTestLitecoinNetParams {
 	

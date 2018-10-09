@@ -1,5 +1,11 @@
 package com.uniquid.connector.impl;
 
+import com.uniquid.connector.Connector;
+import com.uniquid.connector.ConnectorException;
+import com.uniquid.connector.EndPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,13 +13,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.uniquid.connector.Connector;
-import com.uniquid.connector.ConnectorException;
-import com.uniquid.connector.EndPoint;
 
 /**
  * Implementation of a {@link Connector} that uses the TCP plain protocol.
@@ -29,8 +28,7 @@ public class TCPConnector implements Connector {
 
 	/**
 	 * Creates a MQTTConnector that listen on the specified receiving topic and on the specified broker.  
-	 * @param topic the topic to listen to
-	 * @param broker the MQTT broker to use 
+	 * @param port the port where start the connector
 	 */
 	private TCPConnector(int port) {
 
@@ -47,7 +45,7 @@ public class TCPConnector implements Connector {
 
 		/**
 		 * Set the listening topic
-		 * @param _topic the topic to listen to
+		 * @param _port the port to listen to
 		 * @return the Builder
 		 */
 		public Builder set_port(int _port) {

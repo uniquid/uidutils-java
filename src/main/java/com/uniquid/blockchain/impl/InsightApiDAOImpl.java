@@ -1,16 +1,5 @@
 package com.uniquid.blockchain.impl;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.uniquid.blockchain.AddressInfo;
 import com.uniquid.blockchain.BlockChainDAO;
 import com.uniquid.blockchain.Transaction;
@@ -19,6 +8,16 @@ import com.uniquid.blockchain.exception.BlockChainException;
 import com.uniquid.utils.DataProvider;
 import com.uniquid.utils.HttpUtils;
 import com.uniquid.utils.ResponseDecoder;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class InsightApiDAOImpl implements BlockChainDAO {
 

@@ -1,12 +1,12 @@
 package com.uniquid.utils;
 
+import org.spongycastle.util.Arrays;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.spongycastle.util.Arrays;
 
 public class IpUtils {
 	

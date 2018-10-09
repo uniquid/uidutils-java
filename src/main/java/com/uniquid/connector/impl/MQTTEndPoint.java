@@ -1,19 +1,13 @@
 package com.uniquid.connector.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.uniquid.connector.ConnectorException;
 import com.uniquid.connector.EndPoint;
-import com.uniquid.messages.CapabilityMessage;
-import com.uniquid.messages.FunctionRequestMessage;
-import com.uniquid.messages.FunctionResponseMessage;
-import com.uniquid.messages.MessageSerializer;
-import com.uniquid.messages.MessageType;
-import com.uniquid.messages.UniquidMessage;
+import com.uniquid.messages.*;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
 import com.uniquid.userclient.UserClientException;
 import com.uniquid.userclient.impl.MQTTUserClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of a {@link EndPoint} used by {@link MQTTConnector}

@@ -1,23 +1,15 @@
 package com.uniquid.settings.model;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.uniquid.settings.exception.SettingValidationException;
 import com.uniquid.settings.exception.UnknownSettingException;
 import com.uniquid.utils.ParsableProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * Abstract class for application settings.
@@ -35,10 +27,8 @@ public abstract class AbstractSettings {
 	private final ParsableProperties parsableProperties;
 
 	/**
-	 * Create new settings using given settings store
+	 * Create new settings
 	 * 
-	 * @param settingsStore
-	 *            the settings store
 	 * @throws UnknownSettingException
 	 */
 	public AbstractSettings() throws SettingValidationException, UnknownSettingException {
@@ -50,10 +40,8 @@ public abstract class AbstractSettings {
 	}
 
 	/**
-	 * Create new settings using given settings store
-	 * 
-	 * @param settingsStore
-	 *            the settings store
+	 * Create new settings
+	 *
 	 * @param excludedSettings
 	 *            a set of settings that should be excluded as {@link Setting}
 	 * @throws UnknownSettingException

@@ -1,16 +1,16 @@
 package com.uniquid.encryption;
 
-import java.nio.charset.Charset;
-import java.security.AlgorithmParameters;
-import java.security.Key;
+import org.spongycastle.util.encoders.Base64;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.spongycastle.util.encoders.Base64;
+import java.nio.charset.Charset;
+import java.security.AlgorithmParameters;
+import java.security.Key;
 
 /**
  * Class to manage AES encryption
@@ -85,12 +85,6 @@ public class AESUtils {
 	 *
 	 * @param password
 	 *            the password to hash.
-	 * @param salt
-	 *            the salt
-	 * @param iterations
-	 *            the iteration count (slowness factor)
-	 * @param bytes
-	 *            the length of the hash to compute in bytes
 	 * @return the PBDKF2 hash of the password
 	 */
 	private static SecretKey getPasswordHash(String password) throws Exception {

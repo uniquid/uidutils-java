@@ -1,13 +1,12 @@
 package com.uniquid.params;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
+import com.uniquid.utils.IpUtils;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.RegTestParams;
 
-import com.uniquid.utils.IpUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Network parameters for Uniquid Internal RegTestNet

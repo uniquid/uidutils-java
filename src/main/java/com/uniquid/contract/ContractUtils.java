@@ -1,16 +1,12 @@
 package com.uniquid.contract;
 
+import org.bitcoinj.core.*;
+import org.bitcoinj.crypto.TransactionSignature;
+import org.bitcoinj.script.ScriptBuilder;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
-
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.crypto.TransactionSignature;
-import org.bitcoinj.script.ScriptBuilder;
 
 public class ContractUtils {
 	
@@ -62,7 +58,7 @@ public class ContractUtils {
         if (userAddress != null) {
         	
 	        // user output
-	        TransactionOutput outputToUser = new TransactionOutput(networkParameters, transaction, coinValue, Address.fromBase58(networkParameters, userAddress));
+	        TransactionOutput outputToUser = new TransactionOutput(networkParameters, transaction, coinValue, LegacyAddress.fromBase58(networkParameters, userAddress));
 	        transaction.addOutput(outputToUser);
 	        
 	        // add value
@@ -93,7 +89,7 @@ public class ContractUtils {
             Coin revokeCoinOutput = coinValue.multiply(3);
 
         		// revoke addr output
-	        TransactionOutput outputToRevoke = new TransactionOutput(networkParameters, transaction, revokeCoinOutput, Address.fromBase58(networkParameters, revokeAddress));
+	        TransactionOutput outputToRevoke = new TransactionOutput(networkParameters, transaction, revokeCoinOutput, LegacyAddress.fromBase58(networkParameters, revokeAddress));
 	        transaction.addOutput(outputToRevoke);
 	        
 	        // add value
@@ -109,7 +105,7 @@ public class ContractUtils {
         	
     		final Coin change = sum(inputs).subtract(totalCoinOut);
             
-			outputChange = new TransactionOutput(networkParameters, transaction, change, Address.fromBase58(networkParameters, changeAddress));
+			outputChange = new TransactionOutput(networkParameters, transaction, change, LegacyAddress.fromBase58(networkParameters, changeAddress));
             transaction.addOutput(outputChange);
 			
 			// Connect all input
@@ -169,11 +165,11 @@ public class ContractUtils {
         final Transaction transaction = new Transaction(networkParameters);
         
         // provider output
-        TransactionOutput outputToProvider = new TransactionOutput(networkParameters, transaction, coinDivided, Address.fromBase58(networkParameters, providerAddress));
+        TransactionOutput outputToProvider = new TransactionOutput(networkParameters, transaction, coinDivided, LegacyAddress.fromBase58(networkParameters, providerAddress));
         transaction.addOutput(outputToProvider);
         
         // user output
-        TransactionOutput outputToUser = new TransactionOutput(networkParameters, transaction, coinDivided, Address.fromBase58(networkParameters, userAddress));
+        TransactionOutput outputToUser = new TransactionOutput(networkParameters, transaction, coinDivided, LegacyAddress.fromBase58(networkParameters, userAddress));
         transaction.addOutput(outputToUser);
         
         // add value

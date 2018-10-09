@@ -1,14 +1,14 @@
 package com.uniquid.utils;
 
-import java.util.List;
-
+import com.google.common.collect.ImmutableList;
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
 
 public class AddressUtils {
 	
@@ -33,7 +33,7 @@ public class AddressUtils {
 		}
 
 		DeterministicKey imprintingKey = deterministicHierarchy.get(child, true, true);
-		return imprintingKey.toAddress(networkParameters);
+		return LegacyAddress.fromKey(networkParameters, imprintingKey);
 		
 	}
 	
@@ -58,7 +58,7 @@ public class AddressUtils {
 		}
 
 		DeterministicKey imprintingKey = deterministicHierarchy.get(child, true, true);
-		return imprintingKey.toAddress(networkParameters);
+		return LegacyAddress.fromKey(networkParameters, imprintingKey);
 		
 	}
 	
@@ -83,7 +83,7 @@ public class AddressUtils {
 		}
 
 		DeterministicKey imprintingKey = deterministicHierarchy.get(child, true, true);
-		return imprintingKey.toAddress(networkParameters);
+		return LegacyAddress.fromKey(networkParameters, imprintingKey);
 		
 	}
 	
@@ -108,7 +108,7 @@ public class AddressUtils {
 		}
 
 		DeterministicKey imprintingKey = deterministicHierarchy.get(child, true, true);
-		return imprintingKey.toAddress(networkParameters);
+		return LegacyAddress.fromKey(networkParameters, imprintingKey);
 		
 	}
 

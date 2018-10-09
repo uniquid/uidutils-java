@@ -1,21 +1,16 @@
 package com.uniquid.connector.impl;
 
+import com.uniquid.connector.Connector;
+import com.uniquid.connector.ConnectorException;
+import com.uniquid.connector.EndPoint;
+import org.fusesource.mqtt.client.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import org.fusesource.mqtt.client.BlockingConnection;
-import org.fusesource.mqtt.client.MQTT;
-import org.fusesource.mqtt.client.Message;
-import org.fusesource.mqtt.client.QoS;
-import org.fusesource.mqtt.client.Topic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.uniquid.connector.Connector;
-import com.uniquid.connector.ConnectorException;
-import com.uniquid.connector.EndPoint;
 
 /**
  * Implementation of a {@link Connector} that uses the MQTT protocol.

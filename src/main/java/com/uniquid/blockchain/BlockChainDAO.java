@@ -1,8 +1,8 @@
 package com.uniquid.blockchain;
 
-import java.util.Collection;
-
 import com.uniquid.blockchain.exception.BlockChainException;
+
+import java.util.Collection;
 
 /**
  * Interface to interact with BlockChain

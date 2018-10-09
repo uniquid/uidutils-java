@@ -1,14 +1,13 @@
 package com.uniquid.utils;
 
+import com.uniquid.encryption.AESUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.uniquid.encryption.AESUtils;
 
 public class SeedUtils<T extends BackupData> {
 

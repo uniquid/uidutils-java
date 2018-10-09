@@ -1,5 +1,13 @@
 package com.uniquid.userclient.impl;
 
+import com.uniquid.messages.UniquidMessage;
+import com.uniquid.messages.serializers.JSONMessageSerializer;
+import com.uniquid.userclient.UserClient;
+import com.uniquid.userclient.UserClientException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spongycastle.util.Arrays;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -9,15 +17,6 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spongycastle.util.Arrays;
-
-import com.uniquid.messages.UniquidMessage;
-import com.uniquid.messages.serializers.JSONMessageSerializer;
-import com.uniquid.userclient.UserClient;
-import com.uniquid.userclient.UserClientException;
 
 
 /**
@@ -36,8 +35,8 @@ public class TCPUserClient implements UserClient {
 	
 	/**
 	 * Creates an instance from broker, destination topic and timeout
-	 * @param broker the broker to use
-	 * @param destinationTopic the topic that will receive the message
+	 * @param host the host to use
+	 * @param port the port where to listen
 	 * @param timeoutInSeconds the timeout in seconds to wait for a response
 	 */
 	public TCPUserClient(final String host, final int port, final int timeoutInSeconds) {

@@ -1,9 +1,9 @@
 package com.uniquid.settings.model;
 
-import java.io.Serializable;
-
 import com.uniquid.settings.exception.SettingValidationException;
 import com.uniquid.settings.stringifier.DefaultStringifier;
+
+import java.io.Serializable;
 
 /**
  * Represents an application setting

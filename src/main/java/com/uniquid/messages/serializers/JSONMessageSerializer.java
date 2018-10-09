@@ -1,18 +1,10 @@
 package com.uniquid.messages.serializers;
 
-import java.nio.charset.StandardCharsets;
-
+import com.uniquid.messages.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.uniquid.messages.AnnounceMessage;
-import com.uniquid.messages.CapabilityMessage;
-import com.uniquid.messages.FunctionRequestMessage;
-import com.uniquid.messages.FunctionResponseMessage;
-import com.uniquid.messages.MessageSerializer;
-import com.uniquid.messages.MessageSerializerException;
-import com.uniquid.messages.MessageType;
-import com.uniquid.messages.UniquidMessage;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Implementation of Uniquid Messages with JSON format

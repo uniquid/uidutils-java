@@ -1,14 +1,13 @@
 package com.uniquid.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.uniquid.connector.Connector;
 import com.uniquid.connector.EndPoint;
 import com.uniquid.messages.FunctionResponseMessage;
 import com.uniquid.messages.MessageType;
 import com.uniquid.messages.UniquidMessage;
 import com.uniquid.userclient.UserClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class open a connector as a Provider and when a message is received then forward the request via the

@@ -13,6 +13,6 @@ public interface UserClient {
 	 * @return the {@link UniquidMessage} from the Provider.
 	 * @throws UserClientException in case a problem occurs.
 	 */
-	public UniquidMessage execute(UniquidMessage userMessage) throws UserClientException;
+	UniquidMessage execute(UniquidMessage userMessage) throws UserClientException;
 
 }

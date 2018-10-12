@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -93,7 +94,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 	private static Collection<Utxo> utxosFromJsonString(String string, int maxUtxos) throws JSONException {
 
-		Collection<Utxo> collection = new ArrayList<Utxo>();
+		Collection<Utxo> collection = new ArrayList<>();
 
 		JSONArray jsonMessage = new JSONArray(string);
 
@@ -123,7 +124,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 	
 	private static Collection<Utxo> utxosFromJsonString(String string) throws JSONException {
 
-		Collection<Utxo> collection = new ArrayList<Utxo>();
+		Collection<Utxo> collection = new ArrayList<>();
 
 		JSONArray jsonMessage = new JSONArray(string);
 
@@ -175,7 +176,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 						throws Exception {
 					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 						
-						return new ArrayList<Utxo>();
+						return new ArrayList<>();
 					
 					throw new Exception("Received " + responseCode + responseMessage);
 				}
@@ -213,7 +214,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 						throws Exception {
 					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 						
-						return new ArrayList<Utxo>();
+						return new ArrayList<>();
 					
 					throw new Exception("Received " + responseCode + responseMessage);
 				}
@@ -228,13 +229,8 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 	}
 
 	private static String rawtxFromJsonString(String string) throws JSONException {
-
 		JSONObject jsonMessage = new JSONObject(string);
-
-		String rawtx = jsonMessage.getString("rawtx");
-
-		return rawtx;
-
+		return jsonMessage.getString("rawtx");
 	}
 
 	@Override
@@ -358,13 +354,8 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 	}
 	
 	private static String txidFromJsonString(String string) throws JSONException {
-
 		JSONObject jsonMessage = new JSONObject(string);
-
-		String txid = jsonMessage.getString("txid");
-
-		return txid;
-
+		return jsonMessage.getString("txid");
 	}
 
 	@Override
@@ -376,7 +367,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
 
 			jsonMessage.put("rawtx", rawtx);
 			
-			final byte[] postDataBytes = jsonMessage.toString().getBytes("UTF-8");
+			final byte[] postDataBytes = jsonMessage.toString().getBytes(StandardCharsets.UTF_8);
 
 			URL url = new URL(SENDTX_URL.replace("%1&s", insightApiHost));
 			

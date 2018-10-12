@@ -35,9 +35,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Get boolean value
-		boolean value = booleanValue.booleanValue();
-
-		return value;
+		return booleanValue.booleanValue();
 
 	}
 
@@ -59,9 +57,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Parse to boolean
-		Boolean value = new Boolean(stringValue);
-
-		return value;
+		return new Boolean(stringValue);
 
 	}
 
@@ -84,9 +80,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Parse to double
-		double value = doubleValue.doubleValue();
-
-		return value;
+		return doubleValue;
 
 	}
 
@@ -110,9 +104,7 @@ public class ParsableProperties extends Properties {
 			}
 
 			// Parse to double
-			Double value = new Double(stringValue);
-
-			return value;
+			return new Double(stringValue);
 
 		} catch (NumberFormatException ex) {
 
@@ -144,9 +136,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Parse to int
-		int value = integerValue.intValue();
-
-		return value;
+		return integerValue;
 
 	}
 
@@ -166,9 +156,7 @@ public class ParsableProperties extends Properties {
 		try {
 
 			// Parse to int
-			Integer value = new Integer(stringValue);
-
-			return value;
+			return new Integer(stringValue);
 
 		} catch (NumberFormatException ex) {
 
@@ -200,9 +188,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Parse to long
-		long value = longValue.longValue();
-
-		return value;
+		return longValue.longValue();
 
 	}
 
@@ -222,9 +208,7 @@ public class ParsableProperties extends Properties {
 		try {
 
 			// Parse to long
-			Long value = new Long(stringValue);
-
-			return value;
+			return new Long(stringValue);
 
 		} catch (NumberFormatException ex) {
 
@@ -303,9 +287,7 @@ public class ParsableProperties extends Properties {
 		try {
 
 			// Parse to Enum
-			Enum enumValue = Enum.valueOf(enumType, value);
-
-			return enumValue;
+			return Enum.valueOf(enumType, value);
 
 		} catch (Exception ex) {
 
@@ -333,9 +315,7 @@ public class ParsableProperties extends Properties {
 		try {
 
 			// Parse to Enum
-			Enum enumValue = Enum.valueOf(enumType, value);
-
-			return enumValue;
+			return Enum.valueOf(enumType, value);
 
 		} catch (Exception ex) {
 
@@ -367,10 +347,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Get boolean value
-		boolean value = booleanValue.booleanValue();
-
-		return value;
-
+		return booleanValue.booleanValue();
 	}
 
 	/**
@@ -392,9 +369,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Parse to double
-		double value = doubleValue.doubleValue();
-
-		return value;
+		return doubleValue.doubleValue();
 
 	}
 
@@ -417,9 +392,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Parse to int
-		int value = integerValue.intValue();
-
-		return value;
+		return integerValue.intValue();
 
 	}
 
@@ -442,10 +415,7 @@ public class ParsableProperties extends Properties {
 		}
 
 		// Parse to long
-		long value = longValue.longValue();
-
-		return value;
-
+		return longValue.longValue();
 	}
 
 	/**

@@ -13,7 +13,7 @@ public interface MessageSerializer {
 	 * @return the byte array representing the uniquid message
 	 * @throws MessageSerializerException in case a problem occurs during serialization
 	 */
-	public byte[] serialize(UniquidMessage uniquidMessage) throws MessageSerializerException;
+	byte[] serialize(UniquidMessage uniquidMessage) throws MessageSerializerException;
 	
 	/**
 	 * Deserialize an array of bytes into an Uniquid Message instance
@@ -22,6 +22,6 @@ public interface MessageSerializer {
 	 * @return an Uniquid Message instance representing the byte array
 	 * @throws MessageSerializerException in case a problem occurs during deserialization
 	 */
-	public UniquidMessage deserialize(byte[] payload) throws MessageSerializerException;
+	UniquidMessage deserialize(byte[] payload) throws MessageSerializerException;
 	
 }

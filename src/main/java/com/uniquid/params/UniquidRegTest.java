@@ -55,7 +55,7 @@ public class UniquidRegTest extends RegTestParams {
 	 * @throws Exception in case a problem during parsing occurs
 	 */
 	public void overridePeers(String peers) throws Exception {
-		List<Integer> list = new ArrayList<Integer>();
+		List<Integer> list = new ArrayList<>();
 
 		if (peers == null || peers.isEmpty())
 			throw new Exception("Invalid seeds");
@@ -80,7 +80,7 @@ public class UniquidRegTest extends RegTestParams {
 		
 		int[] arr = new int[list.size()];
 		for (int i = 0; i < list.size(); i++) {
-			arr[i] = (int) list.get(i);
+			arr[i] = list.get(i);
 		}
 		
 		SEEDS = arr;

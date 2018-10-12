@@ -52,7 +52,7 @@ public abstract class AbstractSettings {
 		// Get settings
 		settings = getSettings(this.getClass(), excludedSettings);
 
-		settingsListeners = new ArrayList<SettingsListener>();
+		settingsListeners = new ArrayList<>();
 
 		parsableProperties = new ParsableProperties();
 
@@ -198,9 +198,7 @@ public abstract class AbstractSettings {
 		}
 
 		// Get boolean value
-		boolean value = booleanValue.booleanValue();
-
-		return value;
+		return booleanValue.booleanValue();
 
 	}
 
@@ -223,9 +221,7 @@ public abstract class AbstractSettings {
 		}
 
 		// Parse to double
-		double value = doubleValue.doubleValue();
-
-		return value;
+		return doubleValue.doubleValue();
 
 	}
 
@@ -248,10 +244,7 @@ public abstract class AbstractSettings {
 		}
 
 		// Parse to int
-		int value = integerValue.intValue();
-
-		return value;
-
+		return integerValue.intValue();
 	}
 
 	/**
@@ -273,9 +266,7 @@ public abstract class AbstractSettings {
 		}
 
 		// Parse to long
-		long value = longValue.longValue();
-
-		return value;
+		return longValue;
 
 	}
 
@@ -395,7 +386,7 @@ public abstract class AbstractSettings {
 	 */
 	private static Map<String, Setting> getSettings(Class<?> targetClass, Set<Setting> excludedSettings) {
 
-		Map<String, Setting> settings = new HashMap<String, Setting>();
+		Map<String, Setting> settings = new HashMap<>();
 
 		// Log
 		LOGGER.info("analyzing class for settings: " + targetClass);
@@ -476,7 +467,7 @@ public abstract class AbstractSettings {
 		LOGGER.info("Notify settings listeners...");
 
 		// Clone settings listeners
-		List<SettingsListener> settingsListeners = new ArrayList<SettingsListener>(this.settingsListeners);
+		List<SettingsListener> settingsListeners = new ArrayList<>(this.settingsListeners);
 
 		for (SettingsListener settingsListener : settingsListeners) {
 

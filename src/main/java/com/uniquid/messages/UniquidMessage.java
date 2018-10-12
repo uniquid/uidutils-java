@@ -11,6 +11,6 @@ public interface UniquidMessage {
 	 * 
 	 * @return the {@link MessageType} of this message
 	 */
-	public MessageType getMessageType();
+	MessageType getMessageType();
 
 }

@@ -20,6 +20,6 @@ public interface Validator {
 	 *             {@link SettingValidationException#setSettingKey(String)}
 	 *             method.
 	 */
-	public void validate(Setting setting, String stringValue) throws SettingValidationException;
+	void validate(Setting setting, String stringValue) throws SettingValidationException;
 	
 }

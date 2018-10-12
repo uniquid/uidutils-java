@@ -23,7 +23,7 @@ public class AESUtils {
 	private static final int HASH_BYTES = 24;
 	private static final int PBKDF2_ITERATIONS = 1000;
 	private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
-	private static byte[] SALT = new String("458924034589240345892403").getBytes();
+	private static byte[] SALT = ("458924034589240345892403").getBytes();
 	// Compute a SALT from securerandom: this makes a good salt—which doesn't
 	// need to be kept secret
 

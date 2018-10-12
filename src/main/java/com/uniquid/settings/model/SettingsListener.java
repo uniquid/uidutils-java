@@ -11,6 +11,6 @@ public interface SettingsListener {
 	 * @param settings
 	 *            the settings that was changed
 	 */
-	public void settingChanged(AbstractSettings settings);
+	void settingChanged(AbstractSettings settings);
 
 }

@@ -9,32 +9,32 @@ public interface UserClientFactory {
 	/**
 	 * Represent generic configuration used to lookup at runtime the proper client 
 	 */
-	public static interface UserClientFactoryConfiguration {
-		
+	interface UserClientFactoryConfiguration {
+
 		/**
 		 * Return the protocol that the Provider can Talk
 		 * @return
 		 */
-		public String getProviderProtocol();
-		
+		String getProviderProtocol();
+
 		/**
 		 * Return the provider name
 		 * @return
 		 */
-		public String getProviderName();
-		
+		String getProviderName();
+
 		/**
 		 * Return the user address
 		 * @return
 		 */
-		public String getUserAddress();
-		
+		String getUserAddress();
+
 	}
 	/**
 	 * Returns the UserClient compatibile with the specified configuration
 	 * @param configuration
 	 * @return
 	 */
-	public UserClient getUserClient(UserClientFactoryConfiguration configuration);
-	
+	UserClient getUserClient(UserClientFactoryConfiguration configuration);
+
 }

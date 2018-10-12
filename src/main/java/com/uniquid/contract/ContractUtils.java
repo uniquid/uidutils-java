@@ -10,9 +10,7 @@ import java.util.List;
 
 public class ContractUtils {
 	
-//	public static final Coin FEE = Coin.COIN.divide(10000); /* 0,0001 */
 	public static final Coin FEE = Coin.COIN.divide(1000); /* 0,001 */
-	public static final Coin IMPRINT_COIN_VALUE = Coin.CENT; /*0,01 */
 	public static final Coin COIN_OUTPUT = Coin.COIN.divide(1000); /* 0,001 */
 	
 	/*
@@ -27,7 +25,7 @@ public class ContractUtils {
 	 */
 	public static Transaction buildAccessContract(final String userAddress, final String revokeAddress, final String changeAddress, final TransactionOutput prevOut, BitSet bitSet, NetworkParameters networkParameters) throws Exception {
 		
-		ArrayList<TransactionOutput> inputs = new ArrayList<TransactionOutput>();
+		ArrayList<TransactionOutput> inputs = new ArrayList<>();
 		
 		inputs.add(prevOut);
 		
@@ -100,7 +98,7 @@ public class ContractUtils {
         // add fee
         totalCoinOut = totalCoinOut.add(FEE);
         
-        TransactionOutput outputChange = null;
+        TransactionOutput outputChange;
         try {
         	
     		final Coin change = sum(inputs).subtract(totalCoinOut);
@@ -157,9 +155,7 @@ public class ContractUtils {
 		}
 		
 		Coin coinValue = prevOut.getValue().subtract(FEE);
-		
-		Coin totalCoinOut = Coin.ZERO;
-		
+
 		Coin coinDivided = Coin.valueOf(coinValue.getValue() / 2);
 		
         final Transaction transaction = new Transaction(networkParameters);
@@ -171,10 +167,7 @@ public class ContractUtils {
         // user output
         TransactionOutput outputToUser = new TransactionOutput(networkParameters, transaction, coinDivided, LegacyAddress.fromBase58(networkParameters, userAddress));
         transaction.addOutput(outputToUser);
-        
-        // add value
-        totalCoinOut = totalCoinOut.add(coinValue);
-        
+
         try {
 			
 			// Connect all input

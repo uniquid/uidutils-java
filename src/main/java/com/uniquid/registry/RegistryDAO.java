@@ -14,7 +14,7 @@ public interface RegistryDAO {
 	 * @param providerAddress the address of the provider
 	 * @throws RegistryException in case a problem occurs
 	 */
-	public void insertMapping(String providerName, String providerAddress) throws RegistryException;
+	void insertMapping(String providerName, String providerAddress) throws RegistryException;
 	
 	/**
 	 * Returns the provider name from its address
@@ -23,6 +23,6 @@ public interface RegistryDAO {
 	 * @return the provider name associated to the address
 	 * @throws RegistryException in case a problem occurs
 	 */
-	public String retrieveProviderName(String providerAddress) throws RegistryException;
+	String retrieveProviderName(String providerAddress) throws RegistryException;
 
 }

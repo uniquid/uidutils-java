@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class RegistryDAOImpl implements RegistryDAO {
 	
@@ -33,7 +34,7 @@ public class RegistryDAOImpl implements RegistryDAO {
 			jsonMessage.put("provider_name", providerName);
 			jsonMessage.put("provider_address", providerAddress);
 
-			final byte[] postDataBytes = jsonMessage.toString().getBytes("UTF-8");
+			final byte[] postDataBytes = jsonMessage.toString().getBytes(StandardCharsets.UTF_8);
 
 			URL url = new URL(PUT_URL.replace("%1&s", registryAddress));
 

@@ -1,13 +1,14 @@
 package com.uniquid.connector.impl;
 
+import com.uniquid.messages.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.uniquid.connector.ConnectorException;
 import com.uniquid.connector.EndPoint;
-import com.uniquid.messages.*;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
 import com.uniquid.userclient.UserClientException;
 import com.uniquid.userclient.impl.MQTTUserClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of a {@link EndPoint} used by {@link MQTTConnector}
@@ -20,7 +21,7 @@ public class MQTTEndPoint implements EndPoint {
 	private String broker;
 	
 	private final UniquidMessage receivedMessage;
-	private final FunctionResponseMessage providerResponse;
+	private FunctionResponseMessage providerResponse;
 	
 	private MessageSerializer messageSerializer = new JSONMessageSerializer();
 	
@@ -52,6 +53,10 @@ public class MQTTEndPoint implements EndPoint {
 				providerResponse = new FunctionResponseMessage();
 				providerResponse.setId(0);
 				
+			} else if (MessageType.ANNOUNCE.equals(messageReceived.getMessageType())) {
+
+				receivedMessage = messageReceived;
+
 			} else {
 			
 				throw new Exception("Received an invalid message type " + messageReceived.getMessageType());
@@ -66,13 +71,13 @@ public class MQTTEndPoint implements EndPoint {
 	}
 
 	@Override
-	public UniquidMessage getInputMessage() {
+	public UniquidMessage getRequest() {
 		return receivedMessage;
 	}
 
 	@Override
-	public UniquidMessage getOutputMessage() {
-		return providerResponse;
+	public void setResponse(FunctionResponseMessage message) {
+		providerResponse = message;
 	}
 
 	@Override

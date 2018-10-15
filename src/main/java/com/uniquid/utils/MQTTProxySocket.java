@@ -33,9 +33,7 @@ public class MQTTProxySocket implements Runnable {
 
 				EndPoint endPoint = connector.accept();
 
-				UniquidMessage inputMessage = endPoint.getInputMessage();
-
-				FunctionResponseMessage outputMessage = (FunctionResponseMessage) endPoint.getOutputMessage();
+				UniquidMessage inputMessage = endPoint.getRequest();
 
 				if (MessageType.FUNCTION_REQUEST.equals(inputMessage.getMessageType())) {
 
@@ -53,9 +51,11 @@ public class MQTTProxySocket implements Runnable {
 				FunctionResponseMessage response = (FunctionResponseMessage) userClient.execute(inputMessage);
 
 				LOGGER.info("Received response!");
+				FunctionResponseMessage outputMessage = new FunctionResponseMessage();
 				outputMessage.setError(response.getError());
 				outputMessage.setProvider(response.getProvider());
 				outputMessage.setResult(response.getResult());
+				endPoint.setResponse(outputMessage);
 
 				LOGGER.info("Flushing response via MQTT");
 				

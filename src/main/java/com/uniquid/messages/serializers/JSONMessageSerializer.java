@@ -1,15 +1,21 @@
 package com.uniquid.messages.serializers;
 
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.uniquid.messages.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * Implementation of Uniquid Messages with JSON format
  */
 public class JSONMessageSerializer implements MessageSerializer {
+
+	// Pattern: "error - txid"
+	// Example: "0 - 913ae6d8d4f149e0286bd73d4b616b4c8478f256f7929373ffae11224066b4ee"
+	private static final Pattern PATTERN = Pattern.compile("^(\\d+)+\\s+-\\s+(\\w+)$");
 	
 	@Override
 	public byte[] serialize(UniquidMessage uniquidMessage) throws MessageSerializerException {
@@ -130,16 +136,34 @@ public class JSONMessageSerializer implements MessageSerializer {
 				final int error =jsonBody.getInt("error"); 
 				
 				final long id = jsonBody.getLong("id");
-				
-				FunctionResponseMessage responseMessage = new FunctionResponseMessage();
-				
-				responseMessage.setProvider(sender);
-				responseMessage.setResult(result);
-				responseMessage.setError(error);
-				responseMessage.setId(id);
-				
-				return responseMessage;
-				
+
+				// IS function 30 ?
+				Matcher matcher = PATTERN.matcher(result);
+				if (matcher.find()) {
+					final int txidError = Integer.parseInt(matcher.group(1));
+					final String txid = matcher.group(2);
+
+					Function30ResponseMessage responseMessage = new Function30ResponseMessage();
+
+					responseMessage.setProvider(sender);
+					responseMessage.setResult(result);
+					responseMessage.setError(error);
+					responseMessage.setId(id);
+					responseMessage.setTxid(txid);
+					responseMessage.setTxidError(txidError);
+
+					return responseMessage;
+				} else {
+					FunctionResponseMessage responseMessage = new FunctionResponseMessage();
+
+					responseMessage.setProvider(sender);
+					responseMessage.setResult(result);
+					responseMessage.setError(error);
+					responseMessage.setId(id);
+
+					return responseMessage;
+				}
+
 			} else {
 				
 				throw new MessageSerializerException("Invalid message to deserialize!");

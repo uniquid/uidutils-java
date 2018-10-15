@@ -26,7 +26,7 @@ public class MQTTEndPoint implements EndPoint {
 	private String broker;
 	
 	private final UniquidMessage receivedMessage;
-	private final FunctionResponseMessage providerResponse;
+	private FunctionResponseMessage providerResponse;
 	
 	private MessageSerializer messageSerializer = new JSONMessageSerializer();
 	
@@ -72,13 +72,13 @@ public class MQTTEndPoint implements EndPoint {
 	}
 
 	@Override
-	public UniquidMessage getInputMessage() {
+	public UniquidMessage getRequest() {
 		return receivedMessage;
 	}
 
 	@Override
-	public UniquidMessage getOutputMessage() {
-		return providerResponse;
+	public void setResponse(FunctionResponseMessage message) {
+		providerResponse = message;
 	}
 
 	@Override

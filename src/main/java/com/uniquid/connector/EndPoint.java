@@ -1,5 +1,6 @@
 package com.uniquid.connector;
 
+import com.uniquid.messages.FunctionResponseMessage;
 import com.uniquid.messages.UniquidMessage;
 
 /**
@@ -11,13 +12,13 @@ public interface EndPoint {
 	 * Returns the {@link ProviderRequest} performed by the User
 	 * @return the {@link ProviderRequest} performed by the User
 	 */
-	public UniquidMessage getInputMessage();
+	public UniquidMessage getRequest();
 
 	/**
 	 * Returns the {@link ProviderResponse} to be returned to the User
 	 * @return the {@link ProviderResponse} to be returned to the User
 	 */
-	public UniquidMessage getOutputMessage();
+	public void setResponse(FunctionResponseMessage message);
 	
 	/**
 	 * Closes this instance sending all the communication to the User.

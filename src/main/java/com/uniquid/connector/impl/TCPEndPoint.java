@@ -32,7 +32,7 @@ public class TCPEndPoint implements EndPoint {
 	private Socket socket;
 	
 	private final FunctionRequestMessage providerRequest;
-	private final FunctionResponseMessage providerResponse;
+	private FunctionResponseMessage providerResponse;
 	
 	private MessageSerializer messageSerializer = new JSONMessageSerializer();
 	
@@ -87,13 +87,13 @@ public class TCPEndPoint implements EndPoint {
 	}
 
 	@Override
-	public FunctionRequestMessage getInputMessage() {
+	public FunctionRequestMessage getRequest() {
 		return providerRequest;
 	}
 
 	@Override
-	public FunctionResponseMessage getOutputMessage() {
-		return providerResponse;
+	public void setResponse(FunctionResponseMessage message) {
+		providerResponse = message;
 	}
 
 	@Override

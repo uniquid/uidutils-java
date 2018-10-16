@@ -1,14 +1,13 @@
 package com.uniquid.connector.impl;
 
-import com.uniquid.messages.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.uniquid.connector.ConnectorException;
 import com.uniquid.connector.EndPoint;
+import com.uniquid.messages.*;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
 import com.uniquid.userclient.UserClientException;
 import com.uniquid.userclient.impl.MQTTUserClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of a {@link EndPoint} used by {@link MQTTConnector}
@@ -42,14 +41,14 @@ public class MQTTEndPoint implements EndPoint {
 			if (MessageType.FUNCTION_REQUEST.equals(messageReceived.getMessageType())) {
 				
 				// Retrieve message
-				receivedMessage = (FunctionRequestMessage) messageReceived;
+				receivedMessage = messageReceived;
 						
 				providerResponse = new FunctionResponseMessage();
 				providerResponse.setId(((FunctionRequestMessage) messageReceived).getId());
 				
 			} else if (MessageType.UNIQUID_CAPABILITY.equals(messageReceived.getMessageType())) {
 				
-				receivedMessage = (CapabilityMessage) messageReceived;
+				receivedMessage = messageReceived;
 				providerResponse = new FunctionResponseMessage();
 				providerResponse.setId(0);
 				

@@ -1,12 +1,12 @@
 package com.uniquid.settings;
 
-import java.util.Properties;
-
 import com.uniquid.settings.exception.SettingValidationException;
 import com.uniquid.settings.exception.UnknownSettingException;
 import com.uniquid.settings.model.AbstractSettings;
 import com.uniquid.settings.model.Setting;
 import com.uniquid.settings.validator.NotEmpty;
+
+import java.util.Properties;
 
 public class DummySettings extends AbstractSettings {
 	

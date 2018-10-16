@@ -1,12 +1,12 @@
 package com.uniquid.messages.serializers;
 
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.uniquid.messages.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Implementation of Uniquid Messages with JSON format

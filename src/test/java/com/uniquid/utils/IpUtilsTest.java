@@ -1,10 +1,9 @@
 package com.uniquid.utils;
 
-import java.net.InetAddress;
-
+import junit.framework.Assert;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import java.net.InetAddress;
 
 public class IpUtilsTest {
 	

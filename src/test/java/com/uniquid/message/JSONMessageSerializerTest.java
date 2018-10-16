@@ -1,15 +1,9 @@
 package com.uniquid.message;
 
-import org.junit.Test;
-
-import com.uniquid.messages.AnnounceMessage;
-import com.uniquid.messages.FunctionRequestMessage;
-import com.uniquid.messages.FunctionResponseMessage;
-import com.uniquid.messages.MessageSerializerException;
-import com.uniquid.messages.UniquidMessage;
+import com.uniquid.messages.*;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
-
 import junit.framework.Assert;
+import org.junit.Test;
 
 public class JSONMessageSerializerTest {
 

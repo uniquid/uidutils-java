@@ -1,22 +1,18 @@
 package com.uniquid.blockchain;
 
-import java.util.Collection;
-
-import org.junit.Test;
-
-import com.uniquid.blockchain.AddressInfo;
-import com.uniquid.blockchain.Utxo;
 import com.uniquid.blockchain.exception.BlockChainException;
 import com.uniquid.blockchain.impl.InsightApiDAOImpl;
-
 import junit.framework.Assert;
+import org.junit.Test;
+
+import java.util.Collection;
 
 public class InsightApiBlochChainDAOTest {
 
 	@Test
 	public void test() throws Exception {
 
-		InsightApiDAOImpl blockChainDAOImpl = new InsightApiDAOImpl("http://explorer.uniquid.co:3001");
+		InsightApiDAOImpl blockChainDAOImpl = new InsightApiDAOImpl("http://explorer.uniquid.co:3001/insight-api");
 
 		AddressInfo addressInfo = blockChainDAOImpl.retrieveAddressInfo("moJ6LK1BZTvLPhA1XFefMmKCH3YGrdSegm");
 		

@@ -1,17 +1,12 @@
 package com.uniquid.userclient;
 
-import org.fusesource.mqtt.client.BlockingConnection;
-import org.fusesource.mqtt.client.MQTT;
-import org.fusesource.mqtt.client.Message;
-import org.fusesource.mqtt.client.QoS;
-import org.fusesource.mqtt.client.Topic;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.uniquid.messages.FunctionRequestMessage;
 import com.uniquid.messages.FunctionResponseMessage;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
 import com.uniquid.userclient.impl.MQTTUserClient;
+import org.fusesource.mqtt.client.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class MQTTUserClientTest {
 
@@ -67,7 +62,7 @@ public class MQTTUserClientTest {
 		String broker = "tcp://appliance4.uniquid.co:1883";
 		String topic = "test";
 		Topic[] topics = {new Topic(topic, QoS.AT_LEAST_ONCE)};
-		BlockingConnection connection = null;
+		BlockingConnection connection;
 		
 		try{
 			MQTT mqtt = new MQTT();
@@ -141,7 +136,7 @@ private void startMqttServerMockException() {
 		String broker = "tcp://appliance4.uniquid.co:1883";
 		String topic = "test";
 		Topic[] topics = {new Topic(topic, QoS.AT_LEAST_ONCE)};
-		BlockingConnection connection = null;
+		BlockingConnection connection;
 		
 		try{
 			MQTT mqtt = new MQTT();

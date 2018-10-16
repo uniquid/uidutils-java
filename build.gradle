@@ -17,10 +17,6 @@ repositories {
     maven { url "http://repo.maven.apache.org/maven2" }
 }
 
-test {
-    exclude 'com/uniquid/contract/ContractUtilsTest'
-}
-
 dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.22'
     compile group: 'org.bitcoinj', name: 'bitcoinj-core-uniquid', version:'0.15-SNAPSHOT'

@@ -1,13 +1,11 @@
 package com.uniquid.registry;
 
-import java.util.Random;
-
-import org.junit.Test;
-
 import com.uniquid.registry.exception.RegistryException;
 import com.uniquid.registry.impl.RegistryDAOImpl;
-
 import junit.framework.Assert;
+import org.junit.Test;
+
+import java.util.Random;
 
 public class RegistryDAOImplTest {
 	

@@ -1,9 +1,8 @@
 package com.uniquid.params;
 
+import com.uniquid.utils.IpUtils;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.uniquid.utils.IpUtils;
 
 public class UniquidRegTestTest {
 	

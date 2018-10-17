@@ -34,8 +34,8 @@ public class MQTTConnector implements Connector {
 
 		this.providerTopic = topic;
 		this.broker = broker;
-		this.inputQueue = new LinkedList<byte[]>();
-		
+		this.inputQueue = new LinkedList<>();
+
 	}
 
 	/**
@@ -92,23 +92,23 @@ public class MQTTConnector implements Connector {
 				}
 
 				LOGGER.trace("inputQueue not empty! fetching element");
-				
+
 				byte[] inputMessage = inputQueue.poll();
 
 				LOGGER.trace("returning MQTTEndPoint");
-				
+
 				return new MQTTEndPoint(inputMessage, broker);
 
 			}
 
 		} catch (InterruptedException ex) {
-			
+
 			LOGGER.error("Catched InterruptedException", ex);
-			
+
 			throw ex;
-			
+
 		} catch (Exception ex) {
-			
+
 			LOGGER.error("Catched Exception", ex);
 
 			throw new ConnectorException(ex);
@@ -128,77 +128,77 @@ public class MQTTConnector implements Connector {
 			public void run() {
 
 				while (!Thread.currentThread().isInterrupted()) {
-					
+
 					try {
-						
+
 						LOGGER.info("Starting MQTTConnector");
 
 						BlockingConnection connection = null;
-	
+
 						try {
-	
+
 							MQTT mqtt = new MQTT();
-	
+
 							mqtt.setHost(broker);
-							
+
 							LOGGER.info("Connecting to MQTT");
-	
+
 							connection = mqtt.blockingConnection();
 							connection.connect();
-	
+
 							// subscribe
 							Topic[] topics = { new Topic(providerTopic, QoS.AT_LEAST_ONCE) };
 							/*byte[] qoses = */connection.subscribe(topics);
-	
+
 							LOGGER.info("Waiting for a message!");
-							
+
 							// blocks!!!
 							Message message = connection.receive();
-							
+
 							LOGGER.info("Message received!");
-							
+
 							byte[] payload = message.getPayload();
-	
+
 							//
 							message.ack();
-	
+
 							// Create a JSON Message
 							synchronized (inputQueue) {
-	
+
 								inputQueue.add(payload);
 								inputQueue.notifyAll();
-	
+
 							}
-	
+
 							// DONE!
-	
+
 						} finally {
-	
+
 							// disconnect
 							try {
-								
+
 								LOGGER.info("Disconnecting");
-	
+
 								connection.disconnect();
-	
+
 							} catch (Exception ex) {
-	
+
 								LOGGER.error("Catched Exception", ex);
-	
+
 							}
-	
+
 						}
-					
+
 					} catch (InterruptedException ex) {
-						
+
 						LOGGER.info("Received interrupt request. Exiting");
-						
+
 						return;
-						
+
 					} catch (Throwable t) {
-						
+
 						LOGGER.error("Catched Exception", t);
-						
+
 					}
 
 				}
@@ -206,7 +206,7 @@ public class MQTTConnector implements Connector {
 			}
 
 		};
-		
+
 		LOGGER.info("Starting receiving");
 
 		// Start receiver
@@ -216,7 +216,7 @@ public class MQTTConnector implements Connector {
 
 	@Override
 	public void stop() {
-		
+
 		LOGGER.info("Stopping MQTTConnector");
 
 		receiverExecutorService.shutdownNow();

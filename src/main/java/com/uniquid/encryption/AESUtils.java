@@ -53,7 +53,7 @@ public class AESUtils {
 		byte[] encVal = cipher.doFinal(data.getBytes());
 
 		result[0] = new String(Base64.encode(iv), Charset.forName("UTF-8"));
-        result[1] = new String(Base64.encode(encVal), Charset.forName("UTF-8"));
+		result[1] = new String(Base64.encode(encVal), Charset.forName("UTF-8"));
 
 		return result;
 	}

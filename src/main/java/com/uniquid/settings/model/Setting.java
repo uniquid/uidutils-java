@@ -26,11 +26,11 @@ public class Setting implements Serializable {
 	 * setting and the value class. The default value class is the class of
 	 * given default value object. The setting type is provided by
 	 * {@link SettingType#valueClassOf(Class)} giving the default value class.
-	 * 
+	 *
 	 * @throws RuntimeException
 	 *             if a not supported default value object is given
 	 * @see SettingType for supported value class and setting type
-	 * 
+	 *
 	 * @param key
 	 *            the setting key
 	 * @param name
@@ -43,7 +43,7 @@ public class Setting implements Serializable {
 	 *            the setting validator or null if validation is not required
 	 */
 	public Setting(String key, String name, String description, Object defaultValue, Validator validator,
-			Stringifier stringifier) {
+				   Stringifier stringifier) {
 
 		this.key = key;
 		this.name = name;
@@ -55,7 +55,7 @@ public class Setting implements Serializable {
 		this.stringifier = stringifier;
 
 	}
-	
+
 	public Setting(String key, String name, String description, Object defaultValue, Validator validator) {
 		this(key, name, description, defaultValue, null, new DefaultStringifier());
 	}
@@ -65,11 +65,11 @@ public class Setting implements Serializable {
 	 * setting and the value class. The default value class is the class of
 	 * given default value object. The setting type is provided by
 	 * {@link SettingType#valueClassOf(Class)} giving the default value class.
-	 * 
+	 *
 	 * @throws RuntimeException
 	 *             if a not supported default value object is given
 	 * @see SettingType for supported value class and setting type
-	 * 
+	 *
 	 * @param key
 	 *            the setting key
 	 * @param name
@@ -85,7 +85,7 @@ public class Setting implements Serializable {
 
 	/**
 	 * Get setting key
-	 * 
+	 *
 	 * @return the setting key
 	 */
 	public String getKey() {
@@ -94,7 +94,7 @@ public class Setting implements Serializable {
 
 	/**
 	 * Get setting name
-	 * 
+	 *
 	 * @return the setting name
 	 */
 	public String getName() {
@@ -103,7 +103,7 @@ public class Setting implements Serializable {
 
 	/**
 	 * Get setting description
-	 * 
+	 *
 	 * @return the setting description
 	 */
 	public String getDescription() {
@@ -112,7 +112,7 @@ public class Setting implements Serializable {
 
 	/**
 	 * Get settings value class
-	 * 
+	 *
 	 * @return the setting value class
 	 */
 	public Class<?> getValueClass() {
@@ -121,7 +121,7 @@ public class Setting implements Serializable {
 
 	/**
 	 * Get default value
-	 * 
+	 *
 	 * @return the default value as object of same class returned by
 	 *         {@link #getValueClass()}
 	 */
@@ -131,7 +131,7 @@ public class Setting implements Serializable {
 
 	/**
 	 * Get setting type
-	 * 
+	 *
 	 * @return the same setting type returned by
 	 *         {@link SettingType#valueClassOf(Class)} using the object returned
 	 *         by {@link #getDefaultValue()}
@@ -142,7 +142,7 @@ public class Setting implements Serializable {
 
 	/**
 	 * Get setting validator
-	 * 
+	 *
 	 * @return the setting validator or null if no validation is needed
 	 */
 	public Validator getValidator() {
@@ -151,7 +151,7 @@ public class Setting implements Serializable {
 
 	/**
 	 * Validate given string value as value candidate for this setting
-	 * 
+	 *
 	 * @param stringValue
 	 *            the value to validate
 	 * @throws SettingValidationException
@@ -167,16 +167,16 @@ public class Setting implements Serializable {
 		}
 
 	}
-	
+
 	public String stringify() throws Exception {
-		
+
 		return stringifier.stringify(this);
-			
+
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {

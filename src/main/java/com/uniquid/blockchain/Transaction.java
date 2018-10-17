@@ -4,13 +4,13 @@ package com.uniquid.blockchain;
  * Represents a blockchain transaction
  */
 public class Transaction {
-	
+
 	private String txid;
 	private long version;
 	private long confirmations;
 	private long time;
 	private String spentTxId;
-	
+
 	public String getTxid() {
 		return txid;
 	}

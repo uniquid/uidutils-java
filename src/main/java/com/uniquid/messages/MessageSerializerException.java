@@ -4,12 +4,12 @@ package com.uniquid.messages;
  * Thrown when a problem during message serialization/deserialization occurs
  */
 public class MessageSerializerException extends Exception {
-	
-private static final long serialVersionUID = 1L;
-	
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Create new message serializer exception
-	 * 
+	 *
 	 * @param message
 	 *            the message
 	 * @param cause
@@ -21,7 +21,7 @@ private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create new message serializer exception
-	 * 
+	 *
 	 * @param message
 	 *            the message
 	 */

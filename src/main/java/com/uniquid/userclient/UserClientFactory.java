@@ -13,27 +13,27 @@ public interface UserClientFactory {
 
 		/**
 		 * Return the protocol that the Provider can Talk
-		 * @return
+		 * @return the protocol that the Provider can Talk
 		 */
 		String getProviderProtocol();
 
 		/**
 		 * Return the provider name
-		 * @return
+		 * @return the probider name
 		 */
 		String getProviderName();
 
 		/**
 		 * Return the user address
-		 * @return
+		 * @return the user address
 		 */
 		String getUserAddress();
 
 	}
 	/**
 	 * Returns the UserClient compatibile with the specified configuration
-	 * @param configuration
-	 * @return
+	 * @param configuration the {@link UserClientFactoryConfiguration}
+	 * @return the {@link UserClient}
 	 */
 	UserClient getUserClient(UserClientFactoryConfiguration configuration);
 

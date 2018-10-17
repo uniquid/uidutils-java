@@ -9,7 +9,7 @@ public interface Validator {
 
 	/**
 	 * Validate given setting value
-	 * 
+	 *
 	 * @param setting
 	 *            the setting
 	 * @param stringValue
@@ -21,5 +21,5 @@ public interface Validator {
 	 *             method.
 	 */
 	void validate(Setting setting, String stringValue) throws SettingValidationException;
-	
+
 }

@@ -8,7 +8,7 @@ public class NotEmpty extends AbstractValidator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.phoenix2.embedded.client.common.settings.model.validator.
 	 * AbstractValidator#validateAsDuoble(double)
 	 */
@@ -23,7 +23,7 @@ public class NotEmpty extends AbstractValidator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.phoenix2.embedded.client.common.settings.model.validator.
 	 * AbstractValidator#validateAsInteger(int)
 	 */
@@ -38,7 +38,7 @@ public class NotEmpty extends AbstractValidator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.phoenix2.embedded.client.common.settings.model.validator.
 	 * AbstractValidator#validateAsLong(long)
 	 */
@@ -53,7 +53,7 @@ public class NotEmpty extends AbstractValidator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.phoenix2.embedded.client.common.settings.model.validator.
 	 * AbstractValidator#stringAsString(java.lang.String)
 	 */

@@ -9,7 +9,7 @@ public abstract class AbstractValidator implements Validator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.phoenix2.embedded.client.common.settings.model.Validator#validate
 	 * (com.phoenix2.embedded.client.common.settings.model.Setting,
@@ -84,7 +84,7 @@ public abstract class AbstractValidator implements Validator {
 
 	/**
 	 * Assert condition for true
-	 * 
+	 *
 	 * @param conditionResult
 	 *            the condition result
 	 * @param message
@@ -102,7 +102,7 @@ public abstract class AbstractValidator implements Validator {
 	}
 
 	/**
-	 * Throw a a runtime exception with <i>setting not supported for
+	 * Throw a runtime exception with <i>setting not supported for
 	 * validation</i> message
 	 */
 	protected void notSupported() {
@@ -111,7 +111,7 @@ public abstract class AbstractValidator implements Validator {
 
 	/**
 	 * Validate given value
-	 * 
+	 *
 	 * @param doubleValue
 	 *            the value
 	 * @throws SettingValidationException
@@ -122,7 +122,7 @@ public abstract class AbstractValidator implements Validator {
 
 	/**
 	 * Validate given value
-	 * 
+	 *
 	 * @param integerValue
 	 *            the value
 	 * @throws SettingValidationException
@@ -133,7 +133,7 @@ public abstract class AbstractValidator implements Validator {
 
 	/**
 	 * Validate given value
-	 * 
+	 *
 	 * @param longValue
 	 *            the value
 	 * @throws SettingValidationException
@@ -144,7 +144,7 @@ public abstract class AbstractValidator implements Validator {
 
 	/**
 	 * Validate given value
-	 * 
+	 *
 	 * @param stringValue
 	 *            the value
 	 * @throws SettingValidationException

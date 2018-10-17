@@ -1,12 +1,12 @@
 package com.uniquid.registry.exception;
 
 public class RegistryException extends Exception {
-	
-private static final long serialVersionUID = 1L;
-	
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Create new blockchain exception
-	 * 
+	 *
 	 * @param message
 	 *            the message
 	 * @param cause
@@ -18,7 +18,7 @@ private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create new blockchain exception
-	 * 
+	 *
 	 * @param message
 	 *            the message
 	 */

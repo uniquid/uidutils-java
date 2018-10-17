@@ -1,7 +1,7 @@
 package com.uniquid.utils;
 
 public class BackupData {
-	
+
 	private String mnemonic;
 	private String name;
 	private long creationTime;

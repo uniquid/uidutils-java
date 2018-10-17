@@ -86,7 +86,7 @@ public class SeedUtils<T extends BackupData> {
 	}
 
 	public static void main(String[] args) throws Exception {
-		
+
 		SeedUtils<BackupData> seedUtils = new SeedUtils<>(new File(args[0]));
 
 		BackupData backupData = new BackupData();

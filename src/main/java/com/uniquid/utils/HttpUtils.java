@@ -9,15 +9,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpUtils {
-	
+
 	private static Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
-	
+
 	private static final String USER_AGENT = "UNIQUID-UTILS-0.1";
-	
+
 	public static <T> T sendDataWithPost(URL url, DataProvider<T> dataProvider) throws Exception {
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		
+
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("User-Agent", USER_AGENT);
 		connection.setRequestProperty("Content-Type", dataProvider.getContentType());
@@ -42,13 +42,13 @@ public class HttpUtils {
 			return dataProvider.manageResponse(response.toString());
 
 		} else {
-			
+
 			return dataProvider.manageUnexpectedResponseCode(connection.getResponseCode(), connection.getResponseMessage());
 
 		}
 
 	}
-	
+
 	public static <T> T retrieveDataViaHttpGet(URL url, ResponseDecoder<T> responseDecoder) throws Exception {
 
 		try {
@@ -76,7 +76,7 @@ public class HttpUtils {
 				return responseDecoder.manageResponse(response.toString());
 
 			} else {
-				
+
 				return responseDecoder.manageUnexpectedResponseCode(connection.getResponseCode(), connection.getResponseMessage());
 
 			}

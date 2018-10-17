@@ -23,16 +23,16 @@ import java.nio.ByteOrder;
  * Implementation of {@link UserClient} that uses TCP protocol
  */
 public class TCPUserClient implements UserClient {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(TCPUserClient.class);
 
 	private static final int PREFIX_LEN = 4;
-	
+
 	private String host;
 	private int port;
 	private int timeoutInSeconds;
 	private JSONMessageSerializer messageSerializer;
-	
+
 	/**
 	 * Creates an instance from broker, destination topic and timeout
 	 * @param host the host to use
@@ -44,20 +44,20 @@ public class TCPUserClient implements UserClient {
 		this.port = port;
 		this.timeoutInSeconds = timeoutInSeconds;
 		this.messageSerializer = new JSONMessageSerializer();
-		
+
 	}
 
 	@Override
 	public UniquidMessage execute(final UniquidMessage userRequest) throws UserClientException {
-	
+
 		return sendRecv(userRequest);
-		
+
 	}
-	
+
 	public UniquidMessage sendRecv(final UniquidMessage userRequest) throws UserClientException {
-		
+
 		LOGGER.info("Sending output message to {}", host);
-		
+
 		Socket socket = null;
 		try {
 			socket = new Socket();
@@ -65,7 +65,7 @@ public class TCPUserClient implements UserClient {
 			socket.setSoTimeout(timeoutInSeconds * 1000);
 			OutputStream outputStream = socket.getOutputStream();
 			DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-			
+
 			byte[] payload = messageSerializer.serialize(userRequest);
 
 			String msg = new String(payload);
@@ -78,7 +78,7 @@ public class TCPUserClient implements UserClient {
 			byte[] request = Arrays.concatenate(prefix, message);
 			dataOutputStream.write(request);
 			dataOutputStream.flush();
-			
+
 			DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 			byte[] length = new byte[PREFIX_LEN];
 			dataInputStream.read(length, 0, PREFIX_LEN);
@@ -86,33 +86,33 @@ public class TCPUserClient implements UserClient {
 			int resultLen = byteBuffer.getInt();
 			byte[] received = new byte[resultLen];
 			dataInputStream.read(received, 0, received.length);
-			
+
 			// Create a JSON Message
 			return messageSerializer.deserialize(received);
-			
+
 		} catch (SocketTimeoutException ex) {
-			
+
 			LOGGER.error("Timeout while conneting!", ex);
-			
+
 			throw new UserClientException("Timeout while waiting response!", ex);
-			
+
 		} catch (Throwable t) {
-			
+
 			LOGGER.error("Catched Exception: " + t.getMessage(), t);
-			
+
 			throw new UserClientException("Catched Exception: " + t.getMessage(), t);
-			
+
 		} finally {
-			
+
 			// disconnect
 			try {
 
 				if (socket != null && !socket.isClosed()) {
-				
+
 					LOGGER.info("Disconnecting");
-					
+
 					socket.close();
-					
+
 				}
 
 			} catch (Exception ex) {
@@ -121,14 +121,14 @@ public class TCPUserClient implements UserClient {
 
 			}
 
-		} 
-	
+		}
+
 	}
-	
+
 	public void send(final UniquidMessage userRequest) throws UserClientException {
-		
+
 		LOGGER.info("Sending output message to {}", host);
-		
+
 		Socket socket = null;
 		try {
 			socket = new Socket();
@@ -136,7 +136,7 @@ public class TCPUserClient implements UserClient {
 			socket.setSoTimeout(timeoutInSeconds * 1000);
 			OutputStream outputStream = socket.getOutputStream();
 			DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-			
+
 			byte[] payload = messageSerializer.serialize(userRequest);
 
 			String msg = new String(payload);
@@ -148,30 +148,30 @@ public class TCPUserClient implements UserClient {
 			byte[] request = Arrays.concatenate(prefix, message);
 			dataOutputStream.write(request);
 			dataOutputStream.flush();
-			
+
 		} catch (SocketTimeoutException ex) {
-			
+
 			LOGGER.error("Timeout while waiting response!", ex);
-			
+
 			throw new UserClientException("Timeout while waiting response!", ex);
-			
+
 		} catch (Throwable t) {
-			
+
 			LOGGER.error("Catched Exception: " + t.getMessage(), t);
-			
+
 			throw new UserClientException("Catched Exception: " + t.getMessage(), t);
-			
+
 		} finally {
-			
+
 			// disconnect
 			try {
 
 				if (socket != null && !socket.isClosed()) {
-				
+
 					LOGGER.info("Disconnecting");
-					
+
 					socket.close();
-					
+
 				}
 
 			} catch (Exception ex) {
@@ -180,8 +180,8 @@ public class TCPUserClient implements UserClient {
 
 			}
 
-		} 
-	
+		}
+
 	}
 
 }

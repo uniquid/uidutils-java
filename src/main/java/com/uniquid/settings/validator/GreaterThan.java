@@ -10,7 +10,7 @@ public class GreaterThan extends AbstractValidator {
 
 	/**
 	 * Create new validator
-	 * 
+	 *
 	 * @param minValue
 	 *            the min value
 	 */
@@ -20,7 +20,7 @@ public class GreaterThan extends AbstractValidator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.phoenix2.embedded.client.common.settings.model.validator.
 	 * AbstractValidator#validateAsDuoble(double)
 	 */
@@ -35,7 +35,7 @@ public class GreaterThan extends AbstractValidator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.phoenix2.embedded.client.common.settings.model.validator.
 	 * AbstractValidator#validateAsInteger(int)
 	 */
@@ -50,7 +50,7 @@ public class GreaterThan extends AbstractValidator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.phoenix2.embedded.client.common.settings.model.validator.
 	 * AbstractValidator#validateAsLong(long)
 	 */
@@ -65,7 +65,7 @@ public class GreaterThan extends AbstractValidator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.phoenix2.embedded.client.common.settings.model.validator.
 	 * AbstractValidator#stringAsString(java.lang.String)
 	 */

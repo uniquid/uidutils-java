@@ -6,7 +6,6 @@ import com.uniquid.utils.ParsableProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -28,8 +27,8 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Create new settings
-	 * 
-	 * @throws UnknownSettingException
+	 *
+	 * @throws UnknownSettingException in case a problem occurs
 	 */
 	public AbstractSettings() throws SettingValidationException, UnknownSettingException {
 		this(new Properties(), new HashSet<Setting>());
@@ -44,7 +43,7 @@ public abstract class AbstractSettings {
 	 *
 	 * @param excludedSettings
 	 *            a set of settings that should be excluded as {@link Setting}
-	 * @throws UnknownSettingException
+	 * @throws UnknownSettingException in case a problem occurs
 	 */
 	public AbstractSettings(Properties properties, Set<Setting> excludedSettings)
 			throws SettingValidationException, UnknownSettingException {
@@ -62,10 +61,10 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Load settings from properties
-	 * 
-	 * @throws UnknownSettingException
-	 * 
-	 * @throws IOException
+	 *
+	 * @throws UnknownSettingException in case a problem occurs
+	 *
+	 * @throws SettingValidationException in case occurs a problem validating the setting
 	 */
 	private boolean loadFromPropertiesWithoutFireEvent(Properties properties)
 			throws SettingValidationException, UnknownSettingException {
@@ -104,7 +103,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get a properties contains all properties on this settings object
-	 * 
+	 *
 	 * @return properties
 	 */
 	public Properties getProperties() throws Exception {
@@ -129,7 +128,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get list of settings
-	 * 
+	 *
 	 * @return list of settings as {@link Setting}
 	 */
 	public Collection<Setting> getSettings() {
@@ -140,7 +139,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get setting with given key
-	 * 
+	 *
 	 * @param key
 	 *            the setting key
 	 * @return the setting with given key or null if no setting was found with
@@ -154,7 +153,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Add a setting listener
-	 * 
+	 *
 	 * @param settingsListener
 	 *            the setting listener
 	 */
@@ -164,7 +163,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Remove a setting listener
-	 * 
+	 *
 	 * @param settingsListener
 	 *            the setting listener
 	 */
@@ -181,7 +180,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get setting value as boolean
-	 * 
+	 *
 	 * @param setting
 	 *            the setting to be retrieved
 	 * @return the setting value
@@ -204,7 +203,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get setting value as double
-	 * 
+	 *
 	 * @param setting
 	 *            the setting to be retrieved
 	 * @return the setting value
@@ -227,7 +226,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get setting value as integer
-	 * 
+	 *
 	 * @param setting
 	 *            the setting to be retrieved
 	 * @return the setting value
@@ -249,7 +248,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get setting value as long
-	 * 
+	 *
 	 * @param setting
 	 *            the setting to be retrieved
 	 * @return the setting value
@@ -272,7 +271,7 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get setting value as string
-	 * 
+	 *
 	 * @param setting
 	 *            the setting to be retrieved
 	 * @return the setting value
@@ -294,9 +293,9 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Get setting value as Enum
-	 * 
-	 * @param setting
-	 * @return
+	 *
+	 * @param setting the setting to retrieve
+	 * @return the value of the setting
 	 */
 	protected Enum getAsEnum(Setting setting) {
 
@@ -347,9 +346,13 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Save setting
-	 * 
-	 * @throws UnknownSettingException
-	 * 
+	 *
+	 * @param setting the {@link Setting} to save
+	 * @param value the value of the setting to save
+	 *
+	 * @throws SettingValidationException in case occurs a problem validating the setting
+	 * @throws UnknownSettingException in case the setting is unknown
+	 *
 	 */
 	public void setSetting(Setting setting, String value) throws SettingValidationException, UnknownSettingException {
 
@@ -361,9 +364,13 @@ public abstract class AbstractSettings {
 
 	/**
 	 * Save setting
-	 * 
-	 * @throws UnknownSettingException
-	 * 
+	 *
+	 * @param setting the name of the setting to save
+	 * @param value the value of the setting to save
+	 *
+	 * @throws UnknownSettingException in case the setting is unknown
+	 * @throws SettingValidationException in case occurs a problem validating a setting
+	 *
 	 */
 	public void setSetting(String setting, String value) throws SettingValidationException, UnknownSettingException {
 
@@ -377,7 +384,7 @@ public abstract class AbstractSettings {
 	 * Get list of setting of given target class. This method will access all
 	 * static final field of type {@link Setting} and return a list containing
 	 * those objects.
-	 * 
+	 *
 	 * @param targetClass
 	 *            the target class
 	 * @param excludedSettings

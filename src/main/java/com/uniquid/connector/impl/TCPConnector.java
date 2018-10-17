@@ -33,8 +33,8 @@ public class TCPConnector implements Connector {
 	private TCPConnector(int port) {
 
 		this.port = port;
-		this.inputQueue = new LinkedList<Socket>();
-		
+		this.inputQueue = new LinkedList<>();
+
 	}
 
 	/**
@@ -80,23 +80,23 @@ public class TCPConnector implements Connector {
 				}
 
 				LOGGER.trace("inputQueue not empty! fetching element");
-				
+
 				Socket inputSocket = inputQueue.poll();
 
 				LOGGER.trace("returning MQTTEndPoint");
-				
+
 				return new TCPEndPoint(inputSocket);
 
 			}
 
 		} catch (InterruptedException ex) {
-			
+
 			LOGGER.error("Catched InterruptedException", ex);
-			
+
 			throw ex;
-			
+
 		} catch (Exception ex) {
-			
+
 			LOGGER.error("Catched Exception", ex);
 
 			throw new ConnectorException(ex);
@@ -114,61 +114,61 @@ public class TCPConnector implements Connector {
 
 			@Override
 			public void run() {
-				
+
 				ServerSocket serverSocket = null;
-				
+
 				try {
-				
+
 					serverSocket = new ServerSocket(port);
-					
+
 					while (!Thread.currentThread().isInterrupted()) {
-						
+
 						try {
-							
+
 							Socket socket = serverSocket.accept();
-							
+
 							// Create a JSON Message
 							synchronized (inputQueue) {
-	
+
 								inputQueue.add(socket);
 								inputQueue.notifyAll();
-	
+
 							}
-		
+
 						} catch (Throwable t) {
-							
+
 							LOGGER.error("Catched Exception", t);
-							
+
 						}
-	
+
 					}
-				
+
 				} catch (Exception ex) {
-					
+
 					LOGGER.error("Catched Exception", ex);
-					
+
 				} finally {
-					
+
 					if (serverSocket != null && !serverSocket.isClosed()) {
-						
+
 						try {
-							
+
 							serverSocket.close();
-							
+
 						} catch (IOException e) {
-							
+
 							// DO NOTHING HERE
-							
+
 						}
-						
+
 					}
-					
+
 				}
 
 			}
 
 		};
-		
+
 		LOGGER.info("Starting receiving");
 
 		// Start receiver
@@ -178,7 +178,7 @@ public class TCPConnector implements Connector {
 
 	@Override
 	public void stop() {
-		
+
 		LOGGER.info("Stopping MQTTConnector");
 
 		receiverExecutorService.shutdownNow();

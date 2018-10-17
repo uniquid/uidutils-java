@@ -58,13 +58,13 @@ public class MQTTProxySocket implements Runnable {
 				endPoint.setResponse(outputMessage);
 
 				LOGGER.info("Flushing response via MQTT");
-				
+
 				endPoint.flush();
 
 			} catch (Throwable t) {
 
 				LOGGER.error("Throwable catched", t);
-				
+
 			}
 
 		}

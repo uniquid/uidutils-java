@@ -1,12 +1,12 @@
 package com.uniquid.userclient;
 
 public class UserClientException extends Exception {
-	
-private static final long serialVersionUID = 1L;
-	
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Create new UserClientException exception
-	 * 
+	 *
 	 * @param message
 	 *            the message
 	 * @param cause
@@ -18,7 +18,7 @@ private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create new UserClientException exception
-	 * 
+	 *
 	 * @param message
 	 *            the message
 	 */

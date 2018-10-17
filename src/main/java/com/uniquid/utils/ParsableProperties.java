@@ -17,7 +17,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get value as boolean
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @param defaultValue
@@ -41,7 +41,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get value as boolean
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return boolean value according to Boolean(String) constructor; null if
@@ -63,7 +63,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get as double
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @param defaultValue
@@ -86,7 +86,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get as double
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return double value or null if property value is null or property value
@@ -119,7 +119,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get value as integer
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @param defaultValue
@@ -142,7 +142,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get value as integer
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return int value or null if property value is null or property value
@@ -171,7 +171,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get a value as long
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @param defaultValue
@@ -194,7 +194,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get a value as long
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return long value or null if property value is null or property value
@@ -223,7 +223,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get a value as string
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @param defaultValue
@@ -245,7 +245,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get a value as string
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return string value or null if property value is null
@@ -270,10 +270,11 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get value as enum
-	 * 
-	 * @param enumType
-	 * @param key
-	 * @return
+	 *
+	 * @param enumType the {@link Class} object of the enum type from which to return a constant
+	 * @param key the key of the property to retrieve
+	 * @param defaultValue the default value to return in case there is no value for the given key
+	 * @return the value of the given key property
 	 */
 	public Enum<?> getAsEnum(Class enumType, String key, Enum defaultValue) {
 
@@ -302,10 +303,10 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get value as enum
-	 * 
-	 * @param enumType
-	 * @param key
-	 * @return
+	 *
+	 * @param enumType the {@link Class} object of the enum type from which to return a constant
+	 * @param key the key of the property to retrieve
+	 * @return the value of the given key property
 	 */
 	public Enum<?> getAsEnum(Class enumType, String key) {
 
@@ -330,7 +331,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get value as boolean
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return boolean value according to Boolean(String) constructor
@@ -352,7 +353,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get as double
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return double value
@@ -375,7 +376,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get value as integer
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return int value
@@ -398,7 +399,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get a value as long
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return long value
@@ -420,7 +421,7 @@ public class ParsableProperties extends Properties {
 
 	/**
 	 * Get a value as string
-	 * 
+	 *
 	 * @param key
 	 *            key
 	 * @return string value

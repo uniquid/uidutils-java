@@ -7,22 +7,21 @@ import com.uniquid.messages.UniquidMessage;
  * Represents a communication between a Provider and a User
  */
 public interface EndPoint {
-	
-	/**
-	 * Returns the {@link ProviderRequest} performed by the User
-	 * @return the {@link ProviderRequest} performed by the User
-	 */
-	public UniquidMessage getRequest();
 
 	/**
-	 * Returns the {@link ProviderResponse} to be returned to the User
-	 * @return the {@link ProviderResponse} to be returned to the User
+	 * Returns the {@link UniquidMessage} performed by the User
+	 * @return the {@link UniquidMessage} performed by the User
 	 */
-	public void setResponse(FunctionResponseMessage message);
-	
+	UniquidMessage getRequest();
+
+	/**
+	 * Set the {@link FunctionResponseMessage} to be returned to the User
+	 */
+	void setResponse(FunctionResponseMessage message);
+
 	/**
 	 * Closes this instance sending all the communication to the User.
 	 */
-	public void flush() throws ConnectorException;
+	void flush() throws ConnectorException;
 
 }

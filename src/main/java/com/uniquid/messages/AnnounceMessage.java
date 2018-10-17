@@ -6,9 +6,9 @@ import java.util.Objects;
  * Represents an Announce Message: a message sent by a Node when it appear the first time.
  */
 public class AnnounceMessage implements UniquidMessage {
-	
+
 	private String name = "", pubKey = "";
-	
+
 	public String getName() {
 		return name;
 	}
@@ -27,11 +27,11 @@ public class AnnounceMessage implements UniquidMessage {
 
 	@Override
 	public MessageType getMessageType() {
-		
+
 		return MessageType.ANNOUNCE;
-		
+
 	}
-	
+
 	@Override
 	public boolean equals(Object object) {
 
@@ -44,7 +44,7 @@ public class AnnounceMessage implements UniquidMessage {
 		AnnounceMessage announceMessage = (AnnounceMessage) object;
 
 		return Objects.equals(name, announceMessage.name) && Objects.equals(pubKey, announceMessage.pubKey);
-		
+
 	}
 
 	@Override
@@ -53,6 +53,6 @@ public class AnnounceMessage implements UniquidMessage {
 		return Objects.hash(name, pubKey);
 
 	}
-	
+
 
 }

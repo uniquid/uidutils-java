@@ -14,11 +14,11 @@ public class CapabilityMessage implements UniquidMessage {
 	private String rights;
 	private long since;
 	private long until;
-	
+
 	private String assignerSignature;
-	
+
 	public CapabilityMessage() {
-		
+
 	}
 
 	public String getAssigner() {
@@ -68,7 +68,7 @@ public class CapabilityMessage implements UniquidMessage {
 	public void setUntil(long until) {
 		this.until = until;
 	}
-	
+
 	public String getAssignerSignature() {
 		return assignerSignature;
 	}

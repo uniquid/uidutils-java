@@ -9,10 +9,10 @@ import com.uniquid.settings.model.Stringifier;
  * Default implementation for Stringify a Setting
  */
 public class DefaultStringifier implements Stringifier {
-	
+
 	@Override
 	public String stringify(Setting setting) throws StringifyException {
-		
+
 		// Get setting type
 		SettingType settingType = setting.getSettingType();
 
@@ -51,9 +51,9 @@ public class DefaultStringifier implements Stringifier {
 			return String.valueOf(setting.getDefaultValue());
 
 		} else {
-		
+
 			throw new StringifyException("Unknown type");
-		
+
 		}
 
 	}

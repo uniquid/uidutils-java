@@ -14,19 +14,19 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class RegistryDAOImpl implements RegistryDAO {
-	
+
 	private static final String PUT_URL = "%1&s/registry";
 	private static final String GET_URL = "%1&s/registry";
-	
+
 	private String registryAddress;
-	
+
 	public RegistryDAOImpl(String registryAddress) {
 		this.registryAddress = registryAddress;
 	}
 
 	@Override
 	public void insertMapping(String providerName, String providerAddress) throws RegistryException {
-		
+
 		try {
 
 			JSONObject jsonMessage = new JSONObject();
@@ -69,9 +69,9 @@ public class RegistryDAOImpl implements RegistryDAO {
 				public byte[] getPayload() {
 					return postDataBytes;
 				}
-			
+
 			});
-			
+
 		} catch (Throwable t) {
 
 			throw new RegistryException("Unexpected Exception", t);
@@ -79,36 +79,36 @@ public class RegistryDAOImpl implements RegistryDAO {
 		}
 
 	}
-	
+
 	private static String addressFromJsonString(String string, String providerAddress) throws JSONException {
 
 		JSONArray jsonArray = new JSONArray(string);
-		
+
 		// AVOID ITERATOR! WORKAROUND FOR ANDROID!
 		int elements = jsonArray.length();
-		
+
 		for (int i = 0; i < elements; i++) {
-			
+
 			JSONObject jsonMessage = jsonArray.getJSONObject(i);
 
 			String a = jsonMessage.getString("provider_address");
 			String n = jsonMessage.getString("provider_name");
-	
+
 			if (providerAddress.equals(a)) {
-				
+
 				return n;
-				
+
 			}
-			
+
 		}
-		
+
 		return null;
 
 	}
 
 	@Override
 	public String retrieveProviderName(final String providerAddress) throws RegistryException {
-		
+
 		try {
 			URL url = new URL(GET_URL.replace("%1&s", registryAddress));
 
@@ -128,18 +128,18 @@ public class RegistryDAOImpl implements RegistryDAO {
 				public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
 					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 						return null;
-					
+
 					throw new RegistryException("Server returned " + responseCode + " " + responseMessage);
 				}
-			
+
 			});
-			
+
 		} catch (Throwable t) {
-			
+
 			throw new RegistryException("Unexpected Exception", t);
-			
+
 		}
-		
+
 	}
-	
+
 }

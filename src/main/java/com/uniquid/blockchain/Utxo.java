@@ -4,14 +4,14 @@ package com.uniquid.blockchain;
  * Represents an Unspent Transaction Output
  */
 public class Utxo {
-	
+
 	private String address;
 	private String txid;
 	private long vout;
 	private String scriptPubKey;
 	private double amount;
 	private long confirmation;
-	
+
 	/**
 	 * Returns the address that owns this utxo
 	 */
@@ -32,7 +32,7 @@ public class Utxo {
 	public String getTxid() {
 		return txid;
 	}
-	
+
 	/**
 	 * Set the transaction id that contains this utxo
 	 */
@@ -95,5 +95,5 @@ public class Utxo {
 	public void setConfirmation(long confirmation) {
 		this.confirmation = confirmation;
 	}
-	
+
 }

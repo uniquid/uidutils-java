@@ -6,23 +6,23 @@ package com.uniquid.connector;
  */
 public interface Connector {
 
-	/**
-	 * Starts the connector
-	 */
-	void start() throws ConnectorException;
+    /**
+     * Starts the connector
+     */
+    void start() throws ConnectorException;
 
-	/**
-	 * Stop the connector
-	 */
-	void stop() throws ConnectorException;
+    /**
+     * Stop the connector
+     */
+    void stop() throws ConnectorException;
 
-	/**
-	 * Listens for a connection to be made to this connector and accepts it. The method blocks until a
-	 * connection is made
-	 *
-	 * @return {@link EndPoint} the endpoint that wrap the communication with the User.
-	 * @throws ConnectorException in case a problem occurs.
-	 */
-	EndPoint accept() throws ConnectorException, InterruptedException;
+    /**
+     * Listens for a connection to be made to this connector and accepts it. The method blocks until a
+     * connection is made
+     *
+     * @return {@link EndPoint} the endpoint that wrap the communication with the User.
+     * @throws ConnectorException in case a problem occurs.
+     */
+    EndPoint accept() throws ConnectorException, InterruptedException;
 
 }

@@ -19,170 +19,170 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class TCPConnector implements Connector {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TCPConnector.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TCPConnector.class);
 
-	private int port;
-	private Queue<Socket> inputQueue;
+    private int port;
+    private Queue<Socket> inputQueue;
 
-	private ScheduledExecutorService receiverExecutorService;
+    private ScheduledExecutorService receiverExecutorService;
 
-	/**
-	 * Creates a MQTTConnector that listen on the specified receiving topic and on the specified broker.  
-	 * @param port the port where start the connector
-	 */
-	private TCPConnector(int port) {
+    /**
+     * Creates a MQTTConnector that listen on the specified receiving topic and on the specified broker.
+     * @param port the port where start the connector
+     */
+    private TCPConnector(int port) {
 
-		this.port = port;
-		this.inputQueue = new LinkedList<>();
+        this.port = port;
+        this.inputQueue = new LinkedList<>();
 
-	}
+    }
 
-	/**
-	 * Builder for {@link TCPConnector}
-	 */
-	public static class Builder {
-		private int _port;
+    /**
+     * Builder for {@link TCPConnector}
+     */
+    public static class Builder {
+        private int _port;
 
-		/**
-		 * Set the listening topic
-		 * @param _port the port to listen to
-		 * @return the Builder
-		 */
-		public Builder set_port(int _port) {
-			this._port = _port;
-			return this;
-		}
+        /**
+         * Set the listening topic
+         * @param _port the port to listen to
+         * @return the Builder
+         */
+        public Builder set_port(int _port) {
+            this._port = _port;
+            return this;
+        }
 
-		/**
-		 * Returns an instance of a {@link TCPConnector}
-		 * @return an instance of a {@link TCPConnector}
-		 */
-		public TCPConnector build() {
+        /**
+         * Returns an instance of a {@link TCPConnector}
+         * @return an instance of a {@link TCPConnector}
+         */
+        public TCPConnector build() {
 
-			return new TCPConnector(_port);
-		}
+            return new TCPConnector(_port);
+        }
 
-	}
+    }
 
-	@Override
-	public EndPoint accept() throws ConnectorException, InterruptedException {
+    @Override
+    public EndPoint accept() throws ConnectorException, InterruptedException {
 
-		try {
+        try {
 
-			synchronized (inputQueue) {
+            synchronized (inputQueue) {
 
-				while (inputQueue.isEmpty()) {
+                while (inputQueue.isEmpty()) {
 
-					LOGGER.trace("inputQueue is empty. waiting");
+                    LOGGER.trace("inputQueue is empty. waiting");
 
-					inputQueue.wait();
+                    inputQueue.wait();
 
-				}
+                }
 
-				LOGGER.trace("inputQueue not empty! fetching element");
+                LOGGER.trace("inputQueue not empty! fetching element");
 
-				Socket inputSocket = inputQueue.poll();
+                Socket inputSocket = inputQueue.poll();
 
-				LOGGER.trace("returning MQTTEndPoint");
+                LOGGER.trace("returning MQTTEndPoint");
 
-				return new TCPEndPoint(inputSocket);
+                return new TCPEndPoint(inputSocket);
 
-			}
+            }
 
-		} catch (InterruptedException ex) {
+        } catch (InterruptedException ex) {
 
-			LOGGER.error("Catched InterruptedException", ex);
+            LOGGER.error("Catched InterruptedException", ex);
 
-			throw ex;
+            throw ex;
 
-		} catch (Exception ex) {
+        } catch (Exception ex) {
 
-			LOGGER.error("Catched Exception", ex);
+            LOGGER.error("Catched Exception", ex);
 
-			throw new ConnectorException(ex);
+            throw new ConnectorException(ex);
 
-		}
+        }
 
-	}
+    }
 
-	@Override
-	public void start() {
+    @Override
+    public void start() {
 
-		receiverExecutorService = Executors.newSingleThreadScheduledExecutor();
+        receiverExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-		final Runnable receiver = new Runnable() {
+        final Runnable receiver = new Runnable() {
 
-			@Override
-			public void run() {
+            @Override
+            public void run() {
 
-				ServerSocket serverSocket = null;
+                ServerSocket serverSocket = null;
 
-				try {
+                try {
 
-					serverSocket = new ServerSocket(port);
+                    serverSocket = new ServerSocket(port);
 
-					while (!Thread.currentThread().isInterrupted()) {
+                    while (!Thread.currentThread().isInterrupted()) {
 
-						try {
+                        try {
 
-							Socket socket = serverSocket.accept();
+                            Socket socket = serverSocket.accept();
 
-							// Create a JSON Message
-							synchronized (inputQueue) {
+                            // Create a JSON Message
+                            synchronized (inputQueue) {
 
-								inputQueue.add(socket);
-								inputQueue.notifyAll();
+                                inputQueue.add(socket);
+                                inputQueue.notifyAll();
 
-							}
+                            }
 
-						} catch (Throwable t) {
+                        } catch (Throwable t) {
 
-							LOGGER.error("Catched Exception", t);
+                            LOGGER.error("Catched Exception", t);
 
-						}
+                        }
 
-					}
+                    }
 
-				} catch (Exception ex) {
+                } catch (Exception ex) {
 
-					LOGGER.error("Catched Exception", ex);
+                    LOGGER.error("Catched Exception", ex);
 
-				} finally {
+                } finally {
 
-					if (serverSocket != null && !serverSocket.isClosed()) {
+                    if (serverSocket != null && !serverSocket.isClosed()) {
 
-						try {
+                        try {
 
-							serverSocket.close();
+                            serverSocket.close();
 
-						} catch (IOException e) {
+                        } catch (IOException e) {
 
-							// DO NOTHING HERE
+                            // DO NOTHING HERE
 
-						}
+                        }
 
-					}
+                    }
 
-				}
+                }
 
-			}
+            }
 
-		};
+        };
 
-		LOGGER.info("Starting receiving");
+        LOGGER.info("Starting receiving");
 
-		// Start receiver
-		receiverExecutorService.execute(receiver);
+        // Start receiver
+        receiverExecutorService.execute(receiver);
 
-	}
+    }
 
-	@Override
-	public void stop() {
+    @Override
+    public void stop() {
 
-		LOGGER.info("Stopping MQTTConnector");
+        LOGGER.info("Stopping MQTTConnector");
 
-		receiverExecutorService.shutdownNow();
+        receiverExecutorService.shutdownNow();
 
-	}
+    }
 
 }

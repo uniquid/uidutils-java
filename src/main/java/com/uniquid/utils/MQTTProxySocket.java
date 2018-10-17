@@ -15,60 +15,60 @@ import org.slf4j.LoggerFactory;
  */
 public class MQTTProxySocket implements Runnable {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MQTTProxySocket.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MQTTProxySocket.class);
 
-	private Connector connector;
-	private UserClient userClient;
+    private Connector connector;
+    private UserClient userClient;
 
-	public MQTTProxySocket(Connector connector, UserClient userClient) {
-		this.connector = connector;
-		this.userClient = userClient;
-	}
+    public MQTTProxySocket(Connector connector, UserClient userClient) {
+        this.connector = connector;
+        this.userClient = userClient;
+    }
 
-	public void run() {
+    public void run() {
 
-		while (!Thread.currentThread().isInterrupted()) {
+        while (!Thread.currentThread().isInterrupted()) {
 
-			try {
+            try {
 
-				EndPoint endPoint = connector.accept();
+                EndPoint endPoint = connector.accept();
 
-				UniquidMessage inputMessage = endPoint.getRequest();
+                UniquidMessage inputMessage = endPoint.getRequest();
 
-				if (MessageType.FUNCTION_REQUEST.equals(inputMessage.getMessageType())) {
+                if (MessageType.FUNCTION_REQUEST.equals(inputMessage.getMessageType())) {
 
-					LOGGER.info("Received input message {}", inputMessage.getMessageType());
+                    LOGGER.info("Received input message {}", inputMessage.getMessageType());
 
-				} else {
+                } else {
 
-					LOGGER.info("Unknown message type {} received", inputMessage.getMessageType());
+                    LOGGER.info("Unknown message type {} received", inputMessage.getMessageType());
 
-					throw new Exception("Unknown message type");
+                    throw new Exception("Unknown message type");
 
-				}
+                }
 
-				LOGGER.info("Forwarding request via TCP");
-				FunctionResponseMessage response = (FunctionResponseMessage) userClient.execute(inputMessage);
+                LOGGER.info("Forwarding request via TCP");
+                FunctionResponseMessage response = (FunctionResponseMessage) userClient.execute(inputMessage);
 
-				LOGGER.info("Received response!");
-				FunctionResponseMessage outputMessage = new FunctionResponseMessage();
-				outputMessage.setError(response.getError());
-				outputMessage.setProvider(response.getProvider());
-				outputMessage.setResult(response.getResult());
-				endPoint.setResponse(outputMessage);
+                LOGGER.info("Received response!");
+                FunctionResponseMessage outputMessage = new FunctionResponseMessage();
+                outputMessage.setError(response.getError());
+                outputMessage.setProvider(response.getProvider());
+                outputMessage.setResult(response.getResult());
+                endPoint.setResponse(outputMessage);
 
-				LOGGER.info("Flushing response via MQTT");
+                LOGGER.info("Flushing response via MQTT");
 
-				endPoint.flush();
+                endPoint.flush();
 
-			} catch (Throwable t) {
+            } catch (Throwable t) {
 
-				LOGGER.error("Throwable catched", t);
+                LOGGER.error("Throwable catched", t);
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
 }

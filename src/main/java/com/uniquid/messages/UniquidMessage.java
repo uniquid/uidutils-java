@@ -6,11 +6,11 @@ package com.uniquid.messages;
  */
 public interface UniquidMessage {
 
-	/**
-	 * Return the {@link MessageType} of this message
-	 *
-	 * @return the {@link MessageType} of this message
-	 */
-	MessageType getMessageType();
+    /**
+     * Return the {@link MessageType} of this message
+     *
+     * @return the {@link MessageType} of this message
+     */
+    MessageType getMessageType();
 
 }

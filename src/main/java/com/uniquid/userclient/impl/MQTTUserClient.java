@@ -17,162 +17,162 @@ import java.util.concurrent.TimeoutException;
  */
 public class MQTTUserClient implements UserClient {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MQTTUserClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MQTTUserClient.class);
 
-	private String broker;
-	private int timeoutInSeconds;
-	private String destinationTopic;
-	private String senderAddress;
-	private JSONMessageSerializer messageSerializer;
+    private String broker;
+    private int timeoutInSeconds;
+    private String destinationTopic;
+    private String senderAddress;
+    private JSONMessageSerializer messageSerializer;
 
-	/**
-	 * Creates an instance from broker, destination topic and timeout
-	 * @param broker the broker to use
-	 * @param destinationTopic the topic that will receive the message
-	 * @param timeoutInSeconds the timeout in seconds to wait for a response
-	 */
-	public MQTTUserClient(final String broker, final String destinationTopic, final int timeoutInSeconds,
-						  String senderAddress) {
-		this.broker = broker;
-		this.destinationTopic = destinationTopic;
-		this.timeoutInSeconds = timeoutInSeconds;
-		this.senderAddress = senderAddress;
-		this.messageSerializer = new JSONMessageSerializer();
+    /**
+     * Creates an instance from broker, destination topic and timeout
+     * @param broker the broker to use
+     * @param destinationTopic the topic that will receive the message
+     * @param timeoutInSeconds the timeout in seconds to wait for a response
+     */
+    public MQTTUserClient(final String broker, final String destinationTopic, final int timeoutInSeconds,
+                          String senderAddress) {
+        this.broker = broker;
+        this.destinationTopic = destinationTopic;
+        this.timeoutInSeconds = timeoutInSeconds;
+        this.senderAddress = senderAddress;
+        this.messageSerializer = new JSONMessageSerializer();
 
-	}
+    }
 
-	@Override
-	public UniquidMessage execute(final UniquidMessage userRequest) throws UserClientException {
+    @Override
+    public UniquidMessage execute(final UniquidMessage userRequest) throws UserClientException {
 
-		return sendRecv(userRequest);
+        return sendRecv(userRequest);
 
-	}
+    }
 
-	public UniquidMessage sendRecv(final UniquidMessage userRequest) throws UserClientException {
+    public UniquidMessage sendRecv(final UniquidMessage userRequest) throws UserClientException {
 
-		LOGGER.info("Sending output message to {}", destinationTopic);
+        LOGGER.info("Sending output message to {}", destinationTopic);
 
-		BlockingConnection connection = null;
+        BlockingConnection connection = null;
 
-		try {
-			final MQTT mqtt = new MQTT();
+        try {
+            final MQTT mqtt = new MQTT();
 
-			mqtt.setHost(broker);
+            mqtt.setHost(broker);
 
-			connection = mqtt.blockingConnection();
-			connection.connect();
+            connection = mqtt.blockingConnection();
+            connection.connect();
 
-			// to subscribe
-			final Topic[] topics = { new Topic(senderAddress, QoS.AT_LEAST_ONCE) };
-			/*byte[] qoses = */connection.subscribe(topics);
+            // to subscribe
+            final Topic[] topics = { new Topic(senderAddress, QoS.AT_LEAST_ONCE) };
+            /*byte[] qoses = */connection.subscribe(topics);
 
-			byte[] payload = messageSerializer.serialize(userRequest);
+            byte[] payload = messageSerializer.serialize(userRequest);
 
-			// consume
-			connection.publish(destinationTopic, payload, QoS.AT_LEAST_ONCE, false);
+            // consume
+            connection.publish(destinationTopic, payload, QoS.AT_LEAST_ONCE, false);
 
-			final Message message = connection.receive(timeoutInSeconds, TimeUnit.SECONDS);
+            final Message message = connection.receive(timeoutInSeconds, TimeUnit.SECONDS);
 
-			if (message == null) {
+            if (message == null) {
 
-				throw new TimeoutException();
+                throw new TimeoutException();
 
-			}
+            }
 
-			payload = message.getPayload();
+            payload = message.getPayload();
 
-			message.ack();
+            message.ack();
 
-			// Create a JSON Message
-			return messageSerializer.deserialize(payload);
+            // Create a JSON Message
+            return messageSerializer.deserialize(payload);
 
-		} catch (TimeoutException ex) {
+        } catch (TimeoutException ex) {
 
-			LOGGER.error("Timeout while waiting response!", ex);
+            LOGGER.error("Timeout while waiting response!", ex);
 
-			throw new UserClientException("Timeout while waiting response!", ex);
+            throw new UserClientException("Timeout while waiting response!", ex);
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			LOGGER.error("Catched Exception: " + t.getMessage(), t);
+            LOGGER.error("Catched Exception: " + t.getMessage(), t);
 
-			throw new UserClientException("Catched Exception: " + t.getMessage(), t);
+            throw new UserClientException("Catched Exception: " + t.getMessage(), t);
 
-		} finally {
+        } finally {
 
-			// disconnect
-			try {
+            // disconnect
+            try {
 
-				if (connection != null) {
+                if (connection != null) {
 
-					LOGGER.info("Disconnecting");
+                    LOGGER.info("Disconnecting");
 
-					connection.disconnect();
+                    connection.disconnect();
 
-				}
+                }
 
-			} catch (Exception ex) {
+            } catch (Exception ex) {
 
-				LOGGER.error("Catched Exception: " + ex.getMessage(), ex);
+                LOGGER.error("Catched Exception: " + ex.getMessage(), ex);
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
-	public void send(final UniquidMessage userRequest) throws UserClientException {
+    public void send(final UniquidMessage userRequest) throws UserClientException {
 
-		LOGGER.info("Sending output message to {}", destinationTopic);
+        LOGGER.info("Sending output message to {}", destinationTopic);
 
-		BlockingConnection connection = null;
+        BlockingConnection connection = null;
 
-		try {
-			final MQTT mqtt = new MQTT();
+        try {
+            final MQTT mqtt = new MQTT();
 
-			mqtt.setHost(broker);
+            mqtt.setHost(broker);
 
-			connection = mqtt.blockingConnection();
-			connection.connect();
+            connection = mqtt.blockingConnection();
+            connection.connect();
 
-			byte[] payload = messageSerializer.serialize(userRequest);
+            byte[] payload = messageSerializer.serialize(userRequest);
 
-			// consume
-			connection.publish(destinationTopic, payload, QoS.AT_LEAST_ONCE, false);
+            // consume
+            connection.publish(destinationTopic, payload, QoS.AT_LEAST_ONCE, false);
 
-		} catch (TimeoutException ex) {
+        } catch (TimeoutException ex) {
 
-			LOGGER.error("Timeout while waiting response!", ex);
+            LOGGER.error("Timeout while waiting response!", ex);
 
-			throw new UserClientException("Timeout while waiting response!", ex);
+            throw new UserClientException("Timeout while waiting response!", ex);
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			LOGGER.error("Catched Exception: " + t.getMessage(), t);
+            LOGGER.error("Catched Exception: " + t.getMessage(), t);
 
-			throw new UserClientException("Catched Exception: " + t.getMessage(), t);
+            throw new UserClientException("Catched Exception: " + t.getMessage(), t);
 
-		} finally {
+        } finally {
 
-			// disconnect
-			try {
+            // disconnect
+            try {
 
-				if (connection != null) {
+                if (connection != null) {
 
-					LOGGER.info("Disconnecting");
+                    LOGGER.info("Disconnecting");
 
-					connection.disconnect();
+                    connection.disconnect();
 
-				}
+                }
 
-			} catch (Exception ex) {
+            } catch (Exception ex) {
 
-				LOGGER.error("Catched Exception: " + ex.getMessage(), ex);
+                LOGGER.error("Catched Exception: " + ex.getMessage(), ex);
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
 }

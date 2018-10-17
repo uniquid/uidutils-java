@@ -5,12 +5,12 @@ package com.uniquid.messages;
  */
 public enum MessageType {
 
-	ANNOUNCE,
+    ANNOUNCE,
 
-	FUNCTION_REQUEST,
+    FUNCTION_REQUEST,
 
-	FUNCTION_RESPONSE,
+    FUNCTION_RESPONSE,
 
-	UNIQUID_CAPABILITY
+    UNIQUID_CAPABILITY
 
 }

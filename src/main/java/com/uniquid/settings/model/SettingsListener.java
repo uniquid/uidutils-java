@@ -5,12 +5,12 @@ package com.uniquid.settings.model;
  */
 public interface SettingsListener {
 
-	/**
-	 * Invoked when settings are changed
-	 *
-	 * @param settings
-	 *            the settings that was changed
-	 */
-	void settingChanged(AbstractSettings settings);
+    /**
+     * Invoked when settings are changed
+     *
+     * @param settings
+     *            the settings that was changed
+     */
+    void settingChanged(AbstractSettings settings);
 
 }

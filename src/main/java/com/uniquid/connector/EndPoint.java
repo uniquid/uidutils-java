@@ -8,20 +8,20 @@ import com.uniquid.messages.UniquidMessage;
  */
 public interface EndPoint {
 
-	/**
-	 * Returns the {@link UniquidMessage} performed by the User
-	 * @return the {@link UniquidMessage} performed by the User
-	 */
-	UniquidMessage getRequest();
+    /**
+     * Returns the {@link UniquidMessage} performed by the User
+     * @return the {@link UniquidMessage} performed by the User
+     */
+    UniquidMessage getRequest();
 
-	/**
-	 * Set the {@link FunctionResponseMessage} to be returned to the User
-	 */
-	void setResponse(FunctionResponseMessage message);
+    /**
+     * Set the {@link FunctionResponseMessage} to be returned to the User
+     */
+    void setResponse(FunctionResponseMessage message);
 
-	/**
-	 * Closes this instance sending all the communication to the User.
-	 */
-	void flush() throws ConnectorException;
+    /**
+     * Closes this instance sending all the communication to the User.
+     */
+    void flush() throws ConnectorException;
 
 }

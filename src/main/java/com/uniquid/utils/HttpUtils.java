@@ -10,85 +10,85 @@ import java.net.URL;
 
 public class HttpUtils {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
 
-	private static final String USER_AGENT = "UNIQUID-UTILS-0.1";
+    private static final String USER_AGENT = "UNIQUID-UTILS-0.1";
 
-	public static <T> T sendDataWithPost(URL url, DataProvider<T> dataProvider) throws Exception {
+    public static <T> T sendDataWithPost(URL url, DataProvider<T> dataProvider) throws Exception {
 
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("User-Agent", USER_AGENT);
-		connection.setRequestProperty("Content-Type", dataProvider.getContentType());
-		connection.setRequestProperty("Charset", dataProvider.getCharset());
-		connection.setRequestProperty("Content-Length", String.valueOf(dataProvider.getPayload().length));
-		connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("User-Agent", USER_AGENT);
+        connection.setRequestProperty("Content-Type", dataProvider.getContentType());
+        connection.setRequestProperty("Charset", dataProvider.getCharset());
+        connection.setRequestProperty("Content-Length", String.valueOf(dataProvider.getPayload().length));
+        connection.setDoOutput(true);
 
-		connection.getOutputStream().write(dataProvider.getPayload());
+        connection.getOutputStream().write(dataProvider.getPayload());
 
-		if (connection.getResponseCode() == dataProvider.getExpectedResponseCode()) {
+        if (connection.getResponseCode() == dataProvider.getExpectedResponseCode()) {
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String inputLine;
-			StringBuilder response = new StringBuilder();
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
 
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
 
-			in.close();
+            in.close();
 
-			return dataProvider.manageResponse(response.toString());
+            return dataProvider.manageResponse(response.toString());
 
-		} else {
+        } else {
 
-			return dataProvider.manageUnexpectedResponseCode(connection.getResponseCode(), connection.getResponseMessage());
+            return dataProvider.manageUnexpectedResponseCode(connection.getResponseCode(), connection.getResponseMessage());
 
-		}
+        }
 
-	}
+    }
 
-	public static <T> T retrieveDataViaHttpGet(URL url, ResponseDecoder<T> responseDecoder) throws Exception {
+    public static <T> T retrieveDataViaHttpGet(URL url, ResponseDecoder<T> responseDecoder) throws Exception {
 
-		try {
+        try {
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-			// optional default is GET
-			connection.setRequestMethod("GET");
+            // optional default is GET
+            connection.setRequestMethod("GET");
 
-			// add request header
-			connection.setRequestProperty("User-Agent", USER_AGENT);
+            // add request header
+            connection.setRequestProperty("User-Agent", USER_AGENT);
 
-			if (connection.getResponseCode() == responseDecoder.getExpectedResponseCode()) {
+            if (connection.getResponseCode() == responseDecoder.getExpectedResponseCode()) {
 
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
 
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
-				}
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
 
-				in.close();
+                in.close();
 
-				return responseDecoder.manageResponse(response.toString());
+                return responseDecoder.manageResponse(response.toString());
 
-			} else {
+            } else {
 
-				return responseDecoder.manageUnexpectedResponseCode(connection.getResponseCode(), connection.getResponseMessage());
+                return responseDecoder.manageUnexpectedResponseCode(connection.getResponseCode(), connection.getResponseMessage());
 
-			}
+            }
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			LOGGER.error("Unexpected Exception", t);
+            LOGGER.error("Unexpected Exception", t);
 
-			throw new Exception("Unexpected Exception", t);
+            throw new Exception("Unexpected Exception", t);
 
-		}
+        }
 
-	}
+    }
 
 }

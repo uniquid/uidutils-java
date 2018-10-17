@@ -2,10 +2,10 @@ package com.uniquid.utils;
 
 public interface ResponseDecoder<T> {
 
-	int getExpectedResponseCode();
+    int getExpectedResponseCode();
 
-	T manageResponse(String serverResponse) throws Exception;
+    T manageResponse(String serverResponse) throws Exception;
 
-	T manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception;
+    T manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception;
 
 }

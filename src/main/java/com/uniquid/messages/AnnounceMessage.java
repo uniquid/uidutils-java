@@ -7,52 +7,52 @@ import java.util.Objects;
  */
 public class AnnounceMessage implements UniquidMessage {
 
-	private String name = "", pubKey = "";
+    private String name = "", pubKey = "";
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getPubKey() {
-		return pubKey;
-	}
+    public String getPubKey() {
+        return pubKey;
+    }
 
-	public void setPubKey(String pubKey) {
-		this.pubKey = pubKey;
-	}
+    public void setPubKey(String pubKey) {
+        this.pubKey = pubKey;
+    }
 
-	@Override
-	public MessageType getMessageType() {
+    @Override
+    public MessageType getMessageType() {
 
-		return MessageType.ANNOUNCE;
+        return MessageType.ANNOUNCE;
 
-	}
+    }
 
-	@Override
-	public boolean equals(Object object) {
+    @Override
+    public boolean equals(Object object) {
 
-		if (!(object instanceof AnnounceMessage))
-			return false;
+        if (!(object instanceof AnnounceMessage))
+            return false;
 
-		if (this == object)
-			return true;
+        if (this == object)
+            return true;
 
-		AnnounceMessage announceMessage = (AnnounceMessage) object;
+        AnnounceMessage announceMessage = (AnnounceMessage) object;
 
-		return Objects.equals(name, announceMessage.name) && Objects.equals(pubKey, announceMessage.pubKey);
+        return Objects.equals(name, announceMessage.name) && Objects.equals(pubKey, announceMessage.pubKey);
 
-	}
+    }
 
-	@Override
-	public int hashCode() {
+    @Override
+    public int hashCode() {
 
-		return Objects.hash(name, pubKey);
+        return Objects.hash(name, pubKey);
 
-	}
+    }
 
 
 }

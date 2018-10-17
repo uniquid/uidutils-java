@@ -8,19 +8,19 @@ import com.uniquid.userclient.UserClientFactory;
  */
 public class DefaultUserClientFactory implements UserClientFactory {
 
-	private String mqttBroker;
-	private int timeout;
+    private String mqttBroker;
+    private int timeout;
 
-	public DefaultUserClientFactory(String mqttBroker, int timeout) {
-		this.mqttBroker = mqttBroker;
-		this.timeout = timeout;
-	}
+    public DefaultUserClientFactory(String mqttBroker, int timeout) {
+        this.mqttBroker = mqttBroker;
+        this.timeout = timeout;
+    }
 
-	@Override
-	public UserClient getUserClient(UserClientFactoryConfiguration configuration) {
+    @Override
+    public UserClient getUserClient(UserClientFactoryConfiguration configuration) {
 
-		return new MQTTUserClient(mqttBroker, configuration.getProviderName(), timeout, configuration.getUserAddress());
+        return new MQTTUserClient(mqttBroker, configuration.getProviderName(), timeout, configuration.getUserAddress());
 
-	}
+    }
 
 }

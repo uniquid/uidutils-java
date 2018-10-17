@@ -22,401 +22,401 @@ import java.util.Collection;
 
 public class InsightApiDAOImpl implements BlockChainDAO {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(InsightApiDAOImpl.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(InsightApiDAOImpl.class);
 
-	private static final String ADDR_URL = "%1&s/addr/%2&s";
-	private static final String UTXOS_URL = "%1&s/addr/%2&s/utxo";
-	private static final String RAWTX_URL = "%1&s/rawtx/%2&s";
-	private static final String TRANSACTION_URL = "%1&s/tx/%2&s";
-	private static final String SENDTX_URL = "%1&s/tx/send";
+    private static final String ADDR_URL = "%1&s/addr/%2&s";
+    private static final String UTXOS_URL = "%1&s/addr/%2&s/utxo";
+    private static final String RAWTX_URL = "%1&s/rawtx/%2&s";
+    private static final String TRANSACTION_URL = "%1&s/tx/%2&s";
+    private static final String SENDTX_URL = "%1&s/tx/send";
 
-	private String insightApiHost;
+    private String insightApiHost;
 
-	public InsightApiDAOImpl(String insightApiHost) {
-		this.insightApiHost = insightApiHost;
-	}
+    public InsightApiDAOImpl(String insightApiHost) {
+        this.insightApiHost = insightApiHost;
+    }
 
-	@Override
-	public AddressInfo retrieveAddressInfo(String address) throws BlockChainException {
+    @Override
+    public AddressInfo retrieveAddressInfo(String address) throws BlockChainException {
 
-		try {
-			URL url = new URL(ADDR_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
+        try {
+            URL url = new URL(ADDR_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
 
-			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<AddressInfo>() {
+            return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<AddressInfo>() {
 
-				@Override
-				public AddressInfo manageResponse(String serverResponse) {
+                @Override
+                public AddressInfo manageResponse(String serverResponse) {
 
-					return addressFromJsonString(serverResponse);
+                    return addressFromJsonString(serverResponse);
 
-				}
+                }
 
-				@Override
-				public int getExpectedResponseCode() {
-					return HttpURLConnection.HTTP_OK;
-				}
+                @Override
+                public int getExpectedResponseCode() {
+                    return HttpURLConnection.HTTP_OK;
+                }
 
-				@Override
-				public AddressInfo manageUnexpectedResponseCode(int responseCode, String responseMessage)
-						throws Exception {
+                @Override
+                public AddressInfo manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                        throws Exception {
 
-					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+                    if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
-						return null;
+                        return null;
 
-					throw new Exception("Received " + responseCode + responseMessage);
-				}
+                    throw new Exception("Received " + responseCode + responseMessage);
+                }
 
-			});
+            });
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			throw new BlockChainException("Unexpected Exception", t);
+            throw new BlockChainException("Unexpected Exception", t);
 
-		}
+        }
 
-	}
+    }
 
-	private static AddressInfo addressFromJsonString(String string) throws JSONException {
+    private static AddressInfo addressFromJsonString(String string) throws JSONException {
 
-		AddressInfo addressInfo = new AddressInfo();
+        AddressInfo addressInfo = new AddressInfo();
 
-		JSONObject jsonMessage = new JSONObject(string);
+        JSONObject jsonMessage = new JSONObject(string);
 
-		addressInfo.setBalance(jsonMessage.getDouble("balance"));
-		addressInfo.setTotalReceived(jsonMessage.getDouble("totalReceived"));
-		addressInfo.setTotalSent(jsonMessage.getDouble("totalSent"));
-		addressInfo.setUnconfirmedBalance(jsonMessage.getDouble("unconfirmedBalance"));
+        addressInfo.setBalance(jsonMessage.getDouble("balance"));
+        addressInfo.setTotalReceived(jsonMessage.getDouble("totalReceived"));
+        addressInfo.setTotalSent(jsonMessage.getDouble("totalSent"));
+        addressInfo.setUnconfirmedBalance(jsonMessage.getDouble("unconfirmedBalance"));
 
-		return addressInfo;
+        return addressInfo;
 
-	}
+    }
 
-	private static Collection<Utxo> utxosFromJsonString(String string, int maxUtxos) throws JSONException {
+    private static Collection<Utxo> utxosFromJsonString(String string, int maxUtxos) throws JSONException {
 
-		Collection<Utxo> collection = new ArrayList<>();
+        Collection<Utxo> collection = new ArrayList<>();
 
-		JSONArray jsonMessage = new JSONArray(string);
+        JSONArray jsonMessage = new JSONArray(string);
 
-		int elements = jsonMessage.length();
+        int elements = jsonMessage.length();
 
-		elements = (elements <= maxUtxos) ? elements : maxUtxos;
+        elements = (elements <= maxUtxos) ? elements : maxUtxos;
 
-		for (int i = 0; i < elements; i++) {
+        for (int i = 0; i < elements; i++) {
 
-			Utxo utxo = new Utxo();
+            Utxo utxo = new Utxo();
 
-			JSONObject object = jsonMessage.getJSONObject(i);
+            JSONObject object = jsonMessage.getJSONObject(i);
 
-			utxo.setAddress(object.getString("address"));
-			utxo.setTxid(object.getString("txid"));
-			utxo.setVout(object.getLong("vout"));
-			utxo.setScriptPubKey(object.getString("scriptPubKey"));
-			utxo.setAmount(object.getDouble("amount"));
-			utxo.setConfirmation(object.getLong("confirmations"));
+            utxo.setAddress(object.getString("address"));
+            utxo.setTxid(object.getString("txid"));
+            utxo.setVout(object.getLong("vout"));
+            utxo.setScriptPubKey(object.getString("scriptPubKey"));
+            utxo.setAmount(object.getDouble("amount"));
+            utxo.setConfirmation(object.getLong("confirmations"));
 
-			collection.add(utxo);
-		}
+            collection.add(utxo);
+        }
 
-		return collection;
+        return collection;
 
-	}
+    }
 
-	private static Collection<Utxo> utxosFromJsonString(String string) throws JSONException {
+    private static Collection<Utxo> utxosFromJsonString(String string) throws JSONException {
 
-		Collection<Utxo> collection = new ArrayList<>();
+        Collection<Utxo> collection = new ArrayList<>();
 
-		JSONArray jsonMessage = new JSONArray(string);
+        JSONArray jsonMessage = new JSONArray(string);
 
-		int elements = jsonMessage.length();
+        int elements = jsonMessage.length();
 
-		for (int i = 0; i < elements; i++) {
+        for (int i = 0; i < elements; i++) {
 
-			Utxo utxo = new Utxo();
+            Utxo utxo = new Utxo();
 
-			JSONObject object = jsonMessage.getJSONObject(i);
+            JSONObject object = jsonMessage.getJSONObject(i);
 
-			utxo.setAddress(object.getString("address"));
-			utxo.setTxid(object.getString("txid"));
-			utxo.setVout(object.getLong("vout"));
-			utxo.setScriptPubKey(object.getString("scriptPubKey"));
-			utxo.setAmount(object.getDouble("amount"));
-			utxo.setConfirmation(object.getLong("confirmations"));
+            utxo.setAddress(object.getString("address"));
+            utxo.setTxid(object.getString("txid"));
+            utxo.setVout(object.getLong("vout"));
+            utxo.setScriptPubKey(object.getString("scriptPubKey"));
+            utxo.setAmount(object.getDouble("amount"));
+            utxo.setConfirmation(object.getLong("confirmations"));
 
-			collection.add(utxo);
-		}
+            collection.add(utxo);
+        }
 
-		return collection;
+        return collection;
 
-	}
+    }
 
-	@Override
-	public Collection<Utxo> retrieveUtxo(String address) throws BlockChainException {
+    @Override
+    public Collection<Utxo> retrieveUtxo(String address) throws BlockChainException {
 
-		try {
+        try {
 
-			URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
+            URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
 
-			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Collection<Utxo>>() {
+            return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Collection<Utxo>>() {
 
-				@Override
-				public Collection<Utxo> manageResponse(String serverResponse) {
+                @Override
+                public Collection<Utxo> manageResponse(String serverResponse) {
 
-					return utxosFromJsonString(serverResponse);
+                    return utxosFromJsonString(serverResponse);
 
-				}
+                }
 
-				@Override
-				public int getExpectedResponseCode() {
-					return HttpURLConnection.HTTP_OK;
-				}
+                @Override
+                public int getExpectedResponseCode() {
+                    return HttpURLConnection.HTTP_OK;
+                }
 
-				@Override
-				public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage)
-						throws Exception {
-					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+                @Override
+                public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                        throws Exception {
+                    if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
-						return new ArrayList<>();
+                        return new ArrayList<>();
 
-					throw new Exception("Received " + responseCode + responseMessage);
-				}
+                    throw new Exception("Received " + responseCode + responseMessage);
+                }
 
-			});
+            });
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			throw new BlockChainException("Unexpected Exception", t);
+            throw new BlockChainException("Unexpected Exception", t);
 
-		}
-	}
+        }
+    }
 
-	@Override
-	public Collection<Utxo> retrieveUtxo(String address, final int maxUtxo) throws BlockChainException {
+    @Override
+    public Collection<Utxo> retrieveUtxo(String address, final int maxUtxo) throws BlockChainException {
 
-		try {
+        try {
 
-			URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
+            URL url = new URL(UTXOS_URL.replace("%1&s", insightApiHost).replace("%2&s", address));
 
-			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Collection<Utxo>>() {
+            return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Collection<Utxo>>() {
 
-				@Override
-				public Collection<Utxo> manageResponse(String serverResponse) {
-					return utxosFromJsonString(serverResponse, maxUtxo);
-				}
+                @Override
+                public Collection<Utxo> manageResponse(String serverResponse) {
+                    return utxosFromJsonString(serverResponse, maxUtxo);
+                }
 
-				@Override
-				public int getExpectedResponseCode() {
-					return HttpURLConnection.HTTP_OK;
-				}
+                @Override
+                public int getExpectedResponseCode() {
+                    return HttpURLConnection.HTTP_OK;
+                }
 
-				@Override
-				public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage)
-						throws Exception {
-					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+                @Override
+                public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                        throws Exception {
+                    if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
-						return new ArrayList<>();
+                        return new ArrayList<>();
 
-					throw new Exception("Received " + responseCode + responseMessage);
-				}
+                    throw new Exception("Received " + responseCode + responseMessage);
+                }
 
-			});
+            });
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			throw new BlockChainException("Unexpected Exception", t);
+            throw new BlockChainException("Unexpected Exception", t);
 
-		}
-	}
+        }
+    }
 
-	private static String rawtxFromJsonString(String string) throws JSONException {
-		JSONObject jsonMessage = new JSONObject(string);
-		return jsonMessage.getString("rawtx");
-	}
+    private static String rawtxFromJsonString(String string) throws JSONException {
+        JSONObject jsonMessage = new JSONObject(string);
+        return jsonMessage.getString("rawtx");
+    }
 
-	@Override
-	public String retrieveRawTx(String txid) throws BlockChainException {
+    @Override
+    public String retrieveRawTx(String txid) throws BlockChainException {
 
-		try {
-			URL url = new URL(RAWTX_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
+        try {
+            URL url = new URL(RAWTX_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
 
-			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<String>() {
+            return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<String>() {
 
-				@Override
-				public String manageResponse(String serverResponse) {
-					return rawtxFromJsonString(serverResponse);
-				}
+                @Override
+                public String manageResponse(String serverResponse) {
+                    return rawtxFromJsonString(serverResponse);
+                }
 
-				@Override
-				public int getExpectedResponseCode() {
-					return HttpURLConnection.HTTP_OK;
-				}
+                @Override
+                public int getExpectedResponseCode() {
+                    return HttpURLConnection.HTTP_OK;
+                }
 
-				@Override
-				public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
-					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+                @Override
+                public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+                    if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
-						return null;
+                        return null;
 
-					throw new Exception("Received " + responseCode + responseMessage);
-				}
+                    throw new Exception("Received " + responseCode + responseMessage);
+                }
 
-			});
+            });
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			throw new BlockChainException("Unexpected Exception", t);
+            throw new BlockChainException("Unexpected Exception", t);
 
-		}
-	}
+        }
+    }
 
-	private static Transaction transactionFromJsonString(String string) throws JSONException {
+    private static Transaction transactionFromJsonString(String string) throws JSONException {
 
-		JSONObject jsonMessage = new JSONObject(string);
+        JSONObject jsonMessage = new JSONObject(string);
 
-		String txid = jsonMessage.getString("txid");
+        String txid = jsonMessage.getString("txid");
 
-		long version = jsonMessage.getLong("version");
+        long version = jsonMessage.getLong("version");
 
-		long confirmations = jsonMessage.getLong("confirmations");
+        long confirmations = jsonMessage.getLong("confirmations");
 
-		long time = jsonMessage.getLong("time");
+        long time = jsonMessage.getLong("time");
 
-		String spentTxId = null;
+        String spentTxId = null;
 
-		JSONArray vouts = jsonMessage.getJSONArray("vout");
+        JSONArray vouts = jsonMessage.getJSONArray("vout");
 
-		// avoid use of iterator because on Android we don't have this method!
-		for (int i = 0; i < vouts.length(); i++) {
+        // avoid use of iterator because on Android we don't have this method!
+        for (int i = 0; i < vouts.length(); i++) {
 
-			JSONObject vout = (JSONObject) vouts.get(i);
+            JSONObject vout = (JSONObject) vouts.get(i);
 
-			if (vout.getLong("n") == 2) {
+            if (vout.getLong("n") == 2) {
 
-				if (!vout.isNull("spentTxId")) {
+                if (!vout.isNull("spentTxId")) {
 
-					spentTxId = vout.getString("spentTxId");
+                    spentTxId = vout.getString("spentTxId");
 
-				}
+                }
 
-			}
+            }
 
-		}
+        }
 
-		Transaction transaction = new Transaction();
+        Transaction transaction = new Transaction();
 
-		transaction.setTxid(txid);
-		transaction.setVersion(version);
-		transaction.setConfirmations(confirmations);
-		transaction.setTime(time);
-		transaction.setSpentTxId(spentTxId);
+        transaction.setTxid(txid);
+        transaction.setVersion(version);
+        transaction.setConfirmations(confirmations);
+        transaction.setTime(time);
+        transaction.setSpentTxId(spentTxId);
 
-		return transaction;
+        return transaction;
 
-	}
+    }
 
-	@Override
-	public Transaction retrieveTransaction(String txid) throws BlockChainException {
+    @Override
+    public Transaction retrieveTransaction(String txid) throws BlockChainException {
 
-		try {
-			URL url = new URL(TRANSACTION_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
+        try {
+            URL url = new URL(TRANSACTION_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
 
-			return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Transaction>() {
+            return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Transaction>() {
 
-				@Override
-				public Transaction manageResponse(String serverResponse) {
-					return transactionFromJsonString(serverResponse);
-				}
+                @Override
+                public Transaction manageResponse(String serverResponse) {
+                    return transactionFromJsonString(serverResponse);
+                }
 
-				@Override
-				public int getExpectedResponseCode() {
-					return HttpURLConnection.HTTP_OK;
-				}
+                @Override
+                public int getExpectedResponseCode() {
+                    return HttpURLConnection.HTTP_OK;
+                }
 
-				@Override
-				public Transaction manageUnexpectedResponseCode(int responseCode, String responseMessage)
-						throws Exception {
+                @Override
+                public Transaction manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                        throws Exception {
 
-					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+                    if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
-						return null;
+                        return null;
 
-					throw new Exception("Received " + responseCode + responseMessage);
+                    throw new Exception("Received " + responseCode + responseMessage);
 
-				}
+                }
 
-			});
+            });
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			throw new BlockChainException("Unexpected Exception", t);
+            throw new BlockChainException("Unexpected Exception", t);
 
-		}
-	}
+        }
+    }
 
-	private static String txidFromJsonString(String string) throws JSONException {
-		JSONObject jsonMessage = new JSONObject(string);
-		return jsonMessage.getString("txid");
-	}
+    private static String txidFromJsonString(String string) throws JSONException {
+        JSONObject jsonMessage = new JSONObject(string);
+        return jsonMessage.getString("txid");
+    }
 
-	@Override
-	public String sendTx(String rawtx) throws BlockChainException {
+    @Override
+    public String sendTx(String rawtx) throws BlockChainException {
 
-		try {
+        try {
 
-			JSONObject jsonMessage = new JSONObject();
+            JSONObject jsonMessage = new JSONObject();
 
-			jsonMessage.put("rawtx", rawtx);
+            jsonMessage.put("rawtx", rawtx);
 
-			final byte[] postDataBytes = jsonMessage.toString().getBytes(StandardCharsets.UTF_8);
+            final byte[] postDataBytes = jsonMessage.toString().getBytes(StandardCharsets.UTF_8);
 
-			URL url = new URL(SENDTX_URL.replace("%1&s", insightApiHost));
+            URL url = new URL(SENDTX_URL.replace("%1&s", insightApiHost));
 
-			return HttpUtils.sendDataWithPost(url, new DataProvider<String>() {
+            return HttpUtils.sendDataWithPost(url, new DataProvider<String>() {
 
-				@Override
-				public String manageResponse(String serverResponse) {
-					return txidFromJsonString(serverResponse);
-				}
+                @Override
+                public String manageResponse(String serverResponse) {
+                    return txidFromJsonString(serverResponse);
+                }
 
-				@Override
-				public String getContentType() {
-					return "application/json";
-				}
+                @Override
+                public String getContentType() {
+                    return "application/json";
+                }
 
-				@Override
-				public String getCharset() {
-					return "utf-8";
-				}
+                @Override
+                public String getCharset() {
+                    return "utf-8";
+                }
 
-				@Override
-				public byte[] getPayload() {
-					return postDataBytes;
-				}
+                @Override
+                public byte[] getPayload() {
+                    return postDataBytes;
+                }
 
-				@Override
-				public int getExpectedResponseCode() {
-					return HttpURLConnection.HTTP_OK;
-				}
+                @Override
+                public int getExpectedResponseCode() {
+                    return HttpURLConnection.HTTP_OK;
+                }
 
-				@Override
-				public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+                @Override
+                public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
 
-					if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+                    if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
-						return null;
+                        return null;
 
-					throw new Exception("Received " + responseCode + responseMessage);
+                    throw new Exception("Received " + responseCode + responseMessage);
 
-				}
+                }
 
-			});
+            });
 
 
-		} catch (Throwable t) {
+        } catch (Throwable t) {
 
-			throw new BlockChainException("Unexpected Exception", t);
+            throw new BlockChainException("Unexpected Exception", t);
 
-		}
-	}
+        }
+    }
 
 }

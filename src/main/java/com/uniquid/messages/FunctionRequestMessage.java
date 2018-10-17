@@ -8,83 +8,83 @@ import java.util.Random;
  */
 public class FunctionRequestMessage implements UniquidMessage {
 
-	private Random random = new Random();
+    private Random random = new Random();
 
-	private long id;
+    private long id;
 
-	private String user = "", parameters = "";
+    private String user = "", parameters = "";
 
-	private int function;
+    private int function;
 
-	public FunctionRequestMessage() {
+    public FunctionRequestMessage() {
 
-		// This will set a random id!
-		do {
-			id = random.nextInt(Integer.MAX_VALUE);
-		} while (id == 0);
+        // This will set a random id!
+        do {
+            id = random.nextInt(Integer.MAX_VALUE);
+        } while (id == 0);
 
-	}
+    }
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getUser() {
-		return user;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	public String getParameters() {
-		return parameters;
-	}
+    public String getParameters() {
+        return parameters;
+    }
 
-	public void setParameters(String parameters) {
-		this.parameters = parameters;
-	}
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
+    }
 
-	public int getFunction() {
-		return function;
-	}
+    public int getFunction() {
+        return function;
+    }
 
-	public void setFunction(int method) {
-		this.function = method;
-	}
+    public void setFunction(int method) {
+        this.function = method;
+    }
 
-	@Override
-	public MessageType getMessageType() {
+    @Override
+    public MessageType getMessageType() {
 
-		return MessageType.FUNCTION_REQUEST;
+        return MessageType.FUNCTION_REQUEST;
 
-	}
+    }
 
-	@Override
-	public boolean equals(Object object) {
+    @Override
+    public boolean equals(Object object) {
 
-		if (!(object instanceof FunctionRequestMessage))
-			return false;
+        if (!(object instanceof FunctionRequestMessage))
+            return false;
 
-		if (this == object)
-			return true;
+        if (this == object)
+            return true;
 
-		FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) object;
+        FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) object;
 
-		return Objects.equals(id, functionRequestMessage.id) && Objects.equals(user, functionRequestMessage.user)
-				&& Objects.equals(parameters, functionRequestMessage.parameters)
-				&& Objects.equals(function, functionRequestMessage.function);
-	}
+        return Objects.equals(id, functionRequestMessage.id) && Objects.equals(user, functionRequestMessage.user)
+                && Objects.equals(parameters, functionRequestMessage.parameters)
+                && Objects.equals(function, functionRequestMessage.function);
+    }
 
-	@Override
-	public int hashCode() {
+    @Override
+    public int hashCode() {
 
-		return Objects.hash(id, user, parameters, function);
+        return Objects.hash(id, user, parameters, function);
 
-	}
+    }
 
 }

@@ -10,81 +10,81 @@ import java.util.StringTokenizer;
 
 public class UniquidLitecoinRegTest extends RegTestLitecoinNetParams {
 
-	public static final String ID_UNIQUIDLITEREGTEST = "com.uniquid.params.UniquidLitecoinRegTest";
-	public static final String PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST = "uniquidlitecoinregtest";
+    public static final String ID_UNIQUIDLITEREGTEST = "com.uniquid.params.UniquidLitecoinRegTest";
+    public static final String PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST = "uniquidlitecoinregtest";
 
-	// By default use test peers: /40.115.10.153, /40.115.103.9, /40.115.9.216
-	private static int[] SEEDS = new int[] {(int) 2567598888L, (int) 157774632L, (int) 3624497960L};
+    // By default use test peers: /40.115.10.153, /40.115.103.9, /40.115.9.216
+    private static int[] SEEDS = new int[] {(int) 2567598888L, (int) 157774632L, (int) 3624497960L};
 
-	private UniquidLitecoinRegTest() {
-		super();
+    private UniquidLitecoinRegTest() {
+        super();
 
-		port = 19000;
-		id = ID_UNIQUIDLITEREGTEST;
+        port = 19000;
+        id = ID_UNIQUIDLITEREGTEST;
 
-		addrSeeds = SEEDS;
+        addrSeeds = SEEDS;
 
-	}
+    }
 
-	private static UniquidLitecoinRegTest instance;
+    private static UniquidLitecoinRegTest instance;
 
-	public static synchronized UniquidLitecoinRegTest get() {
+    public static synchronized UniquidLitecoinRegTest get() {
 
-		if (instance == null) {
+        if (instance == null) {
 
-			instance = new UniquidLitecoinRegTest();
+            instance = new UniquidLitecoinRegTest();
 
-			NetworkParameters.addCustomNetworkParameter(ID_UNIQUIDLITEREGTEST, instance);
-			NetworkParameters.addCustomPaymentProtocol(PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST, instance);
-		}
+            NetworkParameters.addCustomNetworkParameter(ID_UNIQUIDLITEREGTEST, instance);
+            NetworkParameters.addCustomPaymentProtocol(PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST, instance);
+        }
 
-		return instance;
-	}
+        return instance;
+    }
 
-	@Override
-	public String getPaymentProtocolId() {
-		return PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST;
-	}
+    @Override
+    public String getPaymentProtocolId() {
+        return PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST;
+    }
 
-	/**
-	 * Allow to override default peers used to access to blockchain
-	 *
-	 * @param peers a String representing peers separated by semicolon
-	 * @throws Exception in case a problem during parsing occurs
-	 */
-	public void overridePeers(String peers) throws Exception {
-		List<Integer> list = new ArrayList<>();
+    /**
+     * Allow to override default peers used to access to blockchain
+     *
+     * @param peers a String representing peers separated by semicolon
+     * @throws Exception in case a problem during parsing occurs
+     */
+    public void overridePeers(String peers) throws Exception {
+        List<Integer> list = new ArrayList<>();
 
-		if (peers == null || peers.isEmpty())
-			throw new Exception("Invalid seeds");
+        if (peers == null || peers.isEmpty())
+            throw new Exception("Invalid seeds");
 
-		StringTokenizer stringTokenizer = new StringTokenizer(peers, ";");
+        StringTokenizer stringTokenizer = new StringTokenizer(peers, ";");
 
-		if (!(stringTokenizer.countTokens() > 0)) {
-			throw new Exception("Invalid seeds count");
-		}
+        if (!(stringTokenizer.countTokens() > 0)) {
+            throw new Exception("Invalid seeds count");
+        }
 
-		while (stringTokenizer.hasMoreTokens()) {
+        while (stringTokenizer.hasMoreTokens()) {
 
-			String token = stringTokenizer.nextToken();
+            String token = stringTokenizer.nextToken();
 
-			token = token.trim();
+            token = token.trim();
 
-			int ip = (int) IpUtils.convertStringIpToLong(token);
+            int ip = (int) IpUtils.convertStringIpToLong(token);
 
-			list.add(ip);
+            list.add(ip);
 
-		}
+        }
 
-		int[] arr = new int[list.size()];
-		for (int i = 0; i < list.size(); i++) {
-			arr[i] = list.get(i);
-		}
+        int[] arr = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            arr[i] = list.get(i);
+        }
 
-		SEEDS = arr;
+        SEEDS = arr;
 
-		addrSeeds = SEEDS;
+        addrSeeds = SEEDS;
 
-	}
+    }
 
 }

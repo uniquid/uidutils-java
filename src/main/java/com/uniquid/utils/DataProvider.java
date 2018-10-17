@@ -2,10 +2,10 @@ package com.uniquid.utils;
 
 public interface DataProvider<T> extends ResponseDecoder<T> {
 
-	String getContentType();
+    String getContentType();
 
-	String getCharset();
+    String getCharset();
 
-	byte[] getPayload();
+    byte[] getPayload();
 
 }

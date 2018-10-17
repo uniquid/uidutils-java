@@ -13,204 +13,204 @@ import java.util.regex.Pattern;
  */
 public class JSONMessageSerializer implements MessageSerializer {
 
-	// Pattern: "error - txid"
-	// Example: "0 - 913ae6d8d4f149e0286bd73d4b616b4c8478f256f7929373ffae11224066b4ee"
-	private static final Pattern PATTERN = Pattern.compile("^(\\d+)+\\s+-\\s+(\\w+)$");
+    // Pattern: "error - txid"
+    // Example: "0 - 913ae6d8d4f149e0286bd73d4b616b4c8478f256f7929373ffae11224066b4ee"
+    private static final Pattern PATTERN = Pattern.compile("^(\\d+)+\\s+-\\s+(\\w+)$");
 
-	@Override
-	public byte[] serialize(UniquidMessage uniquidMessage) throws MessageSerializerException {
+    @Override
+    public byte[] serialize(UniquidMessage uniquidMessage) throws MessageSerializerException {
 
-		if (MessageType.FUNCTION_REQUEST.equals(uniquidMessage.getMessageType())) {
+        if (MessageType.FUNCTION_REQUEST.equals(uniquidMessage.getMessageType())) {
 
-			FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) uniquidMessage;
+            FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) uniquidMessage;
 
-			// Create empty json object
-			JSONObject jsonObject = new JSONObject();
+            // Create empty json object
+            JSONObject jsonObject = new JSONObject();
 
-			// populate sender
-			jsonObject.put("sender", functionRequestMessage.getUser());
+            // populate sender
+            jsonObject.put("sender", functionRequestMessage.getUser());
 
-			// Create empty json child
-			JSONObject jsonbody = new JSONObject();
+            // Create empty json child
+            JSONObject jsonbody = new JSONObject();
 
-			// Put all keys inside body
-			jsonbody.put("method", functionRequestMessage.getFunction());
+            // Put all keys inside body
+            jsonbody.put("method", functionRequestMessage.getFunction());
 
-			jsonbody.put("params", functionRequestMessage.getParameters());
+            jsonbody.put("params", functionRequestMessage.getParameters());
 
-			jsonbody.put("id", functionRequestMessage.getId());
+            jsonbody.put("id", functionRequestMessage.getId());
 
-			// Add body
-			jsonObject.put("body", jsonbody);
+            // Add body
+            jsonObject.put("body", jsonbody);
 
-			return jsonObject.toString().getBytes();
+            return jsonObject.toString().getBytes();
 
-		} else if (MessageType.FUNCTION_RESPONSE.equals(uniquidMessage.getMessageType())) {
+        } else if (MessageType.FUNCTION_RESPONSE.equals(uniquidMessage.getMessageType())) {
 
-			FunctionResponseMessage functionResponseMessage = (FunctionResponseMessage) uniquidMessage;
+            FunctionResponseMessage functionResponseMessage = (FunctionResponseMessage) uniquidMessage;
 
-			final JSONObject jsonBody = new JSONObject();
+            final JSONObject jsonBody = new JSONObject();
 
-			jsonBody.put("result", functionResponseMessage.getResult());
-			jsonBody.put("error", functionResponseMessage.getError());
-			jsonBody.put("id", functionResponseMessage.getId());
+            jsonBody.put("result", functionResponseMessage.getResult());
+            jsonBody.put("error", functionResponseMessage.getError());
+            jsonBody.put("id", functionResponseMessage.getId());
 
-			final JSONObject jsonResponse = new JSONObject();
+            final JSONObject jsonResponse = new JSONObject();
 
-			jsonResponse.put("sender", functionResponseMessage.getProvider());
+            jsonResponse.put("sender", functionResponseMessage.getProvider());
 
-			jsonResponse.put("body", jsonBody);
+            jsonResponse.put("body", jsonBody);
 
-			return jsonResponse.toString().getBytes();
+            return jsonResponse.toString().getBytes();
 
-		} else if (MessageType.ANNOUNCE.equals(uniquidMessage.getMessageType())) {
+        } else if (MessageType.ANNOUNCE.equals(uniquidMessage.getMessageType())) {
 
-			AnnounceMessage announceMessage = (AnnounceMessage) uniquidMessage;
+            AnnounceMessage announceMessage = (AnnounceMessage) uniquidMessage;
 
-			final JSONObject jsonResponse = new JSONObject();
+            final JSONObject jsonResponse = new JSONObject();
 
-			jsonResponse.put("name", announceMessage.getName());
-			jsonResponse.put("xpub", announceMessage.getPubKey());
+            jsonResponse.put("name", announceMessage.getName());
+            jsonResponse.put("xpub", announceMessage.getPubKey());
 
-			return jsonResponse.toString().getBytes();
+            return jsonResponse.toString().getBytes();
 
-		} else if (MessageType.UNIQUID_CAPABILITY.equals(uniquidMessage.getMessageType())) {
+        } else if (MessageType.UNIQUID_CAPABILITY.equals(uniquidMessage.getMessageType())) {
 
-			CapabilityMessage capabilityMessage = (CapabilityMessage) uniquidMessage;
+            CapabilityMessage capabilityMessage = (CapabilityMessage) uniquidMessage;
 
-			final JSONObject jsonResponse = new JSONObject();
+            final JSONObject jsonResponse = new JSONObject();
 
-			jsonResponse.put("assigner", capabilityMessage.getAssigner());
-			jsonResponse.put("resourceID", capabilityMessage.getResourceID());
-			jsonResponse.put("assignee", capabilityMessage.getAssignee());
-			jsonResponse.put("rights", capabilityMessage.getRights());
-			jsonResponse.put("since", capabilityMessage.getSince());
-			jsonResponse.put("until", capabilityMessage.getUntil());
-			jsonResponse.put("assignerSignature", capabilityMessage.getAssignerSignature());
+            jsonResponse.put("assigner", capabilityMessage.getAssigner());
+            jsonResponse.put("resourceID", capabilityMessage.getResourceID());
+            jsonResponse.put("assignee", capabilityMessage.getAssignee());
+            jsonResponse.put("rights", capabilityMessage.getRights());
+            jsonResponse.put("since", capabilityMessage.getSince());
+            jsonResponse.put("until", capabilityMessage.getUntil());
+            jsonResponse.put("assignerSignature", capabilityMessage.getAssignerSignature());
 
-			return jsonResponse.toString().getBytes();
+            return jsonResponse.toString().getBytes();
 
-		} else {
+        } else {
 
-			throw new MessageSerializerException("Unknown message type " + uniquidMessage.getMessageType());
+            throw new MessageSerializerException("Unknown message type " + uniquidMessage.getMessageType());
 
-		}
+        }
 
-	}
+    }
 
-	@Override
-	public UniquidMessage deserialize(byte[] payload) throws MessageSerializerException, JSONException {
+    @Override
+    public UniquidMessage deserialize(byte[] payload) throws MessageSerializerException, JSONException {
 
-		String jsonString = new String(payload, StandardCharsets.UTF_8);
+        String jsonString = new String(payload, StandardCharsets.UTF_8);
 
-		final JSONObject jsonMessage = new JSONObject(jsonString);
+        final JSONObject jsonMessage = new JSONObject(jsonString);
 
-		if (jsonMessage.has("sender")) {
+        if (jsonMessage.has("sender")) {
 
-			final String sender = jsonMessage.getString("sender");
+            final String sender = jsonMessage.getString("sender");
 
-			final JSONObject jsonBody = jsonMessage.getJSONObject("body");
+            final JSONObject jsonBody = jsonMessage.getJSONObject("body");
 
-			// IS Request?
-			if (jsonBody.has("method")) {
+            // IS Request?
+            if (jsonBody.has("method")) {
 
-				final int method = jsonBody.getInt("method");
+                final int method = jsonBody.getInt("method");
 
-				final String params = jsonBody.getString("params");
+                final String params = jsonBody.getString("params");
 
-				final long id = jsonBody.getLong("id");
+                final long id = jsonBody.getLong("id");
 
-				FunctionRequestMessage requestMessage = new FunctionRequestMessage();
+                FunctionRequestMessage requestMessage = new FunctionRequestMessage();
 
-				requestMessage.setUser(sender);
-				requestMessage.setFunction(method);
-				requestMessage.setParameters(params);
-				requestMessage.setId(id);
+                requestMessage.setUser(sender);
+                requestMessage.setFunction(method);
+                requestMessage.setParameters(params);
+                requestMessage.setId(id);
 
-				return requestMessage;
+                return requestMessage;
 
-			} else if (jsonBody.has("result")) {
+            } else if (jsonBody.has("result")) {
 
-				final String result = jsonBody.getString("result");
+                final String result = jsonBody.getString("result");
 
-				final int error =jsonBody.getInt("error");
+                final int error =jsonBody.getInt("error");
 
-				final long id = jsonBody.getLong("id");
+                final long id = jsonBody.getLong("id");
 
-				// IS function 30 ?
-				Matcher matcher = PATTERN.matcher(result);
-				if (matcher.find()) {
-					final int txidError = Integer.parseInt(matcher.group(1));
-					final String txid = matcher.group(2);
+                // IS function 30 ?
+                Matcher matcher = PATTERN.matcher(result);
+                if (matcher.find()) {
+                    final int txidError = Integer.parseInt(matcher.group(1));
+                    final String txid = matcher.group(2);
 
-					Function30ResponseMessage responseMessage = new Function30ResponseMessage();
+                    Function30ResponseMessage responseMessage = new Function30ResponseMessage();
 
-					responseMessage.setProvider(sender);
-					responseMessage.setResult(result);
-					responseMessage.setError(error);
-					responseMessage.setId(id);
-					responseMessage.setTxid(txid);
-					responseMessage.setTxidError(txidError);
+                    responseMessage.setProvider(sender);
+                    responseMessage.setResult(result);
+                    responseMessage.setError(error);
+                    responseMessage.setId(id);
+                    responseMessage.setTxid(txid);
+                    responseMessage.setTxidError(txidError);
 
-					return responseMessage;
-				} else {
-					FunctionResponseMessage responseMessage = new FunctionResponseMessage();
+                    return responseMessage;
+                } else {
+                    FunctionResponseMessage responseMessage = new FunctionResponseMessage();
 
-					responseMessage.setProvider(sender);
-					responseMessage.setResult(result);
-					responseMessage.setError(error);
-					responseMessage.setId(id);
+                    responseMessage.setProvider(sender);
+                    responseMessage.setResult(result);
+                    responseMessage.setError(error);
+                    responseMessage.setId(id);
 
-					return responseMessage;
-				}
+                    return responseMessage;
+                }
 
-			} else {
+            } else {
 
-				throw new MessageSerializerException("Invalid message to deserialize!");
+                throw new MessageSerializerException("Invalid message to deserialize!");
 
-			}
+            }
 
-		} else if (jsonMessage.has("xpub")) {
+        } else if (jsonMessage.has("xpub")) {
 
-			final String name = jsonMessage.getString("name");
+            final String name = jsonMessage.getString("name");
 
-			final String pubKey = jsonMessage.getString("xpub");
+            final String pubKey = jsonMessage.getString("xpub");
 
-			AnnounceMessage announceMessage = new AnnounceMessage();
+            AnnounceMessage announceMessage = new AnnounceMessage();
 
-			announceMessage.setName(name);
-			announceMessage.setPubKey(pubKey);
+            announceMessage.setName(name);
+            announceMessage.setPubKey(pubKey);
 
-			return announceMessage;
+            return announceMessage;
 
-		} else if (jsonMessage.has("assignerSignature")) {
+        } else if (jsonMessage.has("assignerSignature")) {
 
-			String assigner = jsonMessage.getString("assigner");
+            String assigner = jsonMessage.getString("assigner");
 
-			String resourceID = jsonMessage.getString("resourceID");
-			String assignee = jsonMessage.getString("assignee");
-			String rights = jsonMessage.getString("rights");
-			long since = jsonMessage.getLong("since");
-			long until = jsonMessage.getLong("until");
+            String resourceID = jsonMessage.getString("resourceID");
+            String assignee = jsonMessage.getString("assignee");
+            String rights = jsonMessage.getString("rights");
+            long since = jsonMessage.getLong("since");
+            long until = jsonMessage.getLong("until");
 
-			String assignerSignature = jsonMessage.getString("assignerSignature");
+            String assignerSignature = jsonMessage.getString("assignerSignature");
 
-			CapabilityMessage capabilityMessage = new CapabilityMessage();
-			capabilityMessage.setAssigner(assigner);
-			capabilityMessage.setResourceID(resourceID);
-			capabilityMessage.setAssignee(assignee);
-			capabilityMessage.setRights(rights);
-			capabilityMessage.setSince(since);
-			capabilityMessage.setUntil(until);
-			capabilityMessage.setAssignerSignature(assignerSignature);
+            CapabilityMessage capabilityMessage = new CapabilityMessage();
+            capabilityMessage.setAssigner(assigner);
+            capabilityMessage.setResourceID(resourceID);
+            capabilityMessage.setAssignee(assignee);
+            capabilityMessage.setRights(rights);
+            capabilityMessage.setSince(since);
+            capabilityMessage.setUntil(until);
+            capabilityMessage.setAssignerSignature(assignerSignature);
 
-			return capabilityMessage;
+            return capabilityMessage;
 
-		} else {
+        } else {
 
-			throw new MessageSerializerException("Invalid message to deserialize!");
+            throw new MessageSerializerException("Invalid message to deserialize!");
 
-		}
-	}
+        }
+    }
 
 }

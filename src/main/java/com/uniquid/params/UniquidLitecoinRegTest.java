@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 public class UniquidLitecoinRegTest extends RegTestLitecoinNetParams {
 
-    public static final String ID_UNIQUIDLITEREGTEST = "com.uniquid.params.UniquidLitecoinRegTest";
+    public static final String ID_UNIQUIDLITEREGTEST = "com.uniquid.litecoinregtest";
     public static final String PAYMENT_PROTOCOL_ID_UNIQUIDLITEREGTEST = "uniquidlitecoinregtest";
 
     // By default use test peers: /40.115.10.153, /40.115.103.9, /40.115.9.216

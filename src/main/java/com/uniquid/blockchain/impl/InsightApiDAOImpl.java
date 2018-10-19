@@ -320,31 +320,39 @@ public class InsightApiDAOImpl implements BlockChainDAO {
         try {
             URL url = new URL(TRANSACTION_URL.replace("%1&s", insightApiHost).replace("%2&s", txid));
 
-            return HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Transaction>() {
+            Transaction tx = null;
+            for (int i = 0; tx == null; i++) {
 
-                @Override
-                public Transaction manageResponse(String serverResponse) {
-                    return transactionFromJsonString(serverResponse);
+                tx = HttpUtils.retrieveDataViaHttpGet(url, new ResponseDecoder<Transaction>() {
+
+                    @Override
+                    public Transaction manageResponse(String serverResponse) {
+                        return transactionFromJsonString(serverResponse);
+                    }
+
+                    @Override
+                    public int getExpectedResponseCode() {
+                        return HttpURLConnection.HTTP_OK;
+                    }
+
+                    @Override
+                    public Transaction manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                            throws Exception {
+
+                        if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
+                            return null;
+
+                        throw new BlockChainException("Received from Insight " + responseCode + responseMessage);
+                    }
+                });
+
+                if (i > 20) {
+                    throw new BlockChainException("Can't find tx in mempool/blockchain: " + txid);
                 }
+                Thread.sleep(1000);
 
-                @Override
-                public int getExpectedResponseCode() {
-                    return HttpURLConnection.HTTP_OK;
-                }
-
-                @Override
-                public Transaction manageUnexpectedResponseCode(int responseCode, String responseMessage)
-                        throws Exception {
-
-                    if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
-
-                        return null;
-
-                    throw new Exception("Received " + responseCode + responseMessage);
-
-                }
-
-            });
+            }
+            return null;
 
         } catch (Throwable t) {
 

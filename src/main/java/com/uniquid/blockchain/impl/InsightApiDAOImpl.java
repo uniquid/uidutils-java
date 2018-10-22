@@ -352,7 +352,7 @@ public class InsightApiDAOImpl implements BlockChainDAO {
                 Thread.sleep(1000);
 
             }
-            return null;
+            return tx;
 
         } catch (Throwable t) {
 

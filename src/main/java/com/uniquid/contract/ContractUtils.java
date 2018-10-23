@@ -11,6 +11,7 @@ import java.util.List;
 public class ContractUtils {
 
     public static final Coin FEE = Coin.COIN.divide(1000); /* 0,001 */
+    public static final Coin FEE_PER_B = Coin.COIN.multiply(3).divide(1000000);	/* 0,000003 */
     public static final Coin COIN_OUTPUT = Coin.COIN.divide(1000); /* 0,001 */
 
     /*
@@ -95,8 +96,15 @@ public class ContractUtils {
 
         }
 
+        // 34 Byte is the size of an output. For access we have 1 User, 1 Revoker, 1 Change
+        // 150 Byte is the size of an input
+        // 80 Byte is the size of the op_return
+        long tSize = (34 * 3) + (150 * inputs.size()) + 92;
+
+        Coin fee = FEE_PER_B.multiply(tSize);
+
         // add fee
-        totalCoinOut = totalCoinOut.add(FEE);
+        totalCoinOut = totalCoinOut.add(fee);
 
         TransactionOutput outputChange;
         try {
@@ -161,7 +169,11 @@ public class ContractUtils {
 
         }
 
-        Coin coinValue = prevOut.getValue().subtract(FEE);
+        Transaction parent = prevOut.getParentTransaction();
+
+        Coin fee = parent != null ? parent.getFee() : FEE;
+
+        Coin coinValue = prevOut.getValue().subtract(fee);
 
         Coin coinDivided = Coin.valueOf(coinValue.getValue() / 2);
 

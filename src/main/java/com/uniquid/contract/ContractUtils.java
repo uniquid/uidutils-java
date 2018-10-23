@@ -169,11 +169,8 @@ public class ContractUtils {
 
         }
 
-        Transaction parent = prevOut.getParentTransaction();
 
-        Coin fee = parent != null ? parent.getFee() : FEE;
-
-        Coin coinValue = prevOut.getValue().subtract(fee);
+        Coin coinValue = prevOut.getValue().subtract(FEE);
 
         Coin coinDivided = Coin.valueOf(coinValue.getValue() / 2);
 

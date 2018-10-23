@@ -1,105 +1,116 @@
 package com.uniquid.contract;
 
-import java.util.BitSet;
-
+import com.uniquid.blockchain.impl.InsightApiDAOImpl;
+import com.uniquid.params.UniquidLitecoinRegTest;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.params.TestNet3Params;
 import org.junit.Assert;
 import org.junit.Test;
+import org.spongycastle.util.encoders.Hex;
 
-import com.subgraph.orchid.encoders.Hex;
+import java.util.BitSet;
 
 public class ContractUtilsTest {
 
-	@Test
-	public void test() throws Exception {
-		
-		String tx = "0100000001b6c3475d919c676da5b6bd8016a8746c3b54fbd98a32379f724305e151abe6b5000000006b483045022100fd22b75a90d5cdb7d32e0cba9eb2b61f51caa13e83b51d1a7152815d18fd0f9e0220359993b09563ba57d9e1f7863bb7aeb581c500c1772de27acab2cfcb54811d55012102a71f7a7adee0ec0710f896e8b26e8db4ac602538dffaf0d7fd4b1e0068d035afffffffff0418730100000000001976a914d141f0e47bc3355260bf701fce59f67343b505fa88ac0000000000000000536a4c50000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018730100000000001976a914d141f0e47bc3355260bf701fce59f67343b505fa88ac88480c00000000001976a91455524f2f6709abe0e640a77ada62ce0a3c80ff4b88ac00000000";
+    @Test
+    public void test() throws Exception {
 
-		Transaction originalTransaction = TestNet3Params.get().getDefaultSerializer().makeTransaction(Hex.decode(tx));
+        NetworkParameters parameters = UniquidLitecoinRegTest.get();
 
-		BitSet bitSet = new BitSet();
-		bitSet.set(30);
-		bitSet.set(33);
+        InsightApiDAOImpl blockChainDAOImpl = new InsightApiDAOImpl("http://40.115.103.9:3001/insight-lite-api");
+        String tx = blockChainDAOImpl.retrieveRawTx("3d09e1cb71d13cd14fc3958d6402f0e08afeb25e1dba7ac853cdbd9b9ec8abad ");
 
-		Transaction contract = null;
-		
-		contract = ContractUtils.buildAccessContract(
-				null,
-				"mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
-				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
-				originalTransaction.getOutput(3), bitSet, TestNet3Params.get());
-		
-		String contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
-		
-		Assert.assertEquals(
-				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff030000000000000000536a4c50000000004002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000030750000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac48ac0b00000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
-				contractTx);
-		
-		contract = ContractUtils.buildAccessContract(
-				"mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
-				"mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
-				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
-				originalTransaction.getOutput(3), null, TestNet3Params.get());
-		
-		contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
-		
-		Assert.assertEquals(
-				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff0310270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac30750000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac38850b00000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
-				contractTx);
-		
-		contract = ContractUtils.buildAccessContract("mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt", null,
-				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
-				originalTransaction.getOutput(3), bitSet, TestNet3Params.get());
+        Transaction originalTransaction = parameters.getDefaultSerializer().makeTransaction(Hex.decode(tx));
 
-		contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
+        BitSet bitSet = new BitSet();
+        bitSet.set(34);
+        bitSet.set(35);
+        bitSet.set(36);
 
-		Assert.assertEquals(
-				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff0310270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac0000000000000000536a4c50000000004002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000068fa0b00000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
-				contractTx);
-		
-		contract = ContractUtils.buildAccessContract("mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt", "mnec4hDq98sd9dS1wXwjMLfoscuyV2hcWt",
-				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
-				originalTransaction.getOutput(3), bitSet, TestNet3Params.get());
+        Transaction contract;
 
-		contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
+        contract = ContractUtils.buildAccessContract(
+                null,
+                "mjF7jmRdMr5zNbUqGgDWEtNEk22RtHQLSc",
+                "mkHdDJq2Veu9QvLijEAxcA46r2JZwj6pZb",
+                originalTransaction.getOutput(3), bitSet, parameters);
 
-		Assert.assertEquals(
-				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff0410270000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac0000000000000000536a4c50000000004002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000030750000000000001976a9144e3b521c391f94a914018dec3a20b1f5194beea888ac38850b00000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
-				contractTx);
+        String contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
 
-		Transaction revoke = null;
-		try {
-			revoke = ContractUtils.buildRevokeContract(
-					null,
-					"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
-					originalTransaction.getOutput(2), TestNet3Params.get());
-			Assert.fail();
-		} catch (Exception e) {
-			//
-		}
-		
-		try {
-			revoke = ContractUtils.buildRevokeContract(
-					"mggtDLwsHpWPB1Y7tKh9G665jJgLUbGiQQ",
-					null,
-					originalTransaction.getOutput(2), TestNet3Params.get());
-			Assert.fail();
-		} catch (Exception e) {
-			//
-		}
-		
-		revoke = ContractUtils.buildRevokeContract(
-				"mggtDLwsHpWPB1Y7tKh9G665jJgLUbGiQQ",
-				"n2W1pM7241TfvpCqgiT8TG4xS1VCb1yQum",
-				originalTransaction.getOutput(2), TestNet3Params.get());
+        Assert.assertEquals(
+                "0100000001adabc89e9bbdcd53c87aba1d5eb2fe8ae0f002648d95c34fd13cd171cbe1093d030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff030000000000000000536a4c5000000000001c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e0930400000000001976a91428e1bb0aef0e6da3c8c7973051764ae94db049fe88ace0da8a00000000001976a91434534aef15c4a052a12c5d5ce21835635f7f033b88ac00000000",
+                contractTx);
 
-		String revokeTx = new String(Hex.encode(revoke.bitcoinSerialize()));
+        contract = ContractUtils.buildAccessContract(
+                "mjwodaJ9qNSgcbBRjHz6NnoTSSm4qYa1BZ",
+                null,
+                "mkHdDJq2Veu9QvLijEAxcA46r2JZwj6pZb",
+                originalTransaction.getOutput(3), bitSet, parameters);
 
-		Assert.assertEquals(
-				"0100000001f311e9e1501f941b0979b049787ee1c19da31305af6ff77ce07f15a1d5abe7f7020000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff0204a60000000000001976a9140cd8e0eb6259627c4cdae4b03166bc4e9041947688ac04a60000000000001976a914e62d2a6f9eb5d27b862aa552cefafdcec2681c9588ac00000000",
-				revokeTx);
+        contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
 
-	}
+        Assert.assertEquals(
+                "0100000001adabc89e9bbdcd53c87aba1d5eb2fe8ae0f002648d95c34fd13cd171cbe1093d030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff03a0860100000000001976a9143093ab996c2f4af5262eeddc755880445fcd667a88ac0000000000000000536a4c5000000000001c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020e88d00000000001976a91434534aef15c4a052a12c5d5ce21835635f7f033b88ac00000000",
+                contractTx);
+
+        contract = ContractUtils.buildAccessContract(
+                "mjwodaJ9qNSgcbBRjHz6NnoTSSm4qYa1BZ",
+                "mjF7jmRdMr5zNbUqGgDWEtNEk22RtHQLSc",
+                "mkHdDJq2Veu9QvLijEAxcA46r2JZwj6pZb",
+                originalTransaction.getOutput(3), null, parameters
+        );
+
+        contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
+
+        Assert.assertEquals(
+                "0100000001adabc89e9bbdcd53c87aba1d5eb2fe8ae0f002648d95c34fd13cd171cbe1093d030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff03a0860100000000001976a9143093ab996c2f4af5262eeddc755880445fcd667a88ace0930400000000001976a91428e1bb0aef0e6da3c8c7973051764ae94db049fe88ac40548900000000001976a91434534aef15c4a052a12c5d5ce21835635f7f033b88ac00000000",
+                contractTx);
+
+        contract = ContractUtils.buildAccessContract(
+                "mjwodaJ9qNSgcbBRjHz6NnoTSSm4qYa1BZ",
+                "mjF7jmRdMr5zNbUqGgDWEtNEk22RtHQLSc",
+                "mkHdDJq2Veu9QvLijEAxcA46r2JZwj6pZb",
+                originalTransaction.getOutput(3), bitSet, parameters
+        );
+
+        contractTx = new String(Hex.encode(contract.bitcoinSerialize()));
+        Assert.assertEquals(
+                "0100000001adabc89e9bbdcd53c87aba1d5eb2fe8ae0f002648d95c34fd13cd171cbe1093d030000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff04a0860100000000001976a9143093ab996c2f4af5262eeddc755880445fcd667a88ac0000000000000000536a4c5000000000001c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e0930400000000001976a91428e1bb0aef0e6da3c8c7973051764ae94db049fe88ac40548900000000001976a91434534aef15c4a052a12c5d5ce21835635f7f033b88ac00000000",
+                contractTx);
+
+
+        Transaction revoke;
+        try {
+            revoke = ContractUtils.buildRevokeContract(
+                    null,
+                    "mjwodaJ9qNSgcbBRjHz6NnoTSSm4qYa1BZ",
+                    originalTransaction.getOutput(2), parameters);
+            Assert.fail();
+        } catch (Exception e) {
+            //
+        }
+
+        try {
+            revoke = ContractUtils.buildRevokeContract(
+                    "mjF7jmRdMr5zNbUqGgDWEtNEk22RtHQLSc",
+                    null,
+                    originalTransaction.getOutput(2), parameters);
+            Assert.fail();
+        } catch (Exception e) {
+            //
+        }
+
+        revoke = ContractUtils.buildRevokeContract(
+                "mjF7jmRdMr5zNbUqGgDWEtNEk22RtHQLSc",
+                "mjwodaJ9qNSgcbBRjHz6NnoTSSm4qYa1BZ",
+                originalTransaction.getOutput(2), parameters);
+
+        String revokeTx = new String(Hex.encode(revoke.bitcoinSerialize()));
+
+        Assert.assertEquals(
+                "0100000001adabc89e9bbdcd53c87aba1d5eb2fe8ae0f002648d95c34fd13cd171cbe1093d020000004847304402207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a002207fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a001ffffffff02a0860100000000001976a91428e1bb0aef0e6da3c8c7973051764ae94db049fe88aca0860100000000001976a9143093ab996c2f4af5262eeddc755880445fcd667a88ac00000000",
+                revokeTx);
+
+    }
 
 }

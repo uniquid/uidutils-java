@@ -1,9 +1,9 @@
 package com.uniquid.utils;
 
-import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
 
 /**
  * Extension of Properties class that allows to perform a get and transform
@@ -11,463 +11,434 @@ import org.slf4j.LoggerFactory;
  */
 public class ParsableProperties extends Properties {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ParsableProperties.class);
-
-	private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParsableProperties.class);
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Get value as boolean
+     *
+     * @param key
+     *            key
+     * @param defaultValue
+     *            default value
+     * @return boolean value according to Boolean(String) constructor; default
+     *         value if property value is null
+     */
+    public boolean getAsBoolean(String key, boolean defaultValue) {
+
+        // Get as boolean
+        Boolean booleanValue = getAsBoolean(key);
+
+        if (booleanValue == null) {
+            return defaultValue;
+        }
+
+        // Get boolean value
+        return booleanValue.booleanValue();
+
+    }
+
+    /**
+     * Get value as boolean
+     *
+     * @param key
+     *            key
+     * @return boolean value according to Boolean(String) constructor; null if
+     *         property value is null;
+     */
+    public Boolean getAsBoolean(String key) {
+
+        // Get value
+        String stringValue = getProperty(key);
+
+        if (stringValue == null) {
+            return null;
+        }
+
+        // Parse to boolean
+        return new Boolean(stringValue);
+
+    }
+
+    /**
+     * Get as double
+     *
+     * @param key
+     *            key
+     * @param defaultValue
+     *            default value
+     * @return double value or default value if value cannot be parse to double
+     */
+    public double getAsDouble(String key, double defaultValue) {
 
-	/**
-	 * Get value as boolean
-	 * 
-	 * @param key
-	 *            key
-	 * @param defaultValue
-	 *            default value
-	 * @return boolean value according to Boolean(String) constructor; default
-	 *         value if property value is null
-	 */
-	public boolean getAsBoolean(String key, boolean defaultValue) {
+        // Get as double
+        Double doubleValue = getAsDouble(key);
 
-		// Get as boolean
-		Boolean booleanValue = getAsBoolean(key);
+        if (doubleValue == null) {
+            return defaultValue;
+        }
+
+        // Parse to double
+        return doubleValue;
+
+    }
 
-		if (booleanValue == null) {
-			return defaultValue;
-		}
+    /**
+     * Get as double
+     *
+     * @param key
+     *            key
+     * @return double value or null if property value is null or property value
+     *         cannot be parsed
+     */
+    public Double getAsDouble(String key) {
 
-		// Get boolean value
-		boolean value = booleanValue.booleanValue();
+        // Get value
+        String stringValue = getProperty(key);
+
+        try {
+
+            if (stringValue == null) {
+                return null;
+            }
+
+            // Parse to double
+            return new Double(stringValue);
+
+        } catch (NumberFormatException ex) {
 
-		return value;
+            // Log
+            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
 
-	}
+            return null;
 
-	/**
-	 * Get value as boolean
-	 * 
-	 * @param key
-	 *            key
-	 * @return boolean value according to Boolean(String) constructor; null if
-	 *         property value is null;
-	 */
-	public Boolean getAsBoolean(String key) {
+        }
 
-		// Get value
-		String stringValue = getProperty(key);
+    }
 
-		if (stringValue == null) {
-			return null;
-		}
+    /**
+     * Get value as integer
+     *
+     * @param key
+     *            key
+     * @param defaultValue
+     *            default value
+     * @return int value or default value if value cannot be parse to integer
+     */
+    public int getAsInteger(String key, int defaultValue) {
 
-		// Parse to boolean
-		Boolean value = new Boolean(stringValue);
+        // Get as integer
+        Integer integerValue = getAsInteger(key);
 
-		return value;
+        if (integerValue == null) {
+            return defaultValue;
+        }
 
-	}
+        // Parse to int
+        return integerValue;
 
-	/**
-	 * Get as double
-	 * 
-	 * @param key
-	 *            key
-	 * @param defaultValue
-	 *            default value
-	 * @return double value or default value if value cannot be parse to double
-	 */
-	public double getAsDouble(String key, double defaultValue) {
+    }
 
-		// Get as double
-		Double doubleValue = getAsDouble(key);
+    /**
+     * Get value as integer
+     *
+     * @param key
+     *            key
+     * @return int value or null if property value is null or property value
+     *         cannot be parsed
+     */
+    public Integer getAsInteger(String key) {
 
-		if (doubleValue == null) {
-			return defaultValue;
-		}
+        // Get setting value
+        String stringValue = getProperty(key);
 
-		// Parse to double
-		double value = doubleValue.doubleValue();
+        try {
 
-		return value;
+            // Parse to int
+            return new Integer(stringValue);
 
-	}
+        } catch (NumberFormatException ex) {
 
-	/**
-	 * Get as double
-	 * 
-	 * @param key
-	 *            key
-	 * @return double value or null if property value is null or property value
-	 *         cannot be parsed
-	 */
-	public Double getAsDouble(String key) {
+            // Log
+            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
 
-		// Get value
-		String stringValue = getProperty(key);
+            return null;
 
-		try {
+        }
 
-			if (stringValue == null) {
-				return null;
-			}
+    }
 
-			// Parse to double
-			Double value = new Double(stringValue);
+    /**
+     * Get a value as long
+     *
+     * @param key
+     *            key
+     * @param defaultValue
+     *            default value
+     * @return long value or default value if value cannot be parse to long
+     */
+    public long getAsLong(String key, long defaultValue) {
 
-			return value;
+        // Get as long
+        Long longValue = getAsLong(key);
 
-		} catch (NumberFormatException ex) {
+        if (longValue == null) {
+            return defaultValue;
+        }
 
-			// Log
-			LOGGER.warn("unable to get value for key: " + key + ": ", ex);
+        // Parse to long
+        return longValue.longValue();
 
-			return null;
+    }
 
-		}
+    /**
+     * Get a value as long
+     *
+     * @param key
+     *            key
+     * @return long value or null if property value is null or property value
+     *         cannot be parsed
+     */
+    public Long getAsLong(String key) {
 
-	}
+        // Get value
+        String stringValue = getProperty(key);
 
-	/**
-	 * Get value as integer
-	 * 
-	 * @param key
-	 *            key
-	 * @param defaultValue
-	 *            default value
-	 * @return int value or default value if value cannot be parse to integer
-	 */
-	public int getAsInteger(String key, int defaultValue) {
+        try {
 
-		// Get as integer
-		Integer integerValue = getAsInteger(key);
+            // Parse to long
+            return new Long(stringValue);
 
-		if (integerValue == null) {
-			return defaultValue;
-		}
+        } catch (NumberFormatException ex) {
 
-		// Parse to int
-		int value = integerValue.intValue();
+            // Log
+            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
 
-		return value;
+            return null;
 
-	}
+        }
 
-	/**
-	 * Get value as integer
-	 * 
-	 * @param key
-	 *            key
-	 * @return int value or null if property value is null or property value
-	 *         cannot be parsed
-	 */
-	public Integer getAsInteger(String key) {
+    }
 
-		// Get setting value
-		String stringValue = getProperty(key);
+    /**
+     * Get a value as string
+     *
+     * @param key
+     *            key
+     * @param defaultValue
+     *            default value
+     * @return string value or default value if value is null
+     */
+    public String getAsString(String key, String defaultValue) {
 
-		try {
+        // Get value
+        String value = getProperty(key);
 
-			// Parse to int
-			Integer value = new Integer(stringValue);
+        if (value == null) {
+            return defaultValue;
+        }
 
-			return value;
+        return value;
 
-		} catch (NumberFormatException ex) {
+    }
 
-			// Log
-			LOGGER.warn("unable to get value for key: " + key + ": ", ex);
+    /**
+     * Get a value as string
+     *
+     * @param key
+     *            key
+     * @return string value or null if property value is null
+     */
+    public String getAsString(String key) {
 
-			return null;
+        // Get value
+        String value = getProperty(key);
 
-		}
+        if (value != null) {
+            return value;
+        } else {
 
-	}
+            // Log
+            LOGGER.warn("unable to get value for key: " + key);
 
-	/**
-	 * Get a value as long
-	 * 
-	 * @param key
-	 *            key
-	 * @param defaultValue
-	 *            default value
-	 * @return long value or default value if value cannot be parse to long
-	 */
-	public long getAsLong(String key, long defaultValue) {
+            return null;
 
-		// Get as long
-		Long longValue = getAsLong(key);
+        }
 
-		if (longValue == null) {
-			return defaultValue;
-		}
+    }
 
-		// Parse to long
-		long value = longValue.longValue();
+    /**
+     * Get value as enum
+     *
+     * @param enumType the {@link Class} object of the enum type from which to return a constant
+     * @param key the key of the property to retrieve
+     * @param defaultValue the default value to return in case there is no value for the given key
+     * @return the value of the given key property
+     */
+    public Enum<?> getAsEnum(Class enumType, String key, Enum defaultValue) {
 
-		return value;
+        // Get value
+        String value = getProperty(key);
 
-	}
+        if (value == null) {
+            return defaultValue;
+        }
 
-	/**
-	 * Get a value as long
-	 * 
-	 * @param key
-	 *            key
-	 * @return long value or null if property value is null or property value
-	 *         cannot be parsed
-	 */
-	public Long getAsLong(String key) {
+        try {
 
-		// Get value
-		String stringValue = getProperty(key);
+            // Parse to Enum
+            return Enum.valueOf(enumType, value);
 
-		try {
+        } catch (Exception ex) {
 
-			// Parse to long
-			Long value = new Long(stringValue);
+            // Log
+            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
 
-			return value;
+            return null;
 
-		} catch (NumberFormatException ex) {
+        }
 
-			// Log
-			LOGGER.warn("unable to get value for key: " + key + ": ", ex);
+    }
 
-			return null;
+    /**
+     * Get value as enum
+     *
+     * @param enumType the {@link Class} object of the enum type from which to return a constant
+     * @param key the key of the property to retrieve
+     * @return the value of the given key property
+     */
+    public Enum<?> getAsEnum(Class enumType, String key) {
 
-		}
+        // Get value
+        String value = getProperty(key);
 
-	}
+        try {
 
-	/**
-	 * Get a value as string
-	 * 
-	 * @param key
-	 *            key
-	 * @param defaultValue
-	 *            default value
-	 * @return string value or default value if value is null
-	 */
-	public String getAsString(String key, String defaultValue) {
+            // Parse to Enum
+            return Enum.valueOf(enumType, value);
 
-		// Get value
-		String value = getProperty(key);
+        } catch (Exception ex) {
 
-		if (value == null) {
-			return defaultValue;
-		}
+            // Log
+            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
 
-		return value;
+            return null;
 
-	}
+        }
 
-	/**
-	 * Get a value as string
-	 * 
-	 * @param key
-	 *            key
-	 * @return string value or null if property value is null
-	 */
-	public String getAsString(String key) {
+    }
 
-		// Get value
-		String value = getProperty(key);
+    /**
+     * Get value as boolean
+     *
+     * @param key
+     *            key
+     * @return boolean value according to Boolean(String) constructor
+     * @throws RuntimeException
+     *             if no value found for given key
+     */
+    public boolean getMandatoryAsBoolean(String key) {
 
-		if (value != null) {
-			return value;
-		} else {
+        // Get as boolean
+        Boolean booleanValue = getAsBoolean(key);
 
-			// Log
-			LOGGER.warn("unable to get value for key: " + key);
+        if (booleanValue == null) {
+            throw new RuntimeException("unable to get value for key: " + key);
+        }
 
-			return null;
+        // Get boolean value
+        return booleanValue.booleanValue();
+    }
 
-		}
+    /**
+     * Get as double
+     *
+     * @param key
+     *            key
+     * @return double value
+     * @throws RuntimeException
+     *             if no value found for given key or value cannot be parsed
+     */
+    public double getMandatoryAsDouble(String key) {
 
-	}
+        // Get as double
+        Double doubleValue = getAsDouble(key);
 
-	/**
-	 * Get value as enum
-	 * 
-	 * @param enumType
-	 * @param key
-	 * @return
-	 */
-	public Enum<?> getAsEnum(Class enumType, String key, Enum defaultValue) {
+        if (doubleValue == null) {
+            throw new RuntimeException("unable to get value for key: " + key);
+        }
 
-		// Get value
-		String value = getProperty(key);
+        // Parse to double
+        return doubleValue.doubleValue();
 
-		if (value == null) {
-			return defaultValue;
-		}
+    }
 
-		try {
+    /**
+     * Get value as integer
+     *
+     * @param key
+     *            key
+     * @return int value
+     * @throws RuntimeException
+     *             if no value found for given key or value cannot be parsed
+     */
+    public int getMandatoryAsInteger(String key) {
 
-			// Parse to Enum
-			Enum enumValue = Enum.valueOf(enumType, value);
+        // Get as integer
+        Integer integerValue = getAsInteger(key);
 
-			return enumValue;
+        if (integerValue == null) {
+            throw new RuntimeException("unable to get value for key: " + key);
+        }
 
-		} catch (Exception ex) {
+        // Parse to int
+        return integerValue.intValue();
 
-			// Log
-			LOGGER.warn("unable to get value for key: " + key + ": ", ex);
+    }
 
-			return null;
+    /**
+     * Get a value as long
+     *
+     * @param key
+     *            key
+     * @return long value
+     * @throws RuntimeException
+     *             if no value found for given key or value cannot be parsed
+     */
+    public long getMandatoryAsLong(String key) {
 
-		}
+        // Get as long
+        Long longValue = getAsLong(key);
 
-	}
+        if (longValue == null) {
+            throw new RuntimeException("unable to get value for key: " + key);
+        }
 
-	/**
-	 * Get value as enum
-	 * 
-	 * @param enumType
-	 * @param key
-	 * @return
-	 */
-	public Enum<?> getAsEnum(Class enumType, String key) {
+        // Parse to long
+        return longValue.longValue();
+    }
 
-		// Get value
-		String value = getProperty(key);
+    /**
+     * Get a value as string
+     *
+     * @param key
+     *            key
+     * @return string value
+     * @throws RuntimeException
+     *             if no value found for given key
+     */
+    public String getMandatoryAsString(String key) {
 
-		try {
+        // Get value
+        String value = getProperty(key);
 
-			// Parse to Enum
-			Enum enumValue = Enum.valueOf(enumType, value);
+        if (value == null) {
+            throw new RuntimeException("unable to get value for key: " + key);
+        }
 
-			return enumValue;
+        return value;
 
-		} catch (Exception ex) {
-
-			// Log
-			LOGGER.warn("unable to get value for key: " + key + ": ", ex);
-
-			return null;
-
-		}
-
-	}
-
-	/**
-	 * Get value as boolean
-	 * 
-	 * @param key
-	 *            key
-	 * @return boolean value according to Boolean(String) constructor
-	 * @throws RuntimeException
-	 *             if no value found for given key
-	 */
-	public boolean getMandatoryAsBoolean(String key) {
-
-		// Get as boolean
-		Boolean booleanValue = getAsBoolean(key);
-
-		if (booleanValue == null) {
-			throw new RuntimeException("unable to get value for key: " + key);
-		}
-
-		// Get boolean value
-		boolean value = booleanValue.booleanValue();
-
-		return value;
-
-	}
-
-	/**
-	 * Get as double
-	 * 
-	 * @param key
-	 *            key
-	 * @return double value
-	 * @throws RuntimeException
-	 *             if no value found for given key or value cannot be parsed
-	 */
-	public double getMandatoryAsDouble(String key) {
-
-		// Get as double
-		Double doubleValue = getAsDouble(key);
-
-		if (doubleValue == null) {
-			throw new RuntimeException("unable to get value for key: " + key);
-		}
-
-		// Parse to double
-		double value = doubleValue.doubleValue();
-
-		return value;
-
-	}
-
-	/**
-	 * Get value as integer
-	 * 
-	 * @param key
-	 *            key
-	 * @return int value
-	 * @throws RuntimeException
-	 *             if no value found for given key or value cannot be parsed
-	 */
-	public int getMandatoryAsInteger(String key) {
-
-		// Get as integer
-		Integer integerValue = getAsInteger(key);
-
-		if (integerValue == null) {
-			throw new RuntimeException("unable to get value for key: " + key);
-		}
-
-		// Parse to int
-		int value = integerValue.intValue();
-
-		return value;
-
-	}
-
-	/**
-	 * Get a value as long
-	 * 
-	 * @param key
-	 *            key
-	 * @return long value
-	 * @throws RuntimeException
-	 *             if no value found for given key or value cannot be parsed
-	 */
-	public long getMandatoryAsLong(String key) {
-
-		// Get as long
-		Long longValue = getAsLong(key);
-
-		if (longValue == null) {
-			throw new RuntimeException("unable to get value for key: " + key);
-		}
-
-		// Parse to long
-		long value = longValue.longValue();
-
-		return value;
-
-	}
-
-	/**
-	 * Get a value as string
-	 * 
-	 * @param key
-	 *            key
-	 * @return string value
-	 * @throws RuntimeException
-	 *             if no value found for given key
-	 */
-	public String getMandatoryAsString(String key) {
-
-		// Get value
-		String value = getProperty(key);
-
-		if (value == null) {
-			throw new RuntimeException("unable to get value for key: " + key);
-		}
-
-		return value;
-
-	}
+    }
 
 }

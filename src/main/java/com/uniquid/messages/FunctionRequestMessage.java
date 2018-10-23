@@ -8,83 +8,83 @@ import java.util.Random;
  */
 public class FunctionRequestMessage implements UniquidMessage {
 
-	private Random random = new Random();
-	
-	private long id;
+    private Random random = new Random();
 
-	private String user = "", parameters = "";
+    private long id;
 
-	private int function;
-	
-	public FunctionRequestMessage() {
-		
-		// This will set a random id!
-		do {
-			id = random.nextInt(Integer.MAX_VALUE);
-		} while (id == 0);
-		
-	}
+    private String user = "", parameters = "";
 
-	public long getId() {
-		return id;
-	}
+    private int function;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public FunctionRequestMessage() {
 
-	public String getUser() {
-		return user;
-	}
+        // This will set a random id!
+        do {
+            id = random.nextInt(Integer.MAX_VALUE);
+        } while (id == 0);
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    }
 
-	public String getParameters() {
-		return parameters;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setParameters(String parameters) {
-		this.parameters = parameters;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public int getFunction() {
-		return function;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public void setFunction(int method) {
-		this.function = method;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	@Override
-	public MessageType getMessageType() {
+    public String getParameters() {
+        return parameters;
+    }
 
-		return MessageType.FUNCTION_REQUEST;
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
+    }
 
-	}
+    public int getFunction() {
+        return function;
+    }
 
-	@Override
-	public boolean equals(Object object) {
+    public void setFunction(int method) {
+        this.function = method;
+    }
 
-		if (!(object instanceof FunctionRequestMessage))
-			return false;
+    @Override
+    public MessageType getMessageType() {
 
-		if (this == object)
-			return true;
+        return MessageType.FUNCTION_REQUEST;
 
-		FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) object;
+    }
 
-		return Objects.equals(id, functionRequestMessage.id) && Objects.equals(user, functionRequestMessage.user)
-				&& Objects.equals(parameters, functionRequestMessage.parameters)
-				&& Objects.equals(function, functionRequestMessage.function);
-	}
+    @Override
+    public boolean equals(Object object) {
 
-	@Override
-	public int hashCode() {
+        if (!(object instanceof FunctionRequestMessage))
+            return false;
 
-		return Objects.hash(id, user, parameters, function);
+        if (this == object)
+            return true;
 
-	}
+        FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) object;
+
+        return Objects.equals(id, functionRequestMessage.id) && Objects.equals(user, functionRequestMessage.user)
+                && Objects.equals(parameters, functionRequestMessage.parameters)
+                && Objects.equals(function, functionRequestMessage.function);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, user, parameters, function);
+
+    }
 
 }

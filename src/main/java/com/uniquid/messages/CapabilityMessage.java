@@ -7,107 +7,107 @@ import java.util.Objects;
  */
 public class CapabilityMessage implements UniquidMessage {
 
-	private String assigner; // Authority (owner) Address
+    private String assigner; // Authority (owner) Address
 
-	private String resourceID; // serviceProviderAddress
-	private String assignee; // serviceUserAddress
-	private String rights;
-	private long since;
-	private long until;
-	
-	private String assignerSignature;
-	
-	public CapabilityMessage() {
-		
-	}
+    private String resourceID; // serviceProviderAddress
+    private String assignee; // serviceUserAddress
+    private String rights;
+    private long since;
+    private long until;
 
-	public String getAssigner() {
-		return assigner;
-	}
+    private String assignerSignature;
 
-	public void setAssigner(String assigner) {
-		this.assigner = assigner;
-	}
+    public CapabilityMessage() {
 
-	public String getResourceID() {
-		return resourceID;
-	}
+    }
 
-	public void setResourceID(String resourceID) {
-		this.resourceID = resourceID;
-	}
+    public String getAssigner() {
+        return assigner;
+    }
 
-	public String getAssignee() {
-		return assignee;
-	}
+    public void setAssigner(String assigner) {
+        this.assigner = assigner;
+    }
 
-	public void setAssignee(String assignee) {
-		this.assignee = assignee;
-	}
+    public String getResourceID() {
+        return resourceID;
+    }
 
-	public String getRights() {
-		return rights;
-	}
+    public void setResourceID(String resourceID) {
+        this.resourceID = resourceID;
+    }
 
-	public void setRights(String rights) {
-		this.rights = rights;
-	}
+    public String getAssignee() {
+        return assignee;
+    }
 
-	public long getSince() {
-		return since;
-	}
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
 
-	public void setSince(long since) {
-		this.since = since;
-	}
+    public String getRights() {
+        return rights;
+    }
 
-	public long getUntil() {
-		return until;
-	}
+    public void setRights(String rights) {
+        this.rights = rights;
+    }
 
-	public void setUntil(long until) {
-		this.until = until;
-	}
-	
-	public String getAssignerSignature() {
-		return assignerSignature;
-	}
+    public long getSince() {
+        return since;
+    }
 
-	public void setAssignerSignature(String assignerSignature) {
-		this.assignerSignature = assignerSignature;
-	}
+    public void setSince(long since) {
+        this.since = since;
+    }
 
-	@Override
-	public MessageType getMessageType() {
+    public long getUntil() {
+        return until;
+    }
 
-		return MessageType.UNIQUID_CAPABILITY;
+    public void setUntil(long until) {
+        this.until = until;
+    }
 
-	}
+    public String getAssignerSignature() {
+        return assignerSignature;
+    }
 
-	@Override
-	public boolean equals(Object object) {
+    public void setAssignerSignature(String assignerSignature) {
+        this.assignerSignature = assignerSignature;
+    }
 
-		if (!(object instanceof CapabilityMessage))
-			return false;
+    @Override
+    public MessageType getMessageType() {
 
-		if (this == object)
-			return true;
+        return MessageType.UNIQUID_CAPABILITY;
 
-		CapabilityMessage capability = (CapabilityMessage) object;
+    }
 
-		return Objects.equals(assigner, capability.assigner)
-				&& Objects.equals(resourceID, capability.resourceID)
-				&& Objects.equals(assignee, capability.assignee)
-				&& Objects.equals(rights, capability.rights)
-				&& Objects.equals(since, capability.since)
-				&& Objects.equals(until, capability.until);
-	}
+    @Override
+    public boolean equals(Object object) {
 
-	@Override
-	public int hashCode() {
+        if (!(object instanceof CapabilityMessage))
+            return false;
 
-		return Objects.hash(assigner, resourceID, assignee, rights, since, until);
+        if (this == object)
+            return true;
 
-	}
+        CapabilityMessage capability = (CapabilityMessage) object;
+
+        return Objects.equals(assigner, capability.assigner)
+                && Objects.equals(resourceID, capability.resourceID)
+                && Objects.equals(assignee, capability.assignee)
+                && Objects.equals(rights, capability.rights)
+                && Objects.equals(since, capability.since)
+                && Objects.equals(until, capability.until);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(assigner, resourceID, assignee, rights, since, until);
+
+    }
 
 }

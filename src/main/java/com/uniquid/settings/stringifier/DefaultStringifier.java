@@ -9,54 +9,54 @@ import com.uniquid.settings.model.Stringifier;
  * Default implementation for Stringify a Setting
  */
 public class DefaultStringifier implements Stringifier {
-	
-	@Override
-	public String stringify(Setting setting) throws StringifyException {
-		
-		// Get setting type
-		SettingType settingType = setting.getSettingType();
 
-		if (SettingType.DOUBLE.equals(settingType)) {
+    @Override
+    public String stringify(Setting setting) throws StringifyException {
 
-			// Get double value
-			Double doubleValue = (Double) setting.getDefaultValue();
+        // Get setting type
+        SettingType settingType = setting.getSettingType();
 
-			// Validate as double
-			return String.valueOf(doubleValue);
+        if (SettingType.DOUBLE.equals(settingType)) {
 
-		} else if (SettingType.INTEGER.equals(settingType)) {
+            // Get double value
+            Double doubleValue = (Double) setting.getDefaultValue();
 
-			// Get integer value
-			Integer integerValue = (Integer) setting.getDefaultValue();
+            // Validate as double
+            return String.valueOf(doubleValue);
 
-			// Validate as integer
-			return String.valueOf(integerValue);
+        } else if (SettingType.INTEGER.equals(settingType)) {
 
-		} else if (SettingType.LONG.equals(settingType)) {
+            // Get integer value
+            Integer integerValue = (Integer) setting.getDefaultValue();
 
-			// Get long value
-			Long longValue = (Long) setting.getDefaultValue();
+            // Validate as integer
+            return String.valueOf(integerValue);
 
-			// Validate as long
-			return String.valueOf(longValue);
+        } else if (SettingType.LONG.equals(settingType)) {
 
-		} else if (SettingType.STRING.equals(settingType)) {
+            // Get long value
+            Long longValue = (Long) setting.getDefaultValue();
 
-			// Validate as string
-			return (String) setting.getDefaultValue();
+            // Validate as long
+            return String.valueOf(longValue);
 
-		} else if (SettingType.BOOLEAN.equals(settingType)) {
+        } else if (SettingType.STRING.equals(settingType)) {
 
-			// Validate as string
-			return String.valueOf(setting.getDefaultValue());
+            // Validate as string
+            return (String) setting.getDefaultValue();
 
-		} else {
-		
-			throw new StringifyException("Unknown type");
-		
-		}
+        } else if (SettingType.BOOLEAN.equals(settingType)) {
 
-	}
+            // Validate as string
+            return String.valueOf(setting.getDefaultValue());
+
+        } else {
+
+            throw new StringifyException("Unknown type");
+
+        }
+
+    }
 
 
 }

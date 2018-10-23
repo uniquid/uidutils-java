@@ -5,9 +5,9 @@ package com.uniquid.connector;
  */
 public class ConnectorException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
+    /**
      * Constructs a new exception with the specified detail message.  The
      * cause is not initialized, and may subsequently be initialized by
      * a call to {@link #initCause}.
@@ -15,11 +15,11 @@ public class ConnectorException extends Exception {
      * @param   message   the detail message. The detail message is saved for
      *          later retrieval by the {@link #getMessage()} method.
      */
-	public ConnectorException(String message) {
+    public ConnectorException(String message) {
         super(message);
     }
-	
-	/**
+
+    /**
      * Constructs a new exception with the specified detail message and
      * cause.  <p>Note that the detail message associated with
      * {@code cause} is <i>not</i> automatically incorporated in
@@ -32,11 +32,11 @@ public class ConnectorException extends Exception {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-	public ConnectorException(String message, Throwable cause) {
+    public ConnectorException(String message, Throwable cause) {
         super(message, cause);
     }
-	
-	/**
+
+    /**
      * Constructs a new exception with the specified cause and a detail
      * message of <tt>(cause==null ? null : cause.toString())</tt> (which
      * typically contains the class and detail message of <tt>cause</tt>).
@@ -49,8 +49,8 @@ public class ConnectorException extends Exception {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-	public ConnectorException(Throwable cause) {
+    public ConnectorException(Throwable cause) {
         super(cause);
     }
-	
+
 }

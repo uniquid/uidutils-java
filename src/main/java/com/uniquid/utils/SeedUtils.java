@@ -1,102 +1,101 @@
 package com.uniquid.utils;
 
+import com.uniquid.encryption.AESUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.uniquid.encryption.AESUtils;
-
 public class SeedUtils<T extends BackupData> {
 
-	private File seedFile;
+    private File seedFile;
 
-	public SeedUtils(File seedFile) {
-		this.seedFile = seedFile;
-	}
+    public SeedUtils(File seedFile) {
+        this.seedFile = seedFile;
+    }
 
-	public void readData(String password, T backupData) throws Exception {
+    public void readData(String password, T backupData) throws Exception {
 
-		FileInputStream fis = new FileInputStream(seedFile);
+        FileInputStream fis = new FileInputStream(seedFile);
 
-		int content;
-		StringBuffer stringBuffer = new StringBuffer();
-		while ((content = fis.read()) != -1) {
+        int content;
+        StringBuffer stringBuffer = new StringBuffer();
+        while ((content = fis.read()) != -1) {
 
-			stringBuffer.append((char) content);
+            stringBuffer.append((char) content);
 
-		}
+        }
 
-		fis.close();
+        fis.close();
 
-		final JSONObject jsonMessage = new JSONObject(stringBuffer.toString());
-		String iv = jsonMessage.getString("initvector");
-		String encoded = jsonMessage.getString("encdata");
+        final JSONObject jsonMessage = new JSONObject(stringBuffer.toString());
+        String iv = jsonMessage.getString("initvector");
+        String encoded = jsonMessage.getString("encdata");
 
-		String decrypted = AESUtils.decrypt(encoded, iv, password);
+        String decrypted = AESUtils.decrypt(encoded, iv, password);
 
-		final JSONObject secureData = new JSONObject(decrypted);
+        final JSONObject secureData = new JSONObject(decrypted);
 
-		backupDataFromJSON(secureData, backupData);
+        backupDataFromJSON(secureData, backupData);
 
-	}
+    }
 
-	protected void backupDataFromJSON(JSONObject secureData, T backupData) throws JSONException {
+    protected void backupDataFromJSON(JSONObject secureData, T backupData) throws JSONException {
 
-		final String mnemonic = secureData.getString("mnemonic");
-		final long creationTime = secureData.getLong("creationTime");
-		final String name = secureData.getString("name");
+        final String mnemonic = secureData.getString("mnemonic");
+        final long creationTime = secureData.getLong("creationTime");
+        final String name = secureData.getString("name");
 
-		backupData.setMnemonic(mnemonic);
-		backupData.setCreationTime(creationTime);
-		backupData.setName(name);
+        backupData.setMnemonic(mnemonic);
+        backupData.setCreationTime(creationTime);
+        backupData.setName(name);
 
-	}
+    }
 
-	public void saveData(T backupData, String password) throws Exception {
+    public void saveData(T backupData, String password) throws Exception {
 
-		BufferedWriter writer = new BufferedWriter(new FileWriter(seedFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(seedFile));
 
-		JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
 
-		backupDataToJSON(backupData, jsonObject);
+        backupDataToJSON(backupData, jsonObject);
 
-		String[] encryptionResult = AESUtils.encrypt(jsonObject.toString(), password);
+        String[] encryptionResult = AESUtils.encrypt(jsonObject.toString(), password);
 
-		jsonObject = new JSONObject();
-		jsonObject.put("initvector", encryptionResult[0]);
-		jsonObject.put("encdata", encryptionResult[1]);
+        jsonObject = new JSONObject();
+        jsonObject.put("initvector", encryptionResult[0]);
+        jsonObject.put("encdata", encryptionResult[1]);
 
-		writer.write(jsonObject.toString());
+        writer.write(jsonObject.toString());
 
-		writer.flush();
+        writer.flush();
 
-		writer.close();
+        writer.close();
 
-	}
+    }
 
-	protected void backupDataToJSON(T backupData, JSONObject jsonObject) throws JSONException {
+    protected void backupDataToJSON(T backupData, JSONObject jsonObject) throws JSONException {
 
-		jsonObject.put("mnemonic", backupData.getMnemonic());
-		jsonObject.put("creationTime", backupData.getCreationTime());
-		jsonObject.put("name", backupData.getName());
+        jsonObject.put("mnemonic", backupData.getMnemonic());
+        jsonObject.put("creationTime", backupData.getCreationTime());
+        jsonObject.put("name", backupData.getName());
 
-	}
+    }
 
-	public static void main(String[] args) throws Exception {
-		
-		SeedUtils<BackupData> seedUtils = new SeedUtils<BackupData>(new File(args[0]));
+    public static void main(String[] args) throws Exception {
 
-		BackupData backupData = new BackupData();
+        SeedUtils<BackupData> seedUtils = new SeedUtils<>(new File(args[0]));
 
-		seedUtils.readData(args[1], backupData);
+        BackupData backupData = new BackupData();
 
-		System.out.println("Mnemonics: " + backupData.getMnemonic());
-		System.out.println("Creation time: " + backupData.getCreationTime());
-		System.out.println("Node name: " + backupData.getName());
-	}
+        seedUtils.readData(args[1], backupData);
+
+        System.out.println("Mnemonics: " + backupData.getMnemonic());
+        System.out.println("Creation time: " + backupData.getCreationTime());
+        System.out.println("Node name: " + backupData.getName());
+    }
 
 }

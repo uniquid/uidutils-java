@@ -6,35 +6,35 @@ package com.uniquid.userclient;
  */
 public interface UserClientFactory {
 
-	/**
-	 * Represent generic configuration used to lookup at runtime the proper client 
-	 */
-	public static interface UserClientFactoryConfiguration {
-		
-		/**
-		 * Return the protocol that the Provider can Talk
-		 * @return
-		 */
-		public String getProviderProtocol();
-		
-		/**
-		 * Return the provider name
-		 * @return
-		 */
-		public String getProviderName();
-		
-		/**
-		 * Return the user address
-		 * @return
-		 */
-		public String getUserAddress();
-		
-	}
-	/**
-	 * Returns the UserClient compatibile with the specified configuration
-	 * @param configuration
-	 * @return
-	 */
-	public UserClient getUserClient(UserClientFactoryConfiguration configuration);
-	
+    /**
+     * Represent generic configuration used to lookup at runtime the proper client
+     */
+    interface UserClientFactoryConfiguration {
+
+        /**
+         * Return the protocol that the Provider can Talk
+         * @return the protocol that the Provider can Talk
+         */
+        String getProviderProtocol();
+
+        /**
+         * Return the provider name
+         * @return the probider name
+         */
+        String getProviderName();
+
+        /**
+         * Return the user address
+         * @return the user address
+         */
+        String getUserAddress();
+
+    }
+    /**
+     * Returns the UserClient compatibile with the specified configuration
+     * @param configuration the {@link UserClientFactoryConfiguration}
+     * @return the {@link UserClient}
+     */
+    UserClient getUserClient(UserClientFactoryConfiguration configuration);
+
 }

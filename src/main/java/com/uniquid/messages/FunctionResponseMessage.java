@@ -6,94 +6,94 @@ import java.util.Objects;
  * Represents a Function Response message: a response from a Provider to an User request's.
  */
 public class FunctionResponseMessage implements UniquidMessage {
-	
-	/**
-	 * Integer code used when everything is ok
-	 */
-	public static final int RESULT_OK = 0;
-	
-	/**
-	 * Integer code used to signal the the user doesn't have permission to execute the requested function.
-	 */
-	public static final int RESULT_NO_PERMISSION = 2;
-	
-	/**
-	 * Integer code used to signal that the user asked to execute a function that is not available in the environment.
-	 */
-	public static final int RESULT_FUNCTION_NOT_AVAILABLE = 3;
-	
-	/**
-	 * Integer code used to signal a generic error.
-	 */
-	public static final int RESULT_ERROR = 4;
-	
 
-	private long id;
-	
-	private String provider = "", result = "";
-	
-	private int error;
-	
-	public long getId() {
-		return id;
-	}
+    /**
+     * Integer code used when everything is ok
+     */
+    public static final int RESULT_OK = 0;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    /**
+     * Integer code used to signal the the user doesn't have permission to execute the requested function.
+     */
+    public static final int RESULT_NO_PERMISSION = 2;
 
-	public String getProvider() {
-		return provider;
-	}
+    /**
+     * Integer code used to signal that the user asked to execute a function that is not available in the environment.
+     */
+    public static final int RESULT_FUNCTION_NOT_AVAILABLE = 3;
 
-	public void setProvider(String provider) {
-		this.provider = provider;
-	}
+    /**
+     * Integer code used to signal a generic error.
+     */
+    public static final int RESULT_ERROR = 4;
 
-	public String getResult() {
-		return result;
-	}
 
-	public void setResult(String result) {
-		this.result = result;
-	}
+    private long id;
 
-	public int getError() {
-		return error;
-	}
+    private String provider = "", result = "";
 
-	public void setError(int error) {
-		this.error = error;
-	}
+    private int error;
 
-	@Override
-	public MessageType getMessageType() {
+    public long getId() {
+        return id;
+    }
 
-		return MessageType.FUNCTION_RESPONSE;
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	}
-	
-	@Override
-	public boolean equals(Object object) {
+    public String getProvider() {
+        return provider;
+    }
 
-		if (!(object instanceof FunctionResponseMessage))
-			return false;
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
 
-		if (this == object)
-			return true;
+    public String getResult() {
+        return result;
+    }
 
-		FunctionResponseMessage functionResponseMessage = (FunctionResponseMessage) object;
+    public void setResult(String result) {
+        this.result = result;
+    }
 
-		return Objects.equals(id, functionResponseMessage.id) && Objects.equals(provider, functionResponseMessage.provider)
-				&& Objects.equals(result, functionResponseMessage.result)
-				&& Objects.equals(error, functionResponseMessage.error);
-	}
+    public int getError() {
+        return error;
+    }
 
-	@Override
-	public int hashCode() {
+    public void setError(int error) {
+        this.error = error;
+    }
 
-		return Objects.hash(id, provider, result, error);
+    @Override
+    public MessageType getMessageType() {
 
-	}
-	
+        return MessageType.FUNCTION_RESPONSE;
+
+    }
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (!(object instanceof FunctionResponseMessage))
+            return false;
+
+        if (this == object)
+            return true;
+
+        FunctionResponseMessage functionResponseMessage = (FunctionResponseMessage) object;
+
+        return Objects.equals(id, functionResponseMessage.id) && Objects.equals(provider, functionResponseMessage.provider)
+                && Objects.equals(result, functionResponseMessage.result)
+                && Objects.equals(error, functionResponseMessage.error);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, provider, result, error);
+
+    }
+
 }

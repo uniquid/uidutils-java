@@ -5,12 +5,12 @@ package com.uniquid.messages;
  * Provider
  */
 public interface UniquidMessage {
-	
-	/**
-	 * Return the {@link MessageType} of this message
-	 * 
-	 * @return the {@link MessageType} of this message
-	 */
-	public MessageType getMessageType();
+
+    /**
+     * Return the {@link MessageType} of this message
+     *
+     * @return the {@link MessageType} of this message
+     */
+    MessageType getMessageType();
 
 }

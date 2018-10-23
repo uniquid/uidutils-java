@@ -1,38 +1,38 @@
 package com.uniquid.utils;
 
 public class BackupData {
-	
-	private String mnemonic;
-	private String name;
-	private long creationTime;
 
-	public String getMnemonic() {
-		return mnemonic;
-	}
+    private String mnemonic;
+    private String name;
+    private long creationTime;
 
-
-	public void setMnemonic(String mnemonic) {
-		this.mnemonic = mnemonic;
-	}
+    public String getMnemonic() {
+        return mnemonic;
+    }
 
 
-	public String getName() {
-		return name;
-	}
+    public void setMnemonic(String mnemonic) {
+        this.mnemonic = mnemonic;
+    }
 
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
 
-	public long getCreationTime() {
-		return creationTime;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
-	public void setCreationTime(long creationTime) {
-		this.creationTime = creationTime;
-	}
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+    }
 
 }

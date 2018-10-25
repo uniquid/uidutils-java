@@ -10,7 +10,6 @@ import java.util.List;
 
 public class ContractUtils {
 
-    public static final Coin FEE = Coin.COIN.divide(1000); /* 0,001 */
     public static final Coin FEE_PER_B = Coin.COIN.multiply(3).divide(1000000);	/* 0,000003 */
     public static final Coin COIN_OUTPUT = Coin.COIN.divide(1000); /* 0,001 */
 
@@ -87,7 +86,7 @@ public class ContractUtils {
 
             Coin revokeCoinOutput = coinValue.multiply(3);
 
-            // revoke addr output
+            // revoke address output
             TransactionOutput outputToRevoke = new TransactionOutput(networkParameters, transaction, revokeCoinOutput, LegacyAddress.fromBase58(networkParameters, revokeAddress));
             transaction.addOutput(outputToRevoke);
 
@@ -96,12 +95,7 @@ public class ContractUtils {
 
         }
 
-        // 34 Byte is the size of an output. For access we have 1 User, 1 Revoker, 1 Change
-        // 150 Byte is the size of an input
-        // 80 Byte is the size of the op_return
-        long tSize = (34 * 3) + (150 * inputs.size()) + 92;
-
-        Coin fee = FEE_PER_B.multiply(tSize);
+        Coin fee = calculateAccessFee(inputs.size(), 2);
 
         // add fee
         totalCoinOut = totalCoinOut.add(fee);
@@ -169,8 +163,9 @@ public class ContractUtils {
 
         }
 
+        Coin fee = calculateRevokeFee(2);
 
-        Coin coinValue = prevOut.getValue().subtract(FEE);
+        Coin coinValue = prevOut.getValue().subtract(fee);
 
         Coin coinDivided = Coin.valueOf(coinValue.getValue() / 2);
 
@@ -197,6 +192,20 @@ public class ContractUtils {
 
         }
 
+    }
+
+    // 148 Byte is the size of an input
+    // 34 Byte is the size of an output. For access we have 1 User, 1 Revoker, + 1 Change
+    // 92 Byte is the size of the op_return
+    // 10 Byte is the size of transaction fixed data (version, #input, #output)
+    private static Coin calculateAccessFee(int inputSize, int outputSize) {
+        long transactionSize = (148 * inputSize) + (34 * outputSize + 1) + 92 + 10;
+        return FEE_PER_B.multiply(transactionSize);
+    }
+
+    private static Coin calculateRevokeFee(int outputSize) {
+        long transactionSize = 148 + (34 * outputSize) + 10;
+        return FEE_PER_B.multiply(transactionSize);
     }
 
 }

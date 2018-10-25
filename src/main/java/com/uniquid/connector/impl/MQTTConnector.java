@@ -122,86 +122,84 @@ public class MQTTConnector implements Connector {
 
         receiverExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-        final Runnable receiver = new Runnable() {
+        final Runnable receiver = () -> {
 
-            @Override
-            public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
 
-                while (!Thread.currentThread().isInterrupted()) {
+                try {
+
+                    LOGGER.info("Starting MQTTConnector");
+
+                    BlockingConnection connection = null;
 
                     try {
 
-                        LOGGER.info("Starting MQTTConnector");
+                        MQTT mqtt = new MQTT();
 
-                        BlockingConnection connection = null;
+                        mqtt.setHost(broker);
 
-                        try {
+                        LOGGER.info("Connecting to MQTT");
 
-                            MQTT mqtt = new MQTT();
+                        connection = mqtt.blockingConnection();
+                        connection.connect();
 
-                            mqtt.setHost(broker);
+                        // subscribe
+                        Topic[] topics = { new Topic(providerTopic, QoS.AT_LEAST_ONCE) };
+                        /*byte[] qoses = */connection.subscribe(topics);
 
-                            LOGGER.info("Connecting to MQTT");
+                        LOGGER.info("Waiting for a message!");
 
-                            connection = mqtt.blockingConnection();
-                            connection.connect();
+                        // blocks!!!
+                        Message message = connection.receive();
 
-                            // subscribe
-                            Topic[] topics = { new Topic(providerTopic, QoS.AT_LEAST_ONCE) };
-                            /*byte[] qoses = */connection.subscribe(topics);
+                        LOGGER.info("Message received!");
 
-                            LOGGER.info("Waiting for a message!");
+                        byte[] payload = message.getPayload();
 
-                            // blocks!!!
-                            Message message = connection.receive();
+                        //
+                        message.ack();
 
-                            LOGGER.info("Message received!");
+                        // Create a JSON Message
+                        synchronized (inputQueue) {
 
-                            byte[] payload = message.getPayload();
-
-                            //
-                            message.ack();
-
-                            // Create a JSON Message
-                            synchronized (inputQueue) {
-
-                                inputQueue.add(payload);
-                                inputQueue.notifyAll();
-
-                            }
-
-                            // DONE!
-
-                        } finally {
-
-                            // disconnect
-                            try {
-
-                                LOGGER.info("Disconnecting");
-
-                                connection.disconnect();
-
-                            } catch (Exception ex) {
-
-                                LOGGER.error("Catched Exception", ex);
-
-                            }
+                            inputQueue.add(payload);
+                            inputQueue.notifyAll();
 
                         }
 
-                    } catch (InterruptedException ex) {
+                        // DONE!
 
-                        LOGGER.info("Received interrupt request. Exiting");
+                    } finally {
 
-                        return;
+                        // disconnect
+                        try {
 
-                    } catch (Throwable t) {
+                            LOGGER.info("Disconnecting");
 
-                        LOGGER.error("Catched Exception", t);
+                            if(connection != null)
+                                connection.disconnect();
+
+                        } catch (Exception ex) {
+
+                            LOGGER.error("Catched Exception", ex);
+
+                        }
 
                     }
 
+                } catch (InterruptedException ex) {
+
+                    LOGGER.info("Received interrupt request. Exiting");
+
+                    return;
+
+                } catch (Throwable t) {
+
+                    LOGGER.error("Catched Exception", t);
+
                 }
+
+
 
             }
 

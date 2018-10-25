@@ -25,7 +25,7 @@ public class RegistryDAOImpl implements RegistryDAO {
     }
 
     @Override
-    public void insertMapping(String providerName, String providerAddress) throws RegistryException {
+        public void insertMapping(String providerName, String providerAddress) throws RegistryException {
 
         try {
 

@@ -9,9 +9,9 @@ import java.util.Random;
 
 public class RegistryDAOImplTest {
 
-    public static final String REGISTRY_URL = "http://appliance4.uniquid.co:8080";
+    public static final String REGISTRY_URL = "http://localhost:8080";
 
-    @Test
+//    @Test
     public void test() throws Exception {
 
         Random random = new Random();

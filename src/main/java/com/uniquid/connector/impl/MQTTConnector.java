@@ -7,6 +7,7 @@ import org.fusesource.mqtt.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Executors;
@@ -118,93 +119,79 @@ public class MQTTConnector implements Connector {
     }
 
     @Override
-    public void start() {
+    public void start() throws ConnectorException {
+
+        LOGGER.info("Starting MQTTConnector");
+
+        MQTT mqtt = new MQTT();
+        try {
+            mqtt.setHost(broker);
+        } catch (URISyntaxException e) {
+            throw new ConnectorException(e);
+        }
 
         receiverExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-        final Runnable receiver = new Runnable() {
+        final Runnable receiver = () -> {
 
-            @Override
-            public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
 
-                while (!Thread.currentThread().isInterrupted()) {
+                LOGGER.info("Connecting to MQTT");
 
-                    try {
+                BlockingConnection connection = mqtt.blockingConnection();
 
-                        LOGGER.info("Starting MQTTConnector");
+                try {
+                    connection.connect();
 
-                        BlockingConnection connection = null;
+                    // subscribe
+                    Topic[] topics = {new Topic(providerTopic, QoS.AT_LEAST_ONCE)};
+                    connection.subscribe(topics);
 
-                        try {
+                    LOGGER.info("Waiting for a message!");
 
-                            MQTT mqtt = new MQTT();
+                    while (!Thread.currentThread().isInterrupted()) {
 
-                            mqtt.setHost(broker);
+                        // blocks until new message receive
+                        Message message = connection.receive();
 
-                            LOGGER.info("Connecting to MQTT");
+                        LOGGER.info("Message received!");
 
-                            connection = mqtt.blockingConnection();
-                            connection.connect();
+                        byte[] payload = message.getPayload();
 
-                            // subscribe
-                            Topic[] topics = { new Topic(providerTopic, QoS.AT_LEAST_ONCE) };
-                            /*byte[] qoses = */connection.subscribe(topics);
+                        // mark message as acknowledged
+                        message.ack();
 
-                            LOGGER.info("Waiting for a message!");
+                        // Create a JSON Message
+                        synchronized (inputQueue) {
 
-                            // blocks!!!
-                            Message message = connection.receive();
-
-                            LOGGER.info("Message received!");
-
-                            byte[] payload = message.getPayload();
-
-                            //
-                            message.ack();
-
-                            // Create a JSON Message
-                            synchronized (inputQueue) {
-
-                                inputQueue.add(payload);
-                                inputQueue.notifyAll();
-
-                            }
-
-                            // DONE!
-
-                        } finally {
-
-                            // disconnect
-                            try {
-
-                                LOGGER.info("Disconnecting");
-
-                                connection.disconnect();
-
-                            } catch (Exception ex) {
-
-                                LOGGER.error("Catched Exception", ex);
-
-                            }
+                            inputQueue.add(payload);
+                            inputQueue.notifyAll();
 
                         }
 
-                    } catch (InterruptedException ex) {
+                    }
+                }  catch (InterruptedException ex) {
+                    LOGGER.info("Received interrupt request. Exiting");
+                    return;
 
-                        LOGGER.info("Received interrupt request. Exiting");
+                } catch (Throwable t) {
+                    LOGGER.error("Catched Exception", t);
 
-                        return;
+                } finally {
+                    // disconnect
+                    try {
 
-                    } catch (Throwable t) {
+                        LOGGER.info("Disconnecting");
 
-                        LOGGER.error("Catched Exception", t);
+                        connection.disconnect();
+
+                    } catch (Exception ex) {
+
+                        LOGGER.error("Catched Exception", ex);
 
                     }
-
                 }
-
             }
-
         };
 
         LOGGER.info("Starting receiving");

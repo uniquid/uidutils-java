@@ -31,49 +31,11 @@ public class MQTTConnector implements Connector {
      * @param topic the topic to listen to
      * @param broker the MQTT broker to use
      */
-    private MQTTConnector(final String topic, final String broker) {
+    public MQTTConnector(final String broker, final String topic) {
 
         this.providerTopic = topic;
         this.broker = broker;
         this.inputQueue = new LinkedList<>();
-
-    }
-
-    /**
-     * Builder for {@link MQTTConnector}
-     */
-    public static class Builder {
-        private String _topic;
-        private String _broker;
-
-        /**
-         * Set the listening topic
-         * @param _topic the topic to listen to
-         * @return the Builder
-         */
-        public Builder set_topic(String _topic) {
-            this._topic = _topic;
-            return this;
-        }
-
-        /**
-         * Set the broker to use
-         * @param _broker the broker to use
-         * @return the Builder
-         */
-        public Builder set_broker(String _broker) {
-            this._broker = _broker;
-            return this;
-        }
-
-        /**
-         * Returns an instance of a {@link MQTTConnector}
-         * @return an instance of a {@link MQTTConnector}
-         */
-        public MQTTConnector build() {
-
-            return new MQTTConnector(_topic, _broker);
-        }
 
     }
 
@@ -108,20 +70,14 @@ public class MQTTConnector implements Connector {
 
             throw ex;
 
-        } catch (Exception ex) {
-
-            LOGGER.error("Catched Exception", ex);
-
-            throw new ConnectorException(ex);
-
         }
 
     }
 
     @Override
-    public void start() throws ConnectorException {
+    public void connect() throws ConnectorException {
 
-        LOGGER.info("Starting MQTTConnector");
+        LOGGER.info("MQTTConnector - connect");
 
         MQTT mqtt = new MQTT();
         try {
@@ -172,9 +128,12 @@ public class MQTTConnector implements Connector {
                     }
                 }  catch (InterruptedException ex) {
                     LOGGER.info("Received interrupt request. Exiting");
+                    // restore flag to check it later if need
+                    Thread.currentThread().interrupt();
                     return;
 
-                } catch (Throwable t) {
+
+                } catch (Exception t) {
                     LOGGER.error("Catched Exception", t);
 
                 } finally {
@@ -202,9 +161,9 @@ public class MQTTConnector implements Connector {
     }
 
     @Override
-    public void stop() {
+    public void close() {
 
-        LOGGER.info("Stopping MQTTConnector");
+        LOGGER.info("MQTTConnector - close connection");
 
         receiverExecutorService.shutdownNow();
 

@@ -6,7 +6,6 @@ import com.uniquid.connector.EndPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -22,7 +21,7 @@ public class TCPConnector implements Connector {
     private static final Logger LOGGER = LoggerFactory.getLogger(TCPConnector.class);
 
     private int port;
-    private Queue<Socket> inputQueue;
+    private final Queue<Socket> inputQueue = new LinkedList<>();
 
     private ScheduledExecutorService receiverExecutorService;
 
@@ -30,37 +29,9 @@ public class TCPConnector implements Connector {
      * Creates a MQTTConnector that listen on the specified receiving topic and on the specified broker.
      * @param port the port where start the connector
      */
-    private TCPConnector(int port) {
+    public TCPConnector(int port) {
 
         this.port = port;
-        this.inputQueue = new LinkedList<>();
-
-    }
-
-    /**
-     * Builder for {@link TCPConnector}
-     */
-    public static class Builder {
-        private int _port;
-
-        /**
-         * Set the listening topic
-         * @param _port the port to listen to
-         * @return the Builder
-         */
-        public Builder set_port(int _port) {
-            this._port = _port;
-            return this;
-        }
-
-        /**
-         * Returns an instance of a {@link TCPConnector}
-         * @return an instance of a {@link TCPConnector}
-         */
-        public TCPConnector build() {
-
-            return new TCPConnector(_port);
-        }
 
     }
 
@@ -106,64 +77,31 @@ public class TCPConnector implements Connector {
     }
 
     @Override
-    public void start() {
+    public void connect() {
 
         receiverExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-        final Runnable receiver = new Runnable() {
+        final Runnable receiver = () -> {
 
-            @Override
-            public void run() {
+            try (ServerSocket serverSocket = new ServerSocket(port)) {
 
-                ServerSocket serverSocket = null;
+                while (!Thread.currentThread().isInterrupted()) {
 
-                try {
+                    Socket socket = serverSocket.accept();
 
-                    serverSocket = new ServerSocket(port);
+                    // Create a JSON Message
+                    synchronized (inputQueue) {
 
-                    while (!Thread.currentThread().isInterrupted()) {
-
-                        try {
-
-                            Socket socket = serverSocket.accept();
-
-                            // Create a JSON Message
-                            synchronized (inputQueue) {
-
-                                inputQueue.add(socket);
-                                inputQueue.notifyAll();
-
-                            }
-
-                        } catch (Throwable t) {
-
-                            LOGGER.error("Catched Exception", t);
-
-                        }
-
-                    }
-
-                } catch (Exception ex) {
-
-                    LOGGER.error("Catched Exception", ex);
-
-                } finally {
-
-                    if (serverSocket != null && !serverSocket.isClosed()) {
-
-                        try {
-
-                            serverSocket.close();
-
-                        } catch (IOException e) {
-
-                            // DO NOTHING HERE
-
-                        }
+                        inputQueue.add(socket);
+                        inputQueue.notifyAll();
 
                     }
 
                 }
+
+            } catch (Exception ex) {
+
+                LOGGER.error("Catched Exception", ex);
 
             }
 
@@ -177,7 +115,7 @@ public class TCPConnector implements Connector {
     }
 
     @Override
-    public void stop() {
+    public void close() {
 
         LOGGER.info("Stopping MQTTConnector");
 

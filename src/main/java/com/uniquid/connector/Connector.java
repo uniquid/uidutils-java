@@ -4,17 +4,17 @@ package com.uniquid.connector;
  * Connector interface hides the specifics of a communication protocol and allows the library to works independently from
  * a particular implementation.
  */
-public interface Connector {
+public interface Connector extends AutoCloseable {
 
     /**
-     * Starts the connector
+     * Establish the connection
      */
-    void start() throws ConnectorException;
+    void connect() throws ConnectorException;
 
     /**
-     * Stop the connector
+     * Close the connection
      */
-    void stop() throws ConnectorException;
+    void close() throws ConnectorException;
 
     /**
      * Listens for a connection to be made to this connector and accepts it. The method blocks until a

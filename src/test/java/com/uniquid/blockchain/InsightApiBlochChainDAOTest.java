@@ -12,12 +12,12 @@ public class InsightApiBlochChainDAOTest {
     @Test
     public void test() throws Exception {
 
-        InsightApiDAOImpl blockChainDAOImpl = new InsightApiDAOImpl("http://explorer.uniquid.co:3001/insight-api");
+        InsightApiDAOImpl blockChainDAOImpl = new InsightApiDAOImpl("http://40.115.103.9:3001/insight-lite-api");
 
-        AddressInfo addressInfo = blockChainDAOImpl.retrieveAddressInfo("moJ6LK1BZTvLPhA1XFefMmKCH3YGrdSegm");
+        AddressInfo addressInfo = blockChainDAOImpl.retrieveAddressInfo("mxt3rL7PSZ22oaRGzVJV3voGwJhU1PFhdB");
 
         Assert.assertNotNull(addressInfo);
-        Assert.assertEquals(addressInfo.getBalance(), 0.00805);
+        Assert.assertEquals(addressInfo.getBalance(), 0.002);
 
         try {
             AddressInfo addressInfo2 = blockChainDAOImpl.retrieveAddressInfo("1Nro9WkpaKm9axmcfPVp79dAJU1Gx7VmMZ");
@@ -26,10 +26,10 @@ public class InsightApiBlochChainDAOTest {
             //OK expected
         }
 
-        Collection<Utxo> utxo = blockChainDAOImpl.retrieveUtxo("moJ6LK1BZTvLPhA1XFefMmKCH3YGrdSegm");
+        Collection<Utxo> utxo = blockChainDAOImpl.retrieveUtxo("mxt3rL7PSZ22oaRGzVJV3voGwJhU1PFhdB");
 
         Assert.assertNotNull(utxo);
-        Assert.assertEquals(1, utxo.size());
+        Assert.assertEquals(2, utxo.size());
 
         Transaction tx = blockChainDAOImpl.retrieveTransaction(utxo.iterator().next().getTxid());
 
@@ -44,19 +44,19 @@ public class InsightApiBlochChainDAOTest {
         }
 
 
-        Collection<Utxo> utxo3 = blockChainDAOImpl.retrieveUtxo("mzRR13McMm1Eh3LbrwaXgWLVRsCsMTVfUa");
+        Collection<Utxo> utxo3 = blockChainDAOImpl.retrieveUtxo("msSf3JrPqbPA47vLSMenge2TcRXUWCBQcY");
 
         Assert.assertNotNull(utxo3);
-        Assert.assertEquals(4, utxo3.size());
+        Assert.assertEquals(2, utxo3.size());
 
-        utxo3 = blockChainDAOImpl.retrieveUtxo("mzRR13McMm1Eh3LbrwaXgWLVRsCsMTVfUa", 1);
+        utxo3 = blockChainDAOImpl.retrieveUtxo("msSf3JrPqbPA47vLSMenge2TcRXUWCBQcY", 1);
 
         Assert.assertNotNull(utxo3);
         Assert.assertEquals(1, utxo3.size());
 
         String rawTx = blockChainDAOImpl.retrieveRawTx(utxo.iterator().next().getTxid());
 
-        Assert.assertEquals("0100000001b6c3475d919c676da5b6bd8016a8746c3b54fbd98a32379f724305e151abe6b5000000006b483045022100fd22b75a90d5cdb7d32e0cba9eb2b61f51caa13e83b51d1a7152815d18fd0f9e0220359993b09563ba57d9e1f7863bb7aeb581c500c1772de27acab2cfcb54811d55012102a71f7a7adee0ec0710f896e8b26e8db4ac602538dffaf0d7fd4b1e0068d035afffffffff0418730100000000001976a914d141f0e47bc3355260bf701fce59f67343b505fa88ac0000000000000000536a4c50000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018730100000000001976a914d141f0e47bc3355260bf701fce59f67343b505fa88ac88480c00000000001976a91455524f2f6709abe0e640a77ada62ce0a3c80ff4b88ac00000000", rawTx);
+        Assert.assertEquals("01000000015a73b9bd48b5ff3786af7d2a06a1552e36fbb3795636df5e815356e3197cb8a0020000006b483045022100ebee2c20ecb6b7c66f377ad60ff512305c70fddd54766d50f252d12c1c1179d7022074c473f6db1373c49df7d478f1d23f6f18867b713d66966a97f37e9815aa4faa0121030e2a17650023a19a50b11f76fb623fe0e2fec69af2bd06a5c9da365805a73962ffffffff02a0860100000000001976a914fa1804e0b3d2049116ec25cfc3d30d47f6ccb8ca88aca0860100000000001976a914be778308363d598e21a2643e9b86fbf5c781865488ac00000000", rawTx);
 
         try {
             String rawTx2 = blockChainDAOImpl.retrieveRawTx("12345");
@@ -66,7 +66,7 @@ public class InsightApiBlochChainDAOTest {
         }
 
         try {
-            blockChainDAOImpl.sendTx("01000000018776b92aa383fd6035bf29491989c95804ba97c2407386981e6cc70241b7f95e000000006a47304402204266e7993a4e1a582571782cd55614be3acf7c4370778aa474fb6cb332aa9fe20220708e9c70e2999611c5d5683dd5132de7a841b0ec8a1f20bd7769dc39d1f0ac700121027b65d3df84fed18aebecd91b265b2eac7d9827b28858fd23164e2b6d3ace9f71ffffffff0418730100000000001976a91485bbd7f6f560a54ef89a66e513c3b1f55cfd86aa88ac0000000000000000536a4c50000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018730100000000001976a91485bbd7f6f560a54ef89a66e513c3b1f55cfd86aa88ac88480c00000000001976a9141abedcd67a1fe806cd9458c614538be97b90f0ea88ac00000000");
+            blockChainDAOImpl.sendTx("01000000015a73b9bd48b5ff3786af7d2a06a1552e36fbb3795636df5e815356e3197cb8a0020000006b483045022100ebee2c20ecb6b7c66f377ad60ff512305c70fddd54766d50f252d12c1c1179d7022074c473f6db1373c49df7d478f1d23f6f18867b713d66966a97f37e9815aa4faa0121030e2a17650023a19a50b11f76fb623fe0e2fec69af2bd06a5c9da365805a73962ffffffff02a0860100000000001976a914fa1804e0b3d2049116ec25cfc3d30d47f6ccb8ca88aca0860100000000001976a914be778308363d598e21a2643e9b86fbf5c781865488ac00000000");
             Assert.fail();
 
         } catch (BlockChainException ex) {

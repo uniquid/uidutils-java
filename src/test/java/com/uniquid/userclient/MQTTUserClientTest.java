@@ -38,13 +38,7 @@ public class MQTTUserClientTest {
         final MQTTUserClient mqttUserClient = new MQTTUserClient(broker, destination, timeout, sender);
         Assert.assertNotNull(mqttUserClient);
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                startMqttServerMock();
-            }
-        }).start();
+        new Thread(this::startMqttServerMock).start();
 
         try {
             FunctionResponseMessage providerResponse = (FunctionResponseMessage) mqttUserClient.execute(providerRequest);
@@ -114,13 +108,7 @@ public class MQTTUserClientTest {
         final MQTTUserClient mqttUserClient = new MQTTUserClient(broker, destination, timeout, sender);
         Assert.assertNotNull(mqttUserClient);
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                startMqttServerMockException();
-            }
-        }).start();
+        new Thread(this::startMqttServerMockException).start();
 
         FunctionRequestMessage providerResponse = (FunctionRequestMessage) mqttUserClient.execute(providerRequest);
         Assert.assertNotNull(providerResponse);

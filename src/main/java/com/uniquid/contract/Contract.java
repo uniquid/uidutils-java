@@ -16,6 +16,7 @@ public class Contract {
         PENDING,    // Contract was picked by mempool but has 0 confirmation
         ACTIVE,     // Contract has at least 1 confirmation
         CONFIRMED,  // Contract has more then 6 confirmation
+        REVOKED,    // Contract was revoked
         FAILED      // Contract was failed
     }
 

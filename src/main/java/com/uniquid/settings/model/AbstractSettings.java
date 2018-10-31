@@ -31,11 +31,11 @@ public abstract class AbstractSettings {
      * @throws UnknownSettingException in case a problem occurs
      */
     public AbstractSettings() throws SettingValidationException, UnknownSettingException {
-        this(new Properties(), new HashSet<Setting>());
+        this(new Properties(), new HashSet<>());
     }
 
     public AbstractSettings(Properties properties) throws SettingValidationException, UnknownSettingException {
-        this(properties, new HashSet<Setting>());
+        this(properties, new HashSet<>());
     }
 
     /**

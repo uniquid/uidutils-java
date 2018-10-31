@@ -19,7 +19,7 @@ public interface UserClientFactory {
 
         /**
          * Return the provider name
-         * @return the probider name
+         * @return the provider name
          */
         String getProviderName();
 
@@ -31,7 +31,7 @@ public interface UserClientFactory {
 
     }
     /**
-     * Returns the UserClient compatibile with the specified configuration
+     * Returns the UserClient compatible with the specified configuration
      * @param configuration the {@link UserClientFactoryConfiguration}
      * @return the {@link UserClient}
      */

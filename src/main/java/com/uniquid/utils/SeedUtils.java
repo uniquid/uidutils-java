@@ -85,17 +85,4 @@ public class SeedUtils<T extends BackupData> {
 
     }
 
-    public static void main(String[] args) throws Exception {
-
-        SeedUtils<BackupData> seedUtils = new SeedUtils<>(new File(args[0]));
-
-        BackupData backupData = new BackupData();
-
-        seedUtils.readData(args[1], backupData);
-
-        System.out.println("Mnemonics: " + backupData.getMnemonic());
-        System.out.println("Creation time: " + backupData.getCreationTime());
-        System.out.println("Node name: " + backupData.getName());
-    }
-
 }

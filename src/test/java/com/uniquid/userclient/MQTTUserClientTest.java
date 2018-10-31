@@ -10,9 +10,10 @@ import org.junit.Test;
 
 public class MQTTUserClientTest {
 
+    private String broker = "tcp://18.224.232.243:1883";
+
     @Test
     public void testConstructor() {
-        String broker = "tcp://appliance4.uniquid.co:1883";
         String destination = "test";
         int timeout = 10;
 
@@ -31,20 +32,13 @@ public class MQTTUserClientTest {
         providerRequest.setFunction(method);
         providerRequest.setParameters(params);
 
-        String broker = "tcp://appliance4.uniquid.co:1883";
         String destination = "test";
         int timeout = 10;
 
         final MQTTUserClient mqttUserClient = new MQTTUserClient(broker, destination, timeout, sender);
         Assert.assertNotNull(mqttUserClient);
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                startMqttServerMock();
-            }
-        }).start();
+        new Thread(this::startMqttServerMock).start();
 
         try {
             FunctionResponseMessage providerResponse = (FunctionResponseMessage) mqttUserClient.execute(providerRequest);
@@ -59,7 +53,6 @@ public class MQTTUserClientTest {
 
     private void startMqttServerMock() {
 
-        String broker = "tcp://appliance4.uniquid.co:1883";
         String topic = "test";
         Topic[] topics = {new Topic(topic, QoS.AT_LEAST_ONCE)};
         BlockingConnection connection;
@@ -109,20 +102,13 @@ public class MQTTUserClientTest {
         providerRequest.setParameters(params);
         providerRequest.setId(1234);
 
-        String broker = "tcp://appliance4.uniquid.co:1883";
         String destination = "test";
-        int timeout = 10;
+        int timeout = 5;
 
         final MQTTUserClient mqttUserClient = new MQTTUserClient(broker, destination, timeout, sender);
         Assert.assertNotNull(mqttUserClient);
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                startMqttServerMockException();
-            }
-        }).start();
+        new Thread(this::startMqttServerMockException).start();
 
         FunctionRequestMessage providerResponse = (FunctionRequestMessage) mqttUserClient.execute(providerRequest);
         Assert.assertNotNull(providerResponse);
@@ -133,7 +119,6 @@ public class MQTTUserClientTest {
 
     private void startMqttServerMockException() {
 
-        String broker = "tcp://appliance4.uniquid.co:1883";
         String topic = "test";
         Topic[] topics = {new Topic(topic, QoS.AT_LEAST_ONCE)};
         BlockingConnection connection;

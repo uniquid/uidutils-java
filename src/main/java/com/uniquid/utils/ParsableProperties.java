@@ -97,24 +97,16 @@ public class ParsableProperties extends Properties {
         // Get value
         String stringValue = getProperty(key);
 
-        try {
+        if (stringValue != null) {
+            try {
+                // Parse to double
+                return new Double(stringValue);
 
-            if (stringValue == null) {
-                return null;
+            } catch (NumberFormatException ex) {
+                LOGGER.warn("unable to get value for key: " + key + ": ", ex);
             }
-
-            // Parse to double
-            return new Double(stringValue);
-
-        } catch (NumberFormatException ex) {
-
-            // Log
-            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
-
-            return null;
-
         }
-
+        return null;
     }
 
     /**
@@ -153,20 +145,16 @@ public class ParsableProperties extends Properties {
         // Get setting value
         String stringValue = getProperty(key);
 
-        try {
+        if (stringValue != null) {
+            try {
+                // Parse to int
+                return new Integer(stringValue);
 
-            // Parse to int
-            return new Integer(stringValue);
-
-        } catch (NumberFormatException ex) {
-
-            // Log
-            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
-
-            return null;
-
+            } catch (NumberFormatException ex) {
+                LOGGER.warn("unable to get value for key: " + key + ": ", ex);
+            }
         }
-
+        return null;
     }
 
     /**
@@ -205,20 +193,16 @@ public class ParsableProperties extends Properties {
         // Get value
         String stringValue = getProperty(key);
 
-        try {
+        if (stringValue != null) {
+            try {
+                // Parse to long
+                return new Long(stringValue);
 
-            // Parse to long
-            return new Long(stringValue);
-
-        } catch (NumberFormatException ex) {
-
-            // Log
-            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
-
-            return null;
-
+            } catch (NumberFormatException ex) {
+                LOGGER.warn("unable to get value for key: " + key + ": ", ex);
+            }
         }
-
+        return null;
     }
 
     /**
@@ -255,17 +239,10 @@ public class ParsableProperties extends Properties {
         // Get value
         String value = getProperty(key);
 
-        if (value != null) {
-            return value;
-        } else {
-
-            // Log
+        if (value == null) {
             LOGGER.warn("unable to get value for key: " + key);
-
-            return null;
-
         }
-
+        return value;
     }
 
     /**
@@ -279,26 +256,13 @@ public class ParsableProperties extends Properties {
     public Enum<?> getAsEnum(Class enumType, String key, Enum defaultValue) {
 
         // Get value
-        String value = getProperty(key);
+        Enum<?> enumValue = getAsEnum(enumType, key);
 
-        if (value == null) {
+        if (enumValue == null) {
             return defaultValue;
         }
 
-        try {
-
-            // Parse to Enum
-            return Enum.valueOf(enumType, value);
-
-        } catch (Exception ex) {
-
-            // Log
-            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
-
-            return null;
-
-        }
-
+        return enumValue;
     }
 
     /**
@@ -313,20 +277,16 @@ public class ParsableProperties extends Properties {
         // Get value
         String value = getProperty(key);
 
-        try {
+        if (value != null) {
+            try {
+                // Parse to Enum
+                return Enum.valueOf(enumType, value);
 
-            // Parse to Enum
-            return Enum.valueOf(enumType, value);
-
-        } catch (Exception ex) {
-
-            // Log
-            LOGGER.warn("unable to get value for key: " + key + ": ", ex);
-
-            return null;
-
+            } catch (Exception ex) {
+                LOGGER.warn("unable to get value for key: " + key + ": ", ex);
+            }
         }
-
+        return null;
     }
 
     /**

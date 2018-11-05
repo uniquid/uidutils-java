@@ -13,9 +13,6 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author Beatrice Formai
- */
 public class BackupTest {
 
     @Test

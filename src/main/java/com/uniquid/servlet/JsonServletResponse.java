@@ -18,9 +18,6 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.util.Formatter;
 
-/**
- * @author Beatrice Formai
- */
 public class JsonServletResponse extends HttpServletResponseWrapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonServletResponse.class.getName());

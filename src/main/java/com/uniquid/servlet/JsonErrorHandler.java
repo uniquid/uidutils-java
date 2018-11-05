@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * @author Beatrice Formai
+ * The JsonErrorHandler prepare the HttpServletResponse
+ * with error in JSON format. Error can be send
+ * using {@code JsonServletResponse.sendException}
  */
 public class JsonErrorHandler extends ErrorHandler {
 

@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Beatrice Formai
+ * This JSON object provides to client information about
+ * java exception (including stack-trace)
  */
 public class ExceptionJson extends ErrorJson {
 

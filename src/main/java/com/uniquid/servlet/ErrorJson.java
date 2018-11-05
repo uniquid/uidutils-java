@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * @author Beatrice Formai
+ * This JSON object provide to client error description
  */
 public class ErrorJson {
 

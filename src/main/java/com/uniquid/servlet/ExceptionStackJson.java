@@ -12,9 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Beatrice Formai
- */
 public class ExceptionStackJson {
 
     private List<ExceptionJson> stack;

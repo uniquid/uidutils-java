@@ -15,9 +15,6 @@ import org.junit.Test;
 import static com.uniquid.utils.AddressUtils.*;
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author Beatrice Formai
- */
 public class AddressUtilsTest {
 
     @Test

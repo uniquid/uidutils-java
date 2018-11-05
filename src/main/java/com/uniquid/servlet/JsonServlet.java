@@ -15,9 +15,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-/**
- * @author Beatrice Formai
- */
 public class JsonServlet extends HttpServlet {
 
     /**

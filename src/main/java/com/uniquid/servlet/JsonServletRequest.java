@@ -17,9 +17,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author Beatrice Formai
- */
 public class JsonServletRequest extends HttpServletRequestWrapper {
 
     private static final ObjectMapper mapper = new ObjectMapper();

@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-/**
- * @author Beatrice Formai
- */
+
 public class ContentTypeFilter implements Filter{
 
     @Override

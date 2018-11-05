@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author Beatrice Formai
+ * Servlet filter to manage CORS
  */
 public class CORSFilter implements Filter {
 

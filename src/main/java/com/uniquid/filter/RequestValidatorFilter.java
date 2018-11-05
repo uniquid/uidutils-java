@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author Beatrice Formai
+ * This filter validate requests from client
  */
 public class RequestValidatorFilter implements Filter {
 

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016-2018. Uniquid Inc. or its affiliates. All Rights Reserved.
+ *
+ * License is in the "LICENSE" file accompanying this file.
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.uniquid.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +19,9 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * @author Beatrice Formai
+ * The JsonErrorHandler prepare the HttpServletResponse
+ * with error in JSON format. Error can be send
+ * using {@code JsonServletResponse.sendException}
  */
 public class JsonErrorHandler extends ErrorHandler {
 

@@ -7,6 +7,8 @@
 
 package com.uniquid.messages;
 
+import com.google.common.base.MoreObjects;
+
 public class Function30ResponseMessage extends FunctionResponseMessage {
 
     private String txid;
@@ -26,5 +28,13 @@ public class Function30ResponseMessage extends FunctionResponseMessage {
 
     public void setTxidError(int txidError) {
         this.txidError = txidError;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("txid", txid)
+                .add("txidError", txidError)
+                .toString();
     }
 }

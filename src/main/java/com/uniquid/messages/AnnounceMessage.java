@@ -7,6 +7,8 @@
 
 package com.uniquid.messages;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.Objects;
 
 /**
@@ -61,5 +63,11 @@ public class AnnounceMessage implements UniquidMessage {
 
     }
 
-
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("pubKey", pubKey)
+                .toString();
+    }
 }

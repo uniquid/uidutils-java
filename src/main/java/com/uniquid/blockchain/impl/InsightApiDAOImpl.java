@@ -64,14 +64,14 @@ public class InsightApiDAOImpl implements BlockChainDAO {
                 }
 
                 @Override
-                public AddressInfo manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                public AddressInfo manageUnexpectedResponseCode(int responseCode, String responseMessage, String body)
                         throws Exception {
 
                     if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
                         return null;
 
-                    throw new Exception("Received " + responseCode + responseMessage);
+                    throw new Exception("GET " + url + " Received " + responseCode + " " + responseMessage + ": " + body);
                 }
 
             });
@@ -179,13 +179,13 @@ public class InsightApiDAOImpl implements BlockChainDAO {
                 }
 
                 @Override
-                public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage, String body)
                         throws Exception {
                     if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
                         return new ArrayList<>();
 
-                    throw new Exception("Received " + responseCode + responseMessage);
+                    throw new Exception("GET " + url + " Received " + responseCode + " " + responseMessage + ": " + body);
                 }
 
             });
@@ -217,13 +217,13 @@ public class InsightApiDAOImpl implements BlockChainDAO {
                 }
 
                 @Override
-                public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                public Collection<Utxo> manageUnexpectedResponseCode(int responseCode, String responseMessage, String body)
                         throws Exception {
                     if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
                         return new ArrayList<>();
 
-                    throw new Exception("Received " + responseCode + responseMessage);
+                    throw new Exception("GET " + url + " Received " + responseCode + " " + responseMessage + ": " + body);
                 }
 
             });
@@ -259,12 +259,12 @@ public class InsightApiDAOImpl implements BlockChainDAO {
                 }
 
                 @Override
-                public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+                public String manageUnexpectedResponseCode(int responseCode, String responseMessage, String body) throws Exception {
                     if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
                         return null;
 
-                    throw new Exception("Received " + responseCode + responseMessage);
+                    throw new Exception("GET " + url + " Received " + responseCode + " " + responseMessage + ": " + body);
                 }
 
             });
@@ -343,13 +343,13 @@ public class InsightApiDAOImpl implements BlockChainDAO {
                     }
 
                     @Override
-                    public Transaction manageUnexpectedResponseCode(int responseCode, String responseMessage)
+                    public Transaction manageUnexpectedResponseCode(int responseCode, String responseMessage, String body)
                             throws Exception {
 
                         if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
                             return null;
 
-                        throw new BlockChainException("Received from Insight " + responseCode + responseMessage);
+                        throw new BlockChainException("GET " + url + " Received from Insight " + responseCode + " " + responseMessage + ": " + body);
                     }
                 });
 
@@ -414,13 +414,13 @@ public class InsightApiDAOImpl implements BlockChainDAO {
                 }
 
                 @Override
-                public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+                public String manageUnexpectedResponseCode(int responseCode, String responseMessage, String body) throws Exception {
 
                     if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
 
                         return null;
 
-                    throw new Exception("Received " + responseCode + responseMessage);
+                    throw new Exception("POST " + url + " Received " + responseCode + " " + responseMessage + ": " + body);
 
                 }
 

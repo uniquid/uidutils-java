@@ -7,6 +7,8 @@
 
 package com.uniquid.messages;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.Objects;
 
 /**
@@ -103,4 +105,13 @@ public class FunctionResponseMessage implements UniquidMessage {
 
     }
 
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("provider", provider)
+                .add("result", result)
+                .add("error", error)
+                .toString();
+    }
 }

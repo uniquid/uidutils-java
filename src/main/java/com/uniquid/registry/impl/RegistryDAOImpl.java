@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016-2018. Uniquid Inc. or its affiliates. All Rights Reserved.
+ *
+ * License is in the "LICENSE" file accompanying this file.
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.uniquid.registry.impl;
 
 import com.uniquid.registry.RegistryDAO;
@@ -51,8 +58,8 @@ public class RegistryDAOImpl implements RegistryDAO {
                 }
 
                 @Override
-                public Void manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
-                    throw new RegistryException("Error while submitting post: " + responseCode + " " + responseMessage);
+                public Void manageUnexpectedResponseCode(int responseCode, String responseMessage, String body) throws Exception {
+                    throw new RegistryException("POST " + url + " Error while submitting post: " + responseCode + " " + responseMessage + ": " + body);
                 }
 
                 @Override
@@ -125,11 +132,11 @@ public class RegistryDAOImpl implements RegistryDAO {
                 }
 
                 @Override
-                public String manageUnexpectedResponseCode(int responseCode, String responseMessage) throws Exception {
+                public String manageUnexpectedResponseCode(int responseCode, String responseMessage, String body) throws Exception {
                     if (HttpURLConnection.HTTP_NOT_FOUND == responseCode)
                         return null;
 
-                    throw new RegistryException("Server returned " + responseCode + " " + responseMessage);
+                    throw new RegistryException("GET " + url + " Server returned " + responseCode + " " + responseMessage + ": " + body);
                 }
 
             });

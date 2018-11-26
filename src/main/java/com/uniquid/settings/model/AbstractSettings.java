@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016-2018. Uniquid Inc. or its affiliates. All Rights Reserved.
+ *
+ * License is in the "LICENSE" file accompanying this file.
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.uniquid.settings.model;
 
 import com.uniquid.settings.exception.SettingValidationException;
@@ -188,17 +195,7 @@ public abstract class AbstractSettings {
      *             if setting value class is other then {@link Boolean}
      */
     protected boolean getAsBoolean(Setting setting) {
-
-        // Get as boolean
-        Boolean booleanValue = parsableProperties.getAsBoolean(setting.getKey());
-
-        if (booleanValue == null) {
-            booleanValue = (Boolean) setting.getDefaultValue();
-        }
-
-        // Get boolean value
-        return booleanValue.booleanValue();
-
+        return parsableProperties.getAsBoolean(setting.getKey(), (Boolean)setting.getDefaultValue());
     }
 
     /**
@@ -211,17 +208,7 @@ public abstract class AbstractSettings {
      *             if setting value class is other then {@link Double}
      */
     protected double getAsDouble(Setting setting) {
-
-        // Get as double
-        Double doubleValue = parsableProperties.getAsDouble(setting.getKey());
-
-        if (doubleValue == null) {
-            doubleValue = (Double) setting.getDefaultValue();
-        }
-
-        // Parse to double
-        return doubleValue.doubleValue();
-
+        return parsableProperties.getAsDouble(setting.getKey(), (Double)setting.getDefaultValue());
     }
 
     /**
@@ -234,16 +221,7 @@ public abstract class AbstractSettings {
      *             if setting value class is other then {@link Integer}
      */
     protected int getAsInteger(Setting setting) {
-
-        // Get as integer
-        Integer integerValue = parsableProperties.getAsInteger(setting.getKey());
-
-        if (integerValue == null) {
-            integerValue = (Integer) setting.getDefaultValue();
-        }
-
-        // Parse to int
-        return integerValue.intValue();
+        return parsableProperties.getAsInteger(setting.getKey(), (Integer)setting.getDefaultValue());
     }
 
     /**
@@ -256,17 +234,7 @@ public abstract class AbstractSettings {
      *             if setting value class is other then {@link Long}
      */
     protected long getAsLong(Setting setting) {
-
-        // Get as long
-        Long longValue = parsableProperties.getAsLong(setting.getKey());
-
-        if (longValue == null) {
-            longValue = (Long) setting.getDefaultValue();
-        }
-
-        // Parse to long
-        return longValue;
-
+        return parsableProperties.getAsLong(setting.getKey(), (Long)setting.getDefaultValue());
     }
 
     /**
@@ -279,16 +247,7 @@ public abstract class AbstractSettings {
      *             if setting value class is other then {@link String}
      */
     protected String getAsString(Setting setting) {
-
-        // Get value
-        String value = parsableProperties.getAsString(setting.getKey());
-
-        if (value == null) {
-            value = (String) setting.getDefaultValue();
-        }
-
-        return value;
-
+        return parsableProperties.getAsString(setting.getKey(), (String)setting.getDefaultValue());
     }
 
     /**
@@ -298,15 +257,7 @@ public abstract class AbstractSettings {
      * @return the value of the setting
      */
     protected Enum getAsEnum(Setting setting) {
-
-        Enum value = parsableProperties.getAsEnum(setting.getDefaultValue().getClass(), setting.getKey());
-
-        if (value == null) {
-            value = (Enum) setting.getDefaultValue();
-        }
-
-        return value;
-
+        return parsableProperties.getAsEnum(setting.getDefaultValue().getClass(), setting.getKey(), (Enum)setting.getDefaultValue());
     }
 
     /**

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016-2018. Uniquid Inc. or its affiliates. All Rights Reserved.
+ *
+ * License is in the "LICENSE" file accompanying this file.
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.uniquid.messages.serializers;
 
 import com.uniquid.messages.*;
@@ -140,8 +147,8 @@ public class JSONMessageSerializer implements MessageSerializer {
                 // IS function 30 ?
                 Matcher matcher = PATTERN.matcher(result);
                 if (matcher.find()) {
-                    final int txidError = Integer.parseInt(matcher.group(1));
-                    final String txid = matcher.group(2);
+                    final int txError = Integer.parseInt(matcher.group(1));
+                    final String serializedTx = matcher.group(2);
 
                     Function30ResponseMessage responseMessage = new Function30ResponseMessage();
 
@@ -149,8 +156,8 @@ public class JSONMessageSerializer implements MessageSerializer {
                     responseMessage.setResult(result);
                     responseMessage.setError(error);
                     responseMessage.setId(id);
-                    responseMessage.setTxid(txid);
-                    responseMessage.setTxidError(txidError);
+                    responseMessage.setSerializedTx(serializedTx);
+                    responseMessage.setTxError(txError);
 
                     return responseMessage;
                 } else {

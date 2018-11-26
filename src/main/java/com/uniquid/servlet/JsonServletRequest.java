@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016-2018. Uniquid Inc. or its affiliates. All Rights Reserved.
+ *
+ * License is in the "LICENSE" file accompanying this file.
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.uniquid.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,9 +17,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author Beatrice Formai
- */
 public class JsonServletRequest extends HttpServletRequestWrapper {
 
     private static final ObjectMapper mapper = new ObjectMapper();

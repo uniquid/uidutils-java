@@ -39,6 +39,13 @@ public class JsonServletResponse extends HttpServletResponseWrapper {
         mapper.writeValue(this.getWriter(), obj);
     }
 
+    @Override
+    public void sendError(int sc, String msg) throws IOException {
+        ErrorJson errorJson = new ErrorJson(msg);
+        this.setStatus(sc);
+        this.writeJson(errorJson);
+    }
+
     public void sendError(int sc, String msg, Object... args) throws IOException {
         try (Formatter formatter = new Formatter()) {
             String fullMsg = formatter.format(msg, args).toString();

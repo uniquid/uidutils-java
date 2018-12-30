@@ -7,9 +7,14 @@
 
 package com.uniquid.servlet.controller;
 
+import com.google.common.base.Strings;
 import com.uniquid.servlet.JsonServletRequest;
 import com.uniquid.servlet.JsonServletResponse;
 import org.eclipse.jetty.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,8 +35,14 @@ import java.util.*;
  */
 public class ControllerServlet extends HttpServlet {
 
-    private Map<RequestMethod, Map<UriMask, Method>> handlers = new HashMap<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerServlet.class.getName());
+    private static final Marker CONSOLE = MarkerFactory.getMarker("CONSOLE");
 
+    private static final Map<RequestMethod, Map<UriMask, Method>> handlers = new EnumMap<>(RequestMethod.class);
+
+    /**
+     * Constructor
+     */
     public ControllerServlet() {
 
         // Get controller Uri if exist
@@ -64,56 +75,80 @@ public class ControllerServlet extends HttpServlet {
     }
 
 
+    /**
+     * Method to parse string to object according to given type
+     *
+     * @param s         string that have to be parsed
+     * @param clazz     class type to which need to parse given string
+     * @return
+     */
     private static <T> T parseObjectFromString(String s, Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        return clazz.getConstructor(new Class[] {String.class }).newInstance(s);
+        return clazz.getConstructor(String.class).newInstance(s);
     }
 
-
-    private boolean isBlank(String s) {
-        return s == null || s.trim().isEmpty();
-    }
 
     /**
-     * Method that can be used to find primitive type for given class if (but only if)
-     * it is either wrapper type or primitive type; returns `null` if type is neither.
+     * Method that can be used to find wrapped class type for given primitive
+     * it there is no wrapped class or given non-primitive type - return same value
+     *
+     * @param type      primitive type to convert
+     * @return          wrapped type analog to given primitive type
      */
     private static Class<?> toWrappedType(Class<?> type)
     {
-        if (type.isPrimitive()) {
-            if (type == Integer.TYPE) {
-                return Integer.class;
-            }
-            if (type == Long.TYPE) {
-                return Long.class;
-            }
-            if (type == Boolean.TYPE) {
-                return Boolean.class;
-            }
-            if (type == Double.TYPE) {
-                return Double.class;
-            }
-            if (type == Float.TYPE) {
-                return Float.class;
-            }
-            if (type == Byte.TYPE) {
-                return Byte.class;
-            }
-            if (type == Short.TYPE) {
-                return Short.class;
-            }
-            if (type == Character.TYPE) {
-                return Character.class;
-            }
+        if (type == Integer.TYPE) {
+            return Integer.class;
+        }
+        if (type == Long.TYPE) {
+            return Long.class;
+        }
+        if (type == Boolean.TYPE) {
+            return Boolean.class;
+        }
+        if (type == Double.TYPE) {
+            return Double.class;
+        }
+        if (type == Float.TYPE) {
+            return Float.class;
+        }
+        if (type == Byte.TYPE) {
+            return Byte.class;
+        }
+        if (type == Short.TYPE) {
+            return Short.class;
+        }
+        if (type == Character.TYPE) {
+            return Character.class;
         }
         return type;
     }
 
+    /**
+     * Method to find handler method suitable with current URI and current RequestMethod
+     *
+     * @param uri               current Uri to search
+     * @param requestMethod     current RequestMethod to search
+     * @return                  keypair with Uri and Method
+     */
     private Map.Entry<UriMask, Method> findMethod(String uri, RequestMethod requestMethod) {
         Map<UriMask, Method> entries = handlers.get(requestMethod);
+        if (entries == null) {
+            return null;
+        }
         return entries.entrySet().stream().filter(e -> e.getKey().isMatch(uri)).findFirst().orElse(null);
     }
 
 
+    /**
+     * Method handler to process incoming http request, find suitable
+     * handler method according to Uri and RequestMethod in annotations
+     * and invoke the method.
+     *
+     * @param req       http request
+     * @param resp      http response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException
@@ -132,7 +167,7 @@ public class ControllerServlet extends HttpServlet {
             Method method = entry.getValue();
 
             // Prepare arguments to call method
-            Object[] args = prepareArguments(method.getParameters(), new JsonServletRequest(req, mask.getUri()));
+            Object[] args = prepareArguments(method, new JsonServletRequest(req, mask.getUri()));
 
             // Invoke suitable method
             Object ret = method.invoke(this, args);
@@ -144,15 +179,25 @@ public class ControllerServlet extends HttpServlet {
             response.sendError(e.getStatusCode(), e.getResponseBody());
         } catch (Exception e) {
             response.sendException(HttpStatus.INTERNAL_SERVER_ERROR_500, e);
-            e.printStackTrace();
+            LOGGER.error(CONSOLE, "HTTP handling error:", e);
         }
     }
 
 
-    private Object[] prepareArguments(Parameter[] params, JsonServletRequest request) throws Exception {
+    /**
+     * Method to prepare arguments values for method invocation based on
+     * current http request
+     *
+     * @param method        method for which you want to prepare the arguments
+     * @param request       current request based on what will be prepared arguments values
+     * @return              array of objects of arguments values
+     */
+    private Object[] prepareArguments(Method method, JsonServletRequest request)
+            throws NoSuchMethodException, HttpException, IOException, InstantiationException,
+            IllegalAccessException, InvocationTargetException {
         List<Object> args = new ArrayList<>();
 
-        for (Parameter param : params) {
+        for (Parameter param : method.getParameters()) {
             args.add(prepareArgument(param, request));
         }
 
@@ -160,27 +205,37 @@ public class ControllerServlet extends HttpServlet {
     }
 
 
-    private Object prepareArgument(Parameter param, JsonServletRequest request) throws Exception {
+    /**
+     * Method to prepare argument value for parameter based on http request
+     *
+     * @param param         parameter for which you want to prepare argument
+     * @param request       current http request based to get values for argument
+     * @return              object of argument value
+     */
+    private Object prepareArgument(Parameter param, JsonServletRequest request)
+            throws IOException, HttpException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException {
         // If param marked as RequestBody
         RequestBody rb = param.getDeclaredAnnotation(RequestBody.class);
         if (rb != null) {
             Object arg = request.readJson(param.getType());
-            if (arg == null && rb.required()) {
+            if (arg != null) {
+                return arg;
+            }
+            if (rb.required()) {
                 throw new HttpException(HttpStatus.BAD_REQUEST_400, "Request body is required valid json.");
             }
-            return arg;
         }
 
         // If param marked as PathVariable
         PathVariable pv = param.getDeclaredAnnotation(PathVariable.class);
         if (pv != null) {
             String pathVarValue = request.getVariable(pv.value());
-            if (isBlank(pathVarValue)) {
-                if (pv.required()) {
-                    throw new HttpException(HttpStatus.BAD_REQUEST_400, "PathVariable '%s' is required.", pv.value());
-                }
-            } else {
+            if (!Strings.isNullOrEmpty(pathVarValue)) {
                 return parseObjectFromString(pathVarValue, toWrappedType(param.getType()));
+            }
+            if (pv.required()) {
+                throw new HttpException(HttpStatus.BAD_REQUEST_400, "PathVariable '%s' is required.", pv.value());
             }
         }
 
@@ -188,12 +243,11 @@ public class ControllerServlet extends HttpServlet {
         PathParam pp = param.getDeclaredAnnotation(PathParam.class);
         if (pp != null) {
             String pathParamValue = request.getParameter(pp.value());
-            if (isBlank(pathParamValue)) {
-                if (pp.required()) {
-                    throw new HttpException(HttpStatus.BAD_REQUEST_400, "PathParam '%s' is required.", pp.value());
-                }
-            } else {
+            if (!Strings.isNullOrEmpty(pathParamValue)) {
                 return parseObjectFromString(pathParamValue, toWrappedType(param.getType()));
+            }
+            if (pp.required()) {
+                throw new HttpException(HttpStatus.BAD_REQUEST_400, "PathParam '%s' is required.", pp.value());
             }
         }
         return null;

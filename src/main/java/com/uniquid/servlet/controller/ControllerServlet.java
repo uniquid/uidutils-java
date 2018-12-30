@@ -7,7 +7,6 @@
 
 package com.uniquid.servlet.controller;
 
-import com.fasterxml.jackson.databind.util.ClassUtil;
 import com.uniquid.servlet.JsonServletRequest;
 import com.uniquid.servlet.JsonServletResponse;
 import org.eclipse.jetty.http.HttpStatus;
@@ -31,34 +30,89 @@ import java.util.*;
  */
 public class ControllerServlet extends HttpServlet {
 
-    private static <T> T parseObjectFromString(String s, Class<T> clazz) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Class<T> type = clazz;
-        if (type.isPrimitive()) {
-            type = (Class<T>)ClassUtil.wrapperType(type);
+    private Map<RequestMethod, Map<UriMask, Method>> handlers = new HashMap<>();
+
+    public ControllerServlet() {
+
+        // Get controller Uri if exist
+        Controller controllerAnnotation = this.getClass().getAnnotation(Controller.class);
+        String controllerUri = "";
+        if (controllerAnnotation != null) {
+             controllerUri = controllerAnnotation.value();
         }
-        return parseWrappedObjectFromString(s, type);
+
+        // Scan inherit class to find methods annotated with RequestMapping
+        for (Method method : this.getClass().getDeclaredMethods()) {
+
+            RequestMapping rm = method.getAnnotation(RequestMapping.class);
+            if (rm != null) {
+
+                // Final Uri consist of controller's global Uri + method's Uri
+                String methodUri = controllerUri + rm.value();
+
+                // Scan all request methods described in annotation
+                for (RequestMethod requestMethod : rm.method()) {
+                    Map<UriMask, Method> methods = handlers.computeIfAbsent(requestMethod, k -> new HashMap<>());
+
+                    // Collect all Methods according to Request Methods and Uri Masks
+                    UriMask mask = new UriMask(methodUri);
+                    methods.put(mask, method);
+                }
+            }
+        }
+
     }
 
-    private static <T> T parseWrappedObjectFromString(String s, Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+
+    private static <T> T parseObjectFromString(String s, Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         return clazz.getConstructor(new Class[] {String.class }).newInstance(s);
     }
 
-    private String getControllerUri() {
-        Controller controllerAnnotation = this.getClass().getAnnotation(Controller.class);
-        if (controllerAnnotation != null) {
-            return controllerAnnotation.value();
-        }
-        return "";
-    }
-
-    private boolean isMatchedUri(String requestUri, String requestMask) {
-        String regexpMask = requestMask.replaceAll("\\{(\\w+)}", ".*");
-        return requestUri.matches(regexpMask);
-    }
 
     private boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
     }
+
+    /**
+     * Method that can be used to find primitive type for given class if (but only if)
+     * it is either wrapper type or primitive type; returns `null` if type is neither.
+     */
+    private static Class<?> toWrappedType(Class<?> type)
+    {
+        if (type.isPrimitive()) {
+            if (type == Integer.TYPE) {
+                return Integer.class;
+            }
+            if (type == Long.TYPE) {
+                return Long.class;
+            }
+            if (type == Boolean.TYPE) {
+                return Boolean.class;
+            }
+            if (type == Double.TYPE) {
+                return Double.class;
+            }
+            if (type == Float.TYPE) {
+                return Float.class;
+            }
+            if (type == Byte.TYPE) {
+                return Byte.class;
+            }
+            if (type == Short.TYPE) {
+                return Short.class;
+            }
+            if (type == Character.TYPE) {
+                return Character.class;
+            }
+        }
+        return type;
+    }
+
+    private Map.Entry<UriMask, Method> findMethod(String uri, RequestMethod requestMethod) {
+        Map<UriMask, Method> entries = handlers.get(requestMethod);
+        return entries.entrySet().stream().filter(e -> e.getKey().isMatch(uri)).findFirst().orElse(null);
+    }
+
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp)
@@ -68,38 +122,32 @@ public class ControllerServlet extends HttpServlet {
 
         try {
 
-            // Find suitable method
-            for (Method method : this.getClass().getDeclaredMethods()) {
+            Map.Entry<UriMask, Method> entry = findMethod(req.getRequestURI(), RequestMethod.valueOf(req.getMethod()));
 
-                RequestMapping methodAnnotation = method.getDeclaredAnnotation(RequestMapping.class);
-                if (methodAnnotation != null && methodAnnotation.method() == RequestMethod.valueOf(req.getMethod())) {
-
-                    // Final Uri consist of controller's global Uri + method's Uri
-                    String methodUri = getControllerUri() + methodAnnotation.value();
-
-                    // Try to match URI with method
-                    if (isMatchedUri(req.getRequestURI(), methodUri)) {
-
-                        // Prepare arguments to call method
-                        Object[] args = prepareArguments(method.getParameters(), new JsonServletRequest(req, methodUri));
-
-                        // Invoke suitable method
-                        Object ret = method.invoke(this, args);
-                        if (ret != null) {
-                            response.writeJson(ret);
-                        }
-                        return;
-                    }
-                }
+            if (entry == null) {
+                throw new HttpException(HttpStatus.NOT_IMPLEMENTED_501, "HTTP method %s is not supported by this URL", req.getMethod());
             }
 
-            throw new HttpException(HttpStatus.NOT_IMPLEMENTED_501, "HTTP method %s is not supported by this URL", req.getMethod());
+            UriMask mask = entry.getKey();
+            Method method = entry.getValue();
+
+            // Prepare arguments to call method
+            Object[] args = prepareArguments(method.getParameters(), new JsonServletRequest(req, mask.getUri()));
+
+            // Invoke suitable method
+            Object ret = method.invoke(this, args);
+            if (ret != null) {
+                response.writeJson(ret);
+            }
+
         } catch (HttpException e) {
             response.sendError(e.getStatusCode(), e.getResponseBody());
         } catch (Exception e) {
             response.sendException(HttpStatus.INTERNAL_SERVER_ERROR_500, e);
+            e.printStackTrace();
         }
     }
+
 
     private Object[] prepareArguments(Parameter[] params, JsonServletRequest request) throws Exception {
         List<Object> args = new ArrayList<>();
@@ -110,6 +158,7 @@ public class ControllerServlet extends HttpServlet {
 
         return args.toArray();
     }
+
 
     private Object prepareArgument(Parameter param, JsonServletRequest request) throws Exception {
         // If param marked as RequestBody
@@ -131,7 +180,7 @@ public class ControllerServlet extends HttpServlet {
                     throw new HttpException(HttpStatus.BAD_REQUEST_400, "PathVariable '%s' is required.", pv.value());
                 }
             } else {
-                return parseObjectFromString(pathVarValue, param.getType());
+                return parseObjectFromString(pathVarValue, toWrappedType(param.getType()));
             }
         }
 
@@ -144,7 +193,7 @@ public class ControllerServlet extends HttpServlet {
                     throw new HttpException(HttpStatus.BAD_REQUEST_400, "PathParam '%s' is required.", pp.value());
                 }
             } else {
-                return parseObjectFromString(pathParamValue, param.getType());
+                return parseObjectFromString(pathParamValue, toWrappedType(param.getType()));
             }
         }
         return null;

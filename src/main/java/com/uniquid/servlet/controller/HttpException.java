@@ -19,6 +19,11 @@ public class HttpException extends Exception {
     private final int statusCode;
     private final String responseBody;
 
+    public HttpException(int statusCode) {
+        this.statusCode = statusCode;
+        this.responseBody = null;
+    }
+
     public HttpException(int statusCode, Object responseObject) throws JsonProcessingException {
         super(String.valueOf(statusCode));
         this.statusCode = statusCode;

@@ -55,6 +55,7 @@ public class ControllerServlet extends HttpServlet {
         // Scan inherit class to find methods annotated with RequestMapping
         for (Method method : this.getClass().getDeclaredMethods()) {
 
+            // If method has RequestMapping annotation
             RequestMapping rm = method.getAnnotation(RequestMapping.class);
             if (rm != null) {
 
@@ -71,6 +72,7 @@ public class ControllerServlet extends HttpServlet {
                 }
             }
 
+            // If method has GetMapping annotation
             GetMapping gm = method.getAnnotation(GetMapping.class);
             if (gm != null) {
                 // Final Uri consist of controller's global Uri + method's Uri
@@ -81,6 +83,7 @@ public class ControllerServlet extends HttpServlet {
                 methods.put(mask, method);
             }
 
+            // If method has PostMapping annotation
             PostMapping pm = method.getAnnotation(PostMapping.class);
             if (pm != null) {
                 // Final Uri consist of controller's global Uri + method's Uri
@@ -91,6 +94,7 @@ public class ControllerServlet extends HttpServlet {
                 methods.put(mask, method);
             }
 
+            // If method has PutMapping annotation
             PutMapping pt = method.getAnnotation(PutMapping.class);
             if (pt != null) {
                 // Final Uri consist of controller's global Uri + method's Uri
@@ -101,6 +105,7 @@ public class ControllerServlet extends HttpServlet {
                 methods.put(mask, method);
             }
 
+            // If method has DeleteMapping annotation
             DeleteMapping dm = method.getAnnotation(DeleteMapping.class);
             if (dm != null) {
                 // Final Uri consist of controller's global Uri + method's Uri
@@ -217,7 +222,18 @@ public class ControllerServlet extends HttpServlet {
             // Invoke suitable method
             Object ret = method.invoke(this, args);
             if (ret != null) {
-                response.writeJson(ret);
+                if (ret instanceof ResponseEntity) {
+                    ResponseEntity entity = (ResponseEntity)ret;
+
+                    Map<String, String> headers = entity.getHeaders();
+                    if (headers != null) {
+                        headers.forEach(response::addHeader);
+                    }
+                    response.setStatus(entity.getStatus());
+                    response.writeJson(entity.getBody());
+                } else {
+                    response.writeJson(ret);
+                }
             }
 
         } catch (HttpException e) {
@@ -296,4 +312,15 @@ public class ControllerServlet extends HttpServlet {
         return null;
     }
 
+    public void requireNotNull(Object obj, String errorMsg) throws HttpException {
+        if (obj == null) {
+            throw new HttpException(HttpStatus.BAD_REQUEST_400, errorMsg);
+        }
+    }
+
+    public void requireNotEmpty(String str, String errorMsg) throws HttpException {
+        if (Strings.isNullOrEmpty(str)) {
+            throw new HttpException(HttpStatus.BAD_REQUEST_400, errorMsg);
+        }
+    }
 }

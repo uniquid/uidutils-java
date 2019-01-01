@@ -70,6 +70,46 @@ public class ControllerServlet extends HttpServlet {
                     methods.put(mask, method);
                 }
             }
+
+            GetMapping gm = method.getAnnotation(GetMapping.class);
+            if (gm != null) {
+                // Final Uri consist of controller's global Uri + method's Uri
+                String methodUri = controllerUri + gm.value();
+
+                Map<UriMask, Method> methods = handlers.computeIfAbsent(RequestMethod.GET, k -> new HashMap<>());
+                UriMask mask = new UriMask(methodUri);
+                methods.put(mask, method);
+            }
+
+            PostMapping pm = method.getAnnotation(PostMapping.class);
+            if (pm != null) {
+                // Final Uri consist of controller's global Uri + method's Uri
+                String methodUri = controllerUri + pm.value();
+
+                Map<UriMask, Method> methods = handlers.computeIfAbsent(RequestMethod.POST, k -> new HashMap<>());
+                UriMask mask = new UriMask(methodUri);
+                methods.put(mask, method);
+            }
+
+            PutMapping pt = method.getAnnotation(PutMapping.class);
+            if (pt != null) {
+                // Final Uri consist of controller's global Uri + method's Uri
+                String methodUri = controllerUri + pt.value();
+
+                Map<UriMask, Method> methods = handlers.computeIfAbsent(RequestMethod.PUT, k -> new HashMap<>());
+                UriMask mask = new UriMask(methodUri);
+                methods.put(mask, method);
+            }
+
+            DeleteMapping dm = method.getAnnotation(DeleteMapping.class);
+            if (dm != null) {
+                // Final Uri consist of controller's global Uri + method's Uri
+                String methodUri = controllerUri + dm.value();
+
+                Map<UriMask, Method> methods = handlers.computeIfAbsent(RequestMethod.DELETE, k -> new HashMap<>());
+                UriMask mask = new UriMask(methodUri);
+                methods.put(mask, method);
+            }
         }
 
     }
@@ -78,12 +118,17 @@ public class ControllerServlet extends HttpServlet {
     /**
      * Method to parse string to object according to given type
      *
-     * @param s         string that have to be parsed
-     * @param clazz     class type to which need to parse given string
+     * @param s     string that have to be parsed
+     * @param clazz class type to which need to parse given string
      * @return
      */
-    private static <T> T parseObjectFromString(String s, Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        return clazz.getConstructor(String.class).newInstance(s);
+    private static <T> T parseObjectFromString(String s, Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        String strObj = s;
+        // Force enum to uppercase
+        if (Enum.class.isAssignableFrom(clazz)) {
+            strObj = s.toUpperCase();
+        }
+        return (T) clazz.getMethod("valueOf", String.class).invoke(clazz, strObj);
     }
 
 
@@ -193,8 +238,7 @@ public class ControllerServlet extends HttpServlet {
      * @return              array of objects of arguments values
      */
     private Object[] prepareArguments(Method method, JsonServletRequest request)
-            throws NoSuchMethodException, HttpException, IOException, InstantiationException,
-            IllegalAccessException, InvocationTargetException {
+            throws NoSuchMethodException, HttpException, IOException, IllegalAccessException, InvocationTargetException {
         List<Object> args = new ArrayList<>();
 
         for (Parameter param : method.getParameters()) {
@@ -213,8 +257,7 @@ public class ControllerServlet extends HttpServlet {
      * @return              object of argument value
      */
     private Object prepareArgument(Parameter param, JsonServletRequest request)
-            throws IOException, HttpException, InvocationTargetException, NoSuchMethodException,
-            InstantiationException, IllegalAccessException {
+            throws IOException, HttpException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         // If param marked as RequestBody
         RequestBody rb = param.getDeclaredAnnotation(RequestBody.class);
         if (rb != null) {

@@ -5,16 +5,15 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.uniquid.servlet;
+package com.uniquid.servlet.controller;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Deprecated
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UriPattern {
-    String value();
+public @interface RequestBody {
+    boolean required() default true;
 }

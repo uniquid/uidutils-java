@@ -14,6 +14,10 @@ import org.slf4j.MarkerFactory;
 
 public class UserLogger {
 
+    private UserLogger() {
+        // Private constructor for utility class
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserLogger.class);
     private static final Marker LOG_MARKER = MarkerFactory.getMarker("USER");
 
@@ -30,6 +34,7 @@ public class UserLogger {
     }
 
     public static void fatal(String format, Object... arguments) {
-        LOGGER.error(LOG_MARKER, "Internal Server Error: " + format + " Please contact Uniquid support to resolve the problem.", arguments);
+        String msg = "Internal Server Error: " + format + " Please contact Uniquid support to resolve the problem.";
+        LOGGER.error(LOG_MARKER, msg, arguments);
     }
 }

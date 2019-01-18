@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-@Deprecated
 public class JsonServlet extends HttpServlet {
 
     /**

@@ -8,6 +8,7 @@
 package com.uniquid.contract;
 
 import com.uniquid.blockchain.Transaction;
+import com.uniquid.utils.UserLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,6 +158,7 @@ public class Contract {
 
                         // found at least 1 confirmation - set status to ACTIVE
                         LOGGER.info("TX {} was found in blockchain with {} confirmation(s).", txid, confirmations);
+                        UserLogger.info("Create contract: Contract {} successfully created", txid);
                         confirmations = txConfirmations;
                         contractStatus = ContractStatus.ACTIVE;
                     }

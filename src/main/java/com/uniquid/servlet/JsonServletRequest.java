@@ -34,7 +34,7 @@ public class JsonServletRequest extends HttpServletRequestWrapper {
     /**
      * Constructs a request object wrapping the given request.
      * Additionally you can provide URI pattern to get PathVariables
-     * using method JsonServletRequest.getVar().
+     * using method JsonServletRequest.getVariable().
      *
      * @param request
      * @param uriPattern
@@ -67,7 +67,7 @@ public class JsonServletRequest extends HttpServletRequestWrapper {
         return mapper.readValue(this.getReader(), clazz);
     }
 
-    public String getVar(String key) {
+    public String getVariable(String key) {
         return pathVars.get(key);
 
     }

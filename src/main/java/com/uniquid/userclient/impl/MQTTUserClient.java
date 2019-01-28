@@ -11,6 +11,7 @@ import com.uniquid.messages.UniquidMessage;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
 import com.uniquid.userclient.UserClient;
 import com.uniquid.userclient.UserClientException;
+import com.uniquid.userclient.UserClientTimeoutException;
 import org.fusesource.mqtt.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,13 +98,13 @@ public class MQTTUserClient implements UserClient {
 
             LOGGER.error("Timeout while waiting response!", ex);
 
-            throw new UserClientException("Timeout while waiting response!", ex);
+            throw new UserClientTimeoutException("Timeout while waiting response from client!", ex);
 
         } catch (Throwable t) {
 
             LOGGER.error("Catched Exception: " + t.getMessage(), t);
 
-            throw new UserClientException("Catched Exception: " + t.getMessage(), t);
+            throw new UserClientException("Catched Exception from client: " + t.getMessage(), t);
 
         } finally {
 

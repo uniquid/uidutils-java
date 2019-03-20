@@ -93,7 +93,7 @@ public class MQTTEndPoint implements EndPoint {
 
             FunctionRequestMessage message = (FunctionRequestMessage) receivedMessage;
 
-            MQTTUserClient mqttUserClient = new MQTTUserClient(broker, message.getUser(), DEFAULT_TIMEOUT, providerResponse.getProvider());
+            MQTTUserClient mqttUserClient = new MQTTUserClient(broker, message.getSender(), DEFAULT_TIMEOUT, null);
 
             try {
 

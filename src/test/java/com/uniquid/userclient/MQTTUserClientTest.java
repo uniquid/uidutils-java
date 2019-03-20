@@ -35,8 +35,8 @@ public class MQTTUserClientTest {
         String params = "params";
 
         FunctionRequestMessage providerRequest = new FunctionRequestMessage();
-        providerRequest.setUser(sender);
-        providerRequest.setFunction(method);
+        providerRequest.setSender(sender);
+        providerRequest.setMethod(method);
         providerRequest.setParameters(params);
 
         String destination = "test";
@@ -83,12 +83,12 @@ public class MQTTUserClientTest {
             Assert.assertNotNull(rpcProviderRequest);
 
             FunctionResponseMessage rpcProviderResponse = new FunctionResponseMessage();
-            rpcProviderResponse.setProvider("test");
+            rpcProviderResponse.setDestination("test");
             rpcProviderResponse.setError(0);
             rpcProviderResponse.setResult("result");
             rpcProviderResponse.setId(rpcProviderRequest.getId());
 
-            connection.publish(rpcProviderRequest.getUser(), new JSONMessageSerializer().serialize(rpcProviderResponse), QoS.AT_LEAST_ONCE, false);
+            connection.publish(rpcProviderRequest.getSender(), new JSONMessageSerializer().serialize(rpcProviderResponse), QoS.AT_LEAST_ONCE, false);
 
             connection.disconnect();
 
@@ -104,8 +104,8 @@ public class MQTTUserClientTest {
         String params = "params";
 
         FunctionRequestMessage providerRequest = new FunctionRequestMessage();
-        providerRequest.setUser(sender);
-        providerRequest.setFunction(method);
+        providerRequest.setSender(sender);
+        providerRequest.setMethod(method);
         providerRequest.setParameters(params);
         providerRequest.setId(1234);
 
@@ -149,7 +149,7 @@ public class MQTTUserClientTest {
             Assert.assertNotNull(functionRequestMessage);
 
             FunctionResponseMessage functionResponseMessage = new FunctionResponseMessage();
-            functionResponseMessage.setProvider("sender");
+            functionResponseMessage.setDestination("sender");
             functionResponseMessage.setResult("result");
             functionResponseMessage.setError(0);
 

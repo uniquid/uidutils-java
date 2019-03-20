@@ -7,11 +7,13 @@
 
 package com.uniquid.messages;
 
+import org.spongycastle.util.encoders.Hex;
+
 import java.util.Objects;
 import java.util.Random;
 
 /**
- * Represent a Function Request message: the User asks the provider to perform the specified function.
+ * Represent a Function Request message: the User asks the provider to perform the specified method.
  */
 public class FunctionRequestMessage implements UniquidMessage {
 
@@ -19,9 +21,11 @@ public class FunctionRequestMessage implements UniquidMessage {
 
     private long id;
 
-    private String user = "", parameters = "";
+    private String signature = "", parameters = "";
 
-    private int function;
+    private int method;
+
+    private String sender;
 
     public FunctionRequestMessage() {
 
@@ -40,12 +44,12 @@ public class FunctionRequestMessage implements UniquidMessage {
         this.id = id;
     }
 
-    public String getUser() {
-        return user;
+    public String getSignature() {
+        return signature;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 
     public String getParameters() {
@@ -56,12 +60,32 @@ public class FunctionRequestMessage implements UniquidMessage {
         this.parameters = parameters;
     }
 
-    public int getFunction() {
-        return function;
+    public int getMethod() {
+        return method;
     }
 
-    public void setFunction(int method) {
-        this.function = method;
+    public void setMethod(int method) {
+        this.method = method;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String prepareToSign() {
+
+        StringBuilder serializedData = new StringBuilder();
+
+        serializedData.append(method);
+        serializedData.append(parameters);
+        serializedData.append(id);
+
+        return serializedData.toString();
+
     }
 
     @Override
@@ -82,15 +106,15 @@ public class FunctionRequestMessage implements UniquidMessage {
 
         FunctionRequestMessage functionRequestMessage = (FunctionRequestMessage) object;
 
-        return Objects.equals(id, functionRequestMessage.id) && Objects.equals(user, functionRequestMessage.user)
+        return Objects.equals(id, functionRequestMessage.id) && Objects.equals(signature, functionRequestMessage.signature)
                 && Objects.equals(parameters, functionRequestMessage.parameters)
-                && Objects.equals(function, functionRequestMessage.function);
+                && Objects.equals(method, functionRequestMessage.method);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, user, parameters, function);
+        return Objects.hash(id, signature, parameters, method);
 
     }
 

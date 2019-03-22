@@ -7,17 +7,12 @@
 
 package com.uniquid.messages;
 
-import org.spongycastle.util.encoders.Hex;
-
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * Represent a Function Request message: the User asks the provider to perform the specified method.
  */
 public class FunctionRequestMessage implements UniquidMessage {
-
-    private Random random = new Random();
 
     private long id;
 
@@ -29,10 +24,7 @@ public class FunctionRequestMessage implements UniquidMessage {
 
     public FunctionRequestMessage() {
 
-        // This will set a random id!
-        do {
-            id = random.nextInt(Integer.MAX_VALUE);
-        } while (id == 0);
+        id = System.currentTimeMillis();
 
     }
 

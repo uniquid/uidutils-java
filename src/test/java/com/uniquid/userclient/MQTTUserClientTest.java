@@ -83,7 +83,6 @@ public class MQTTUserClientTest {
             Assert.assertNotNull(rpcProviderRequest);
 
             FunctionResponseMessage rpcProviderResponse = new FunctionResponseMessage();
-            rpcProviderResponse.setDestination("test");
             rpcProviderResponse.setError(0);
             rpcProviderResponse.setResult("result");
             rpcProviderResponse.setId(rpcProviderRequest.getId());
@@ -149,7 +148,6 @@ public class MQTTUserClientTest {
             Assert.assertNotNull(functionRequestMessage);
 
             FunctionResponseMessage functionResponseMessage = new FunctionResponseMessage();
-            functionResponseMessage.setDestination("sender");
             functionResponseMessage.setResult("result");
             functionResponseMessage.setError(0);
 

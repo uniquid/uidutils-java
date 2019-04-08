@@ -10,7 +10,6 @@ package com.uniquid.registry;
 import com.uniquid.registry.exception.RegistryException;
 import com.uniquid.registry.impl.RegistryDAOImpl;
 import junit.framework.Assert;
-import org.junit.Test;
 
 import java.util.Random;
 

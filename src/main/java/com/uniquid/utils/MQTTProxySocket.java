@@ -60,7 +60,6 @@ public class MQTTProxySocket implements Runnable {
                 LOGGER.info("Received response!");
                 FunctionResponseMessage outputMessage = new FunctionResponseMessage();
                 outputMessage.setError(response.getError());
-                outputMessage.setProvider(response.getProvider());
                 outputMessage.setResult(response.getResult());
                 endPoint.setResponse(outputMessage);
 

@@ -39,7 +39,7 @@ public class FunctionResponseMessage implements UniquidMessage {
 
     private long id;
 
-    private String provider = "", result = "";
+    private String signature = "", result = "";
 
     private int error;
 
@@ -51,12 +51,12 @@ public class FunctionResponseMessage implements UniquidMessage {
         this.id = id;
     }
 
-    public String getProvider() {
-        return provider;
+    public String getSignature() {
+        return signature;
     }
 
-    public void setProvider(String provider) {
-        this.provider = provider;
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 
     public String getResult() {
@@ -73,6 +73,15 @@ public class FunctionResponseMessage implements UniquidMessage {
 
     public void setError(int error) {
         this.error = error;
+    }
+
+    public String prepareToSign() {
+        StringBuilder serializedData = new StringBuilder();
+        serializedData.append(error);
+        serializedData.append(result);
+        serializedData.append(id);
+
+        return serializedData.toString();
     }
 
     @Override
@@ -93,7 +102,7 @@ public class FunctionResponseMessage implements UniquidMessage {
 
         FunctionResponseMessage functionResponseMessage = (FunctionResponseMessage) object;
 
-        return Objects.equals(id, functionResponseMessage.id) && Objects.equals(provider, functionResponseMessage.provider)
+        return Objects.equals(id, functionResponseMessage.id) && Objects.equals(signature, functionResponseMessage.signature)
                 && Objects.equals(result, functionResponseMessage.result)
                 && Objects.equals(error, functionResponseMessage.error);
     }
@@ -101,7 +110,7 @@ public class FunctionResponseMessage implements UniquidMessage {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, provider, result, error);
+        return Objects.hash(id, signature, result, error);
 
     }
 
@@ -109,7 +118,7 @@ public class FunctionResponseMessage implements UniquidMessage {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
-                .add("provider", provider)
+                .add("signature", signature)
                 .add("result", result)
                 .add("error", error)
                 .toString();

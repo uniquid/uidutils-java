@@ -6,11 +6,11 @@ The Uniquid java utils project contains many utilities classes shared between ma
 ### Technologies
 
 * Java 7 for the core modules, Java 8 for everything else
-* [Gradle 3.4+](https://gradle.org/) - to building the project
+* [Gradle 4.4+](https://gradle.org/) - to building the project
 
 ### Getting started
 
-To get started, it is best to have the latest JDK and Maven installed. The HEAD of the `master` branch contains the latest development code and various production releases are provided on feature branches.
+To get started, it is best to have the latest JDK and Gradle installed. The HEAD of the `master` branch contains the latest development code and various production releases are provided on feature branches.
 
 #### Building from the command line
 

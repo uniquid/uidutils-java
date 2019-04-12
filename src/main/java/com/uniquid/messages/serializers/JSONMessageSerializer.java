@@ -34,14 +34,14 @@ public class JSONMessageSerializer implements MessageSerializer {
             // Create empty json object
             JSONObject jsonObject = new JSONObject();
 
-            // populate sender
-            jsonObject.put("sender", functionRequestMessage.getUser());
+            // populate signature
+            jsonObject.put("signature", functionRequestMessage.getSignature());
 
             // Create empty json child
             JSONObject jsonbody = new JSONObject();
 
             // Put all keys inside body
-            jsonbody.put("method", functionRequestMessage.getFunction());
+            jsonbody.put("method", functionRequestMessage.getMethod());
 
             jsonbody.put("params", functionRequestMessage.getParameters());
 
@@ -64,7 +64,7 @@ public class JSONMessageSerializer implements MessageSerializer {
 
             final JSONObject jsonResponse = new JSONObject();
 
-            jsonResponse.put("sender", functionResponseMessage.getProvider());
+            jsonResponse.put("signature", functionResponseMessage.getSignature());
 
             jsonResponse.put("body", jsonBody);
 
@@ -112,9 +112,9 @@ public class JSONMessageSerializer implements MessageSerializer {
 
         final JSONObject jsonMessage = new JSONObject(jsonString);
 
-        if (jsonMessage.has("sender")) {
+        if (jsonMessage.has("signature")) {
 
-            final String sender = jsonMessage.getString("sender");
+            final String signature = jsonMessage.getString("signature");
 
             final JSONObject jsonBody = jsonMessage.getJSONObject("body");
 
@@ -129,8 +129,8 @@ public class JSONMessageSerializer implements MessageSerializer {
 
                 FunctionRequestMessage requestMessage = new FunctionRequestMessage();
 
-                requestMessage.setUser(sender);
-                requestMessage.setFunction(method);
+                requestMessage.setSignature(signature);
+                requestMessage.setMethod(method);
                 requestMessage.setParameters(params);
                 requestMessage.setId(id);
 
@@ -152,7 +152,7 @@ public class JSONMessageSerializer implements MessageSerializer {
 
                     Function30ResponseMessage responseMessage = new Function30ResponseMessage();
 
-                    responseMessage.setProvider(sender);
+                    responseMessage.setSignature(signature);
                     responseMessage.setResult(result);
                     responseMessage.setError(error);
                     responseMessage.setId(id);
@@ -163,7 +163,7 @@ public class JSONMessageSerializer implements MessageSerializer {
                 } else {
                     FunctionResponseMessage responseMessage = new FunctionResponseMessage();
 
-                    responseMessage.setProvider(sender);
+                    responseMessage.setSignature(signature);
                     responseMessage.setResult(result);
                     responseMessage.setError(error);
                     responseMessage.setId(id);

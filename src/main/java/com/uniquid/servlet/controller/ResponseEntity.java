@@ -1,7 +1,5 @@
 package com.uniquid.servlet.controller;
 
-import org.eclipse.jetty.http.HttpStatus;
-
 import java.util.Map;
 
 public class ResponseEntity<T> {

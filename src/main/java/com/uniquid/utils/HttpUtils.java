@@ -10,10 +10,8 @@ package com.uniquid.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.stream.Collectors;
 
@@ -52,8 +50,8 @@ public class HttpUtils {
         } else {
 
             return dataProvider.manageUnexpectedResponseCode(connection.getResponseCode(),
-                                                             connection.getResponseMessage(),
-                                                             body);
+                    connection.getResponseMessage(),
+                    body);
         }
 
     }
@@ -98,7 +96,7 @@ public class HttpUtils {
 
     }
 
-    public static <T> T downloadFile(URL url, @Nullable String path, ResponseDecoder<T> responseDecoder) throws Exception {
+    public static <T> T downloadFile(URL url, String path, ResponseDecoder<T> responseDecoder) throws Exception {
 
         try {
 
@@ -110,6 +108,7 @@ public class HttpUtils {
             // add request header
             connection.setRequestProperty("User-Agent", USER_AGENT);
 
+            // set timeout
             connection.setConnectTimeout(CONNECTION_TIMEOUT);
             connection.setReadTimeout(READ_TIMEOUT);
 
@@ -148,10 +147,14 @@ public class HttpUtils {
                         outputStream.toString());
             }
 
-        } catch (SocketTimeoutException e) {
+        } catch (Exception e) {
             LOGGER.error("Unexpected Exception", e);
             throw new Exception("Unexpected Exception", e);
         }
+    }
+
+    public static <T> T downloadFile(URL url, ResponseDecoder<T> responseDecoder) throws Exception {
+        return downloadFile(url, null, responseDecoder);
     }
 
 }

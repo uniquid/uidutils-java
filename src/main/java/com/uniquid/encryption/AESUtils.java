@@ -7,7 +7,7 @@
 
 package com.uniquid.encryption;
 
-import org.spongycastle.util.encoders.Base64;
+import org.bouncycastle.util.encoders.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

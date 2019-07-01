@@ -7,7 +7,8 @@
 
 package com.uniquid.utils;
 
-import org.spongycastle.util.Arrays;
+
+import org.bouncycastle.util.Arrays;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

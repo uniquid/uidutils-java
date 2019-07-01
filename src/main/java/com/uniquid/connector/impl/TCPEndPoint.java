@@ -11,9 +11,9 @@ import com.uniquid.connector.ConnectorException;
 import com.uniquid.connector.EndPoint;
 import com.uniquid.messages.*;
 import com.uniquid.messages.serializers.JSONMessageSerializer;
+import org.bouncycastle.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.Arrays;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;

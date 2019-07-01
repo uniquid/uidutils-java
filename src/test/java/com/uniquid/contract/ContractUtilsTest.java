@@ -11,9 +11,9 @@ import com.uniquid.blockchain.impl.InsightApiDAOImpl;
 import com.uniquid.params.UniquidLitecoinRegTest;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
 
 import java.util.BitSet;
 
